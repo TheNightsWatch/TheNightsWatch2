@@ -3,7 +3,7 @@
 return [
     'controllers' => [
         'invokables' => [
-            'NightsWatch\Controller\Site' => 'NightsWatch\Controller\SiteController',
+            'Authentication\Controller\Auth' => 'Authentication\Controller\AuthController',
         ],
     ],
     'router' => [
@@ -11,11 +11,11 @@ return [
             'home' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '[/][:controller][/:action]',
+                    'route' => '/auth[/:action]',
                     'defaults' => [
-                        '__NAMESPACE__' => 'NightsWatch\Controller',
-                        'controller' => 'NightsWatch\Controller\Site',
-                        'action' => 'index',
+                        '__NAMESPACE__' => 'Authentication\Controller',
+                        'controller' => 'Authentication\Controller\Auth',
+                        'action' => 'login',
                     ]
                 ]
             ]
@@ -25,8 +25,6 @@ return [
         'display_not_found_reason' => true,
         'display_exceptions' => true,
         'doctype' => 'HTML5',
-        'not_found_template' => 'error/404',
-        'exception_template' => 'error/index',
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],

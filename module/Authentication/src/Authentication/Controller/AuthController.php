@@ -1,12 +1,12 @@
 <?php
 
-namespace NightsWatch\Controller;
+namespace Authentication\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
     Zend\View\Model\ViewModel,
     Doctrine\ORM\EntityManager;
 
-class SiteController extends AbstractActionController
+class AuthController extends AbstractActionController
 {
     /** @var EntityManager */
     protected $entityManager;
@@ -22,7 +22,7 @@ class SiteController extends AbstractActionController
         return $this->entityManager;
     }
 
-    public function indexAction()
+    public function loginAction()
     {
         return new ViewModel();
     }

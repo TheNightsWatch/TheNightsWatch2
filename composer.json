@@ -9,9 +9,13 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": ">2.2.0rc1"
+        "zendframework/zendframework": ">2.2.0rc1",
+        "doctrine/doctrine-orm-module": "0.7.0"
     },
     "autoload": {
-        "psr-0": { "NightsWatch": "module/NightsWatch/src" }
+        "psr-0": {
+            "NightsWatch": "module/NightsWatch/src",
+            "Authentication": "module/Authentication/src"
+        }
     }
 }
