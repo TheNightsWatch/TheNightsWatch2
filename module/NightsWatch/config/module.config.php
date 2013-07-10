@@ -1,9 +1,12 @@
 <?php
 
+namespace NightsWatch;
+
 return [
     'controllers' => [
         'invokables' => [
-            'NightsWatch\Controller\Site' => 'NightsWatch\Controller\SiteController',
+            'Site' => 'NightsWatch\Controller\SiteController',
+            'Map' => 'NightsWatch\Controller\MapController',
         ],
     ],
     'router' => [
@@ -14,7 +17,7 @@ return [
                     'route' => '[/][:controller][/:action]',
                     'defaults' => [
                         '__NAMESPACE__' => 'NightsWatch\Controller',
-                        'controller' => 'NightsWatch\Controller\Site',
+                        'controller' => 'Site',
                         'action' => 'index',
                     ]
                 ]

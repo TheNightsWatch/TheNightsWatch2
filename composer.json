@@ -6,11 +6,12 @@
         "framework",
         "zf2"
     ],
+    "minimum-stability": "dev",
     "homepage": "http://framework.zend.com/",
     "require": {
-        "php": ">=5.3.3",
-        "zendframework/zendframework": ">2.2.0rc1",
-        "doctrine/doctrine-orm-module": "0.7.0"
+        "php": ">=5.4",
+        "zendframework/zendframework": "dev-master",
+        "doctrine/doctrine-orm-module": "dev-master"
     },
     "autoload": {
         "psr-0": {

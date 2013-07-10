@@ -2,8 +2,8 @@
 
 namespace NightsWatch\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController,
-    Zend\View\Model\ViewModel,
+use Doctrine\Common\Collections\Criteria,
+    Zend\Mvc\Controller\AbstractActionController,
     Doctrine\ORM\EntityManager;
 
 class SiteController extends AbstractActionController
@@ -16,7 +16,7 @@ class SiteController extends AbstractActionController
      */
     public function getEntityManager()
     {
-        if(is_null($this->entityManager)) {
+        if (is_null($this->entityManager)) {
             $this->entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         }
         return $this->entityManager;
@@ -24,6 +24,11 @@ class SiteController extends AbstractActionController
 
     public function indexAction()
     {
-        return new ViewModel();
+        return;
+    }
+
+    public function mapAction()
+    {
+        return;
     }
 }
