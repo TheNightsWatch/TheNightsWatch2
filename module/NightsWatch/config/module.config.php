@@ -21,7 +21,19 @@ return [
                         'action' => 'index',
                     ]
                 ]
-            ]
+            ],
+            // Specific Routes
+            'join' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/join[/]',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'NightsWatch\Controller',
+                        'controller' => 'Site',
+                        'action' => 'join',
+                    ]
+                ]
+            ],
         ],
     ],
     'view_manager' => [

@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @property string $username
  * @property Honor[] $honors
  * @property int $rank
+ * @property bool $admin
  */
 class User implements InputFilterAwareInterface
 {
@@ -66,6 +67,12 @@ class User implements InputFilterAwareInterface
      * @ORM\OneToMany(targetEntity="Honor", mappedBy="user")
      */
     protected $honors;
+
+    /**
+     * @var int
+     * @ORM\Column(type="boolean")
+     */
+    protected $admin;
 
     public static function getRankNames()
     {

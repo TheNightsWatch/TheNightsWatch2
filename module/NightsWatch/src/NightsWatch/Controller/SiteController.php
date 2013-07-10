@@ -5,6 +5,8 @@ namespace NightsWatch\Controller;
 use Doctrine\Common\Collections\Criteria,
     Zend\Mvc\Controller\AbstractActionController,
     Doctrine\ORM\EntityManager;
+use NightsWatch\Form\RegisterForm;
+use Zend\View\Model\ViewModel;
 
 class SiteController extends AbstractActionController
 {
@@ -27,8 +29,12 @@ class SiteController extends AbstractActionController
         return;
     }
 
-    public function mapAction()
+    public function joinAction()
     {
-        return;
+        return new ViewModel(
+            [
+                'form' => new RegisterForm(),
+            ]
+        );
     }
 }
