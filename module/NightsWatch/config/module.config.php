@@ -13,16 +13,26 @@ return [
     ],
     'router' => [
         'routes' => [
+            'login' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '[/]login[/]',
+                    'defaults' => [
+                        'controller' => 'site',
+                        'action' => 'login',
+                    ],
+                ],
+            ],
             'home' => [
                 'type' => 'segment',
                 'options' => [
                     'route' => '[/][:controller][/:action]',
                     'defaults' => [
-                        '__NAMESPACE__' => 'NightsWatch\Controller',
-                        'controller' => 'Site',
+                        //'__NAMESPACE__' => 'NightsWatch\Controller',
+                        'controller' => 'site',
                         'action' => 'index',
-                    ]
-                ]
+                    ],
+                ],
             ],
         ],
     ],
@@ -43,6 +53,7 @@ return [
         ],
         'factories' => [
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+            'right-navigation' => 'NightsWatch\Navigation\Service\RightNavigationFactory',
         ],
         'aliases' => [
             'translator' => 'MvcTranslator',
@@ -85,7 +96,18 @@ return [
                 'route' => 'home',
                 'controller' => 'chat',
                 'action' => 'index',
+            ],
+        ],
+        'right' => [
+            [
+                'label' => 'Log In',
+                'route' => 'login',
+            ],
+            [
+                'label' => 'Register',
+                'route' => 'home',
+                'controller' => 'join',
             ]
         ]
-    ]
+    ],
 ];

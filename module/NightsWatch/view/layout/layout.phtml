@@ -35,6 +35,7 @@
                     <a class="brand" href="<?php echo $this->url('home') ?>"><?php echo $this->translate('The Night\'s Watch') ?></a>
                     <div class="nav-collapse collapse">
                         <?= $this->bootstrapNavbar('navigation'); ?>
+                        <?= $this->bootstrapNavbar('right-navigation')->setUlClass('nav pull-right'); ?>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
