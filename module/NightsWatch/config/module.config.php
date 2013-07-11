@@ -7,6 +7,8 @@ return [
         'invokables' => [
             'Site' => 'NightsWatch\Controller\SiteController',
             'Map' => 'NightsWatch\Controller\MapController',
+            'Chat' => 'NightsWatch\Controller\ChatController',
+            'Join' => 'NightsWatch\Controller\JoinController',
         ],
     ],
     'router' => [
@@ -19,18 +21,6 @@ return [
                         '__NAMESPACE__' => 'NightsWatch\Controller',
                         'controller' => 'Site',
                         'action' => 'index',
-                    ]
-                ]
-            ],
-            // Specific Routes
-            'join' => [
-                'type' => 'segment',
-                'options' => [
-                    'route' => '/join[/]',
-                    'defaults' => [
-                        '__NAMESPACE__' => 'NightsWatch\Controller',
-                        'controller' => 'Site',
-                        'action' => 'join',
                     ]
                 ]
             ],
@@ -50,6 +40,9 @@ return [
         'abstract_factories' => [
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
+        ],
+        'factories' => [
+            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
         ],
         'aliases' => [
             'translator' => 'MvcTranslator',
@@ -79,4 +72,20 @@ return [
             ],
         ],
     ],
+    'navigation' => [
+        'default' => [
+            [
+                'label' => 'Home',
+                'route' => 'home',
+                'controller' => 'site',
+                'action' => 'index',
+            ],
+            [
+                'label' => 'Chat',
+                'route' => 'home',
+                'controller' => 'chat',
+                'action' => 'index',
+            ]
+        ]
+    ]
 ];

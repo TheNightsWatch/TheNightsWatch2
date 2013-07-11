@@ -11,7 +11,9 @@
     "require": {
         "php": ">=5.4",
         "zendframework/zendframework": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master"
+        "doctrine/doctrine-orm-module": "dev-master",
+        "navarr/minecraft-api": "dev-master",
+        "zucchi/bootstrap": "dev-master"
     },
     "autoload": {
         "psr-0": {

@@ -2,6 +2,7 @@
 
 namespace NightsWatch\Form;
 
+use Zend\Form\Element\Collection;
 use Zend\Form\Form;
 
 class RegisterForm extends Form
@@ -9,22 +10,8 @@ class RegisterForm extends Form
     public function __construct($name = null)
     {
         parent::__construct('register');
-        $this->setAttribute('method', 'post');
 
-        $this->add(
-            [
-                'name' => 'username',
-                'attributes' => [
-                    'type' => 'text',
-                    'id' => 'register-username',
-                    'required' => true,
-                ],
-                'options' => [
-                    'label' => 'Minecraft Username',
-                    'required' => true,
-                ],
-            ]
-        );
+        $this->setAttribute('method', 'post');
 
         $this->add(
             [
@@ -35,8 +22,27 @@ class RegisterForm extends Form
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Email Address',
+                    'label' => 'Email',
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name' => 'username',
+                'attributes' => [
+                    'type' => 'text',
+                    'id' => 'register-username',
                     'required' => true,
+                ],
+                'options' => [
+                    'label' => 'Username',
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => 'This must be exactly the same as your Minecraft character\'s username.',
+                        ]
+                    ]
                 ],
             ]
         );
@@ -51,7 +57,12 @@ class RegisterForm extends Form
                 ],
                 'options' => [
                     'label' => 'Password',
-                    'required' => true,
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => 'Please create a secure password for your new account.',
+                        ]
+                    ],
                 ],
             ]
         );
@@ -65,8 +76,13 @@ class RegisterForm extends Form
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Password',
-                    'required' => true,
+                    'label',
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => 'Please verify your new password by typing it again.',
+                        ],
+                    ],
                 ],
             ]
         );
@@ -78,6 +94,15 @@ class RegisterForm extends Form
                     'type' => 'submit',
                     'value' => 'Register',
                     'id' => 'register-submit',
+                    'class' => 'btn btn-primary',
+                ],
+                'options' => [
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => 'On the next page, you will be asked to verify your Minecraft account to finish registration.',
+                        ],
+                    ],
                 ],
             ]
         );

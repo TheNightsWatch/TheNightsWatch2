@@ -23,6 +23,7 @@
 
     </head>
     <body>
+
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -33,9 +34,7 @@
                     </a>
                     <a class="brand" href="<?php echo $this->url('home') ?>"><?php echo $this->translate('The Night\'s Watch') ?></a>
                     <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                        </ul>
+                        <?= $this->bootstrapNavbar('navigation'); ?>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>

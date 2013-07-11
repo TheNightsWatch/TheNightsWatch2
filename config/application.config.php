@@ -5,6 +5,8 @@ return array(
         'NightsWatch',
         'DoctrineModule',
         'DoctrineORMModule',
+        'Zucchi',
+        'ZucchiBootstrap',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

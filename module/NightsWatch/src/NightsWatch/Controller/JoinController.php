@@ -2,13 +2,14 @@
 
 namespace NightsWatch\Controller;
 
-use Doctrine\Common\Collections\Criteria,
-    Zend\Mvc\Controller\AbstractActionController,
-    Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManager;
 use NightsWatch\Form\RegisterForm;
+use NightsWatch\Form\VerifyForm;
+use Zend\Mvc\Controller\AbstractActionController;
+use Navarr\MinecraftAPI\MinecraftAPI;
 use Zend\View\Model\ViewModel;
 
-class SiteController extends AbstractActionController
+class JoinController extends AbstractActionController
 {
     /** @var EntityManager */
     protected $entityManager;
@@ -26,6 +27,19 @@ class SiteController extends AbstractActionController
 
     public function indexAction()
     {
-        return;
+        return new ViewModel(
+            [
+                'form' => new RegisterForm(),
+            ]
+        );
+    }
+
+    public function verifyAction()
+    {
+        return new ViewModel(
+            [
+                'form' => new VerifyForm(),
+            ]
+        );
     }
 }

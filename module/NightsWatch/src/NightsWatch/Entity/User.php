@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Table(name="user")
  * @property int $id
  * @property string $username
+ * @property string $minecraftId
  * @property Honor[] $honors
  * @property int $rank
  * @property bool $admin
@@ -49,6 +50,12 @@ class User implements InputFilterAwareInterface
      * @ORM\Column(type="string")
      */
     protected $username;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $minecraftId;
 
     /**
      * @var string
