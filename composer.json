@@ -10,10 +10,12 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.4",
+        "ext-intl": "*",
         "zendframework/zendframework": "dev-master",
         "doctrine/doctrine-orm-module": "dev-master",
         "navarr/minecraft-api": "dev-master",
-        "zucchi/bootstrap": "dev-master"
+        "zucchi/bootstrap": "dev-master",
+        "zf-commons/zfc-rbac": "dev-master"
     },
     "autoload": {
         "psr-0": {

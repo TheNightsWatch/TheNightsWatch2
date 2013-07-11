@@ -16,12 +16,14 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Table(name="user")
  * @property int $id
  * @property string $username
+ * @property string $password
+ * @property string $email
  * @property string $minecraftId
  * @property Honor[] $honors
  * @property int $rank
  * @property bool $admin
  */
-class User implements InputFilterAwareInterface
+class User
 {
     // Rank Constants, with space to grow.
     // The bigger the number, the higher the rank.
@@ -33,9 +35,6 @@ class User implements InputFilterAwareInterface
     const RANK_PRIVATE = 2;
     const RANK_RECRUIT = 1;
     const RANK_CIVILIAN = 0;
-
-    /** @var InputFilterInterface */
-    protected $inputFilter;
 
     /**
      * @var int
@@ -55,19 +54,25 @@ class User implements InputFilterAwareInterface
      * @var string
      * @ORM\Column(type="string")
      */
+    protected $email;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
     protected $minecraftId;
 
     /**
      * @var string
      * @ORM\Column(type="string")
      */
-    private $password;
+    protected $password;
 
     /**
      * @var int
      * @ORM\Column(type="integer", options={"unsigned"=true})
      */
-    protected $rank;
+    protected $rank = self::RANK_CIVILIAN;
 
     /**
      * @var Honor[]
@@ -79,7 +84,7 @@ class User implements InputFilterAwareInterface
      * @var int
      * @ORM\Column(type="boolean")
      */
-    protected $admin;
+    protected $admin = false;
 
     public static function getRankNames()
     {
@@ -134,87 +139,5 @@ class User implements InputFilterAwareInterface
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
-    }
-
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Not used");
-    }
-
-    /**
-     * @return InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-
-            $factory = new InputFactory();
-
-            // ID
-            $inputFilter->add(
-                $factory->createInput(
-                    array(
-                        'name' => 'id',
-                        'required' => true,
-                        'filters' => array(
-                            array('name' => 'Int'),
-                        ),
-                    )
-                )
-            );
-
-            // Username
-            $inputFilter->add(
-                $factory->createInput(
-                    array(
-                        'name' => 'username',
-                        'required' => true,
-                        'filters' => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
-                                'name' => 'StringLength',
-                                'options' => array(
-                                    'encoding' => 'UTF-8',
-                                    'min' => 1,
-                                    'max' => 16,
-                                ),
-                            ),
-                        ),
-                    )
-                )
-            );
-
-            // Password
-            $inputFilter->add(
-                $factory->createInput(
-                    array(
-                        'name' => 'password',
-                        'required' => true,
-                        'filters' => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
-                                'name' => 'StringLength',
-                                'options' => array(
-                                    'encoding' => 'UTF-8',
-                                    'min' => 1,
-                                    'max' => 100,
-                                ),
-                            ),
-                        ),
-                    )
-                )
-            );
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
     }
 }

@@ -3,9 +3,12 @@
 namespace NightsWatch\Form;
 
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilter;
 
 class VerifyForm extends Form
 {
+    private $inputFilter = null;
+
     public function __construct($name = null)
     {
         parent::__construct('verify');
@@ -14,33 +17,6 @@ class VerifyForm extends Form
         $this->add(
             [
                 'name' => 'username',
-                'attributes' => [
-                    'type' => 'hidden',
-                ]
-            ]
-        );
-
-        $this->add(
-            [
-                'name' => 'email',
-                'attributes' => [
-                    'type' => 'hidden',
-                ]
-            ]
-        );
-
-        $this->add(
-            [
-                'name' => 'password',
-                'attributes' => [
-                    'type' => 'hidden',
-                ]
-            ]
-        );
-
-        $this->add(
-            [
-                'name' => 'mojang-login',
                 'attributes' => [
                     'type' => 'text',
                     'id' => 'mojang-login',
@@ -60,9 +36,9 @@ class VerifyForm extends Form
 
         $this->add(
             [
-                'name' => 'mojang-password',
+                'name' => 'password',
                 'attributes' => [
-                    'type' => 'text',
+                    'type' => 'password',
                     'id' => 'mojang-password',
                     'required' => true,
                 ],
@@ -89,5 +65,28 @@ class VerifyForm extends Form
                 ],
             ]
         );
+    }
+
+    public function getInputFilter()
+    {
+        if (is_null($this->inputFilter)) {
+            $inputFilter = new InputFilter();
+
+            $inputFilter->add(
+                [
+                    'name' => 'username',
+                    'required' => true,
+                ]
+            );
+
+            $inputFilter->add(
+                [
+                    'name' => 'password',
+                    'required' => true,
+                ]
+            );
+            $this->inputFilter = $inputFilter;
+        }
+        return $this->inputFilter;
     }
 }

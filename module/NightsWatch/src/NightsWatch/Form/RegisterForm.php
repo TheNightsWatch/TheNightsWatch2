@@ -4,9 +4,13 @@ namespace NightsWatch\Form;
 
 use Zend\Form\Element\Collection;
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Factory as InputFactory;
 
 class RegisterForm extends Form
 {
+    private $inputFilter = null;
+
     public function __construct($name = null)
     {
         parent::__construct('register');
@@ -16,6 +20,7 @@ class RegisterForm extends Form
         $this->add(
             [
                 'name' => 'email',
+                'type' => 'email',
                 'attributes' => [
                     'type' => 'email',
                     'id' => 'register-email',
@@ -24,14 +29,19 @@ class RegisterForm extends Form
                 'options' => [
                     'label' => 'Email',
                 ],
+                'validators' => [
+                    [
+                        'name' => 'EmailAddress',
+                    ]
+                ]
             ]
         );
 
         $this->add(
             [
                 'name' => 'username',
+                'type' => 'text',
                 'attributes' => [
-                    'type' => 'text',
                     'id' => 'register-username',
                     'required' => true,
                 ],
@@ -44,6 +54,25 @@ class RegisterForm extends Form
                         ]
                     ]
                 ],
+                'validators' => [
+                    [
+                        'name' => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min' => 1,
+                            'max' => 16,
+                        ],
+                    ],
+                    [
+                        'name' => 'Alpha',
+                        'options' => [
+                            'allowWhiteSpace' => false,
+                        ],
+                    ],
+                    [
+                        'name' => 'NightsWatch\Validator\MinecraftUsername',
+                    ],
+                ]
             ]
         );
 
@@ -64,6 +93,16 @@ class RegisterForm extends Form
                         ]
                     ],
                 ],
+                'validators' => [
+                    [
+                        'name' => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min' => 5,
+                            'max' => 100,
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -81,6 +120,14 @@ class RegisterForm extends Form
                         'help' => [
                             'style' => 'block',
                             'content' => 'Please verify your new password by typing it again.',
+                        ],
+                    ],
+                ],
+                'validators' => [
+                    [
+                        'name' => 'Identical',
+                        'options' => [
+                            'token' => 'password',
                         ],
                     ],
                 ],
@@ -106,5 +153,85 @@ class RegisterForm extends Form
                 ],
             ]
         );
+    }
+
+    public function getInputFilter()
+    {
+        if (is_null($this->inputFilter)) {
+            $inputFilter = new InputFilter();
+
+            $inputFilter->add(
+                [
+                    'name' => 'email',
+                    'required' => true,
+                    'validators' => [
+                        [
+                            'name' => 'EmailAddress',
+                        ]
+                    ]
+                ]
+            );
+
+            $inputFilter->add(
+                [
+                    'name' => 'username',
+                    'required' => true,
+                    'validators' => [
+                        [
+                            'name' => 'StringLength',
+                            'options' => [
+                                'encoding' => 'UTF-8',
+                                'min' => 1,
+                                'max' => 16,
+                            ],
+                        ],
+                        [
+                            'name' => 'Alpha',
+                            'options' => [
+                                'allowWhiteSpace' => false,
+                            ],
+                        ],
+                        [
+                            'name' => 'NightsWatch\Validator\MinecraftUsername',
+                        ],
+                    ]
+                ]
+            );
+
+            $inputFilter->add(
+                [
+                    'name' => 'password',
+                    'required' => true,
+                    'validators' => [
+                        [
+                            'name' => 'StringLength',
+                            'options' => [
+                                'encoding' => 'UTF-8',
+                                'min' => 5,
+                                'max' => 100,
+                            ],
+                        ],
+                    ],
+                ]
+            );
+
+            $inputFilter->add(
+                [
+                    'name' => 'password2',
+                    'required' => true,
+                    'validators' => [
+                        [
+                            'name' => 'Identical',
+                            'options' => [
+                                'token' => 'password',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+
+            $this->inputFilter = $inputFilter;
+        }
+        return $this->inputFilter;
     }
 }
