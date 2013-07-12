@@ -14,15 +14,13 @@ class ActionController extends AbstractActionController
     /** @var \Doctrine\Orm\EntityManager */
     protected $entityManager;
 
+    /** @var \NightsWatch\Entity\User */
+    protected $identityEntity = -1;
+
     public function updateLayoutWithIdentity()
     {
         $this->layout()->setVariable('hasIdentity', $this->getAuthenticationService()->hasIdentity());
-        $this->layout()->setVariable('identity', null);
-        if ($this->getAuthenticationService()->hasIdentity()) {
-            $identity = $this->getEntityManager()
-                ->find('NightsWatch\Entity\User', $this->getAuthenticationService()->getIdentity());
-            $this->layout()->setVariable('identity', $identity);
-        }
+        $this->layout()->setVariable('identity', $this->getIdentityEntity());
     }
 
     /**
@@ -34,6 +32,23 @@ class ActionController extends AbstractActionController
             $this->entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         }
         return $this->entityManager;
+    }
+
+    /**
+     * @return \NightsWatch\Entity\User|null
+     */
+    public function getIdentityEntity()
+    {
+        if ($this->identityEntity === -1) {
+            if ($this->getAuthenticationService()->hasIdentity()) {
+                $identity = $this->getEntityManager()
+                    ->find('NightsWatch\Entity\User', $this->getAuthenticationService()->getIdentity());
+                $this->identityEntity = $identity;
+            } else {
+                $this->identityEntity = null;
+            }
+        }
+        return $this->identityEntity;
     }
 
     /**
@@ -74,5 +89,18 @@ class ActionController extends AbstractActionController
         } else {
             return false;
         }
+    }
+
+    protected function disallowRankLessThan($rank)
+    {
+        if ($this->disallowGuest()) {
+            $this->redirect()->toRoute('login');
+            return true;
+        }
+        if ($this->getIdentityEntity()->rank < $rank) {
+            $this->redirect()->toRoute('home');
+            return true;
+        }
+        return false;
     }
 }

@@ -23,7 +23,6 @@ class JoinController extends ActionController
 
     public function __construct()
     {
-        parent::__construct();
         $this->session = new SessionContainer('NightsWatch\register');
     }
 
