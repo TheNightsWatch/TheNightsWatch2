@@ -20,6 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property int $id
  * @property User $user
  * @property string $chatroom
+ * @property \DateTime $timestamp
  * @property string $message
  */
 class ChatMessage
@@ -49,6 +50,12 @@ class ChatMessage
      * @ORM\Column(type="string")
      */
     protected $message;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     */
+    protected $timestamp;
 
     public function __get($property)
     {

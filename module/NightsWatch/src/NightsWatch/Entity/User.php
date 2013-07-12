@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property Honor[] $honors
  * @property int $rank
  * @property bool $admin
+ * @property \DateTime $joined
  */
 class User
 {
@@ -82,6 +83,12 @@ class User
      */
     protected $admin = false;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     */
+    protected $joined = null;
+
     public static function getRankNames()
     {
         return [
@@ -103,6 +110,7 @@ class User
 
     public function __construct()
     {
+        $this->joined = new \DateTime();
         $this->honors = new ArrayCollection();
     }
 
