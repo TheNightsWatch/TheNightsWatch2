@@ -44,6 +44,9 @@ class ActionController extends AbstractActionController
                 $identity = $this->getEntityManager()
                     ->find('NightsWatch\Entity\User', $this->getAuthenticationService()->getIdentity());
                 $this->identityEntity = $identity;
+                if (is_null($identity)) {
+                    $this->getAuthenticationService()->clearIdentity();
+                }
             } else {
                 $this->identityEntity = null;
             }

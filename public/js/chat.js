@@ -4,6 +4,16 @@ $(document).ready(function () {
 
     var currentRoom;
 
+    var isActive = true;
+
+    $(window).on('focus', function(e) {
+        isActive = true;
+        // clear notifications
+    });
+    $(window).on('blur', function(e) {
+        isActive = false;
+    });
+
     var afterChatHasLoaded = function()
     {
         // Remove the Loading Stuff
@@ -66,6 +76,7 @@ $(document).ready(function () {
     var initialLoad = true;
     socket.on('messages', function (messages) {
         var shouldScroll = initialLoad || atBottomOfScrollList('#chat-message-container');
+        var shouldMarkUnread = !initialLoad;
         initialLoad = false;
         for (var i = 0, l = messages.length; i < l; ++i) {
             data = messages[i];
@@ -90,9 +101,11 @@ $(document).ready(function () {
 
             var tableClass = '.' + data.room;
 
-            var $nav = $chatNav.find(tableClass);
-            if (!$nav.hasClass('active')) {
-                $nav.addClass('unread');
+            if (shouldMarkUnread) {
+                var $nav = $chatNav.find(tableClass);
+                if (!$nav.hasClass('active')) {
+                    $nav.addClass('unread');
+                }
             }
 
             $('.chat-messages' + tableClass).find('ol').append($li);
