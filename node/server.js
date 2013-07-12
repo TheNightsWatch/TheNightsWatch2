@@ -8,20 +8,37 @@ var mysql = require('mysql'),
         password: config.password
     });
 
-var messageLog = [];
+var rooms = ['public','recruit','private','council'];
 
-var addToMessageLog = function(message) {
-    if (messageLog.length >= 20) {
-        messageLog.shift();
+var messageLog = {};
+
+function populateTheMessageLog()
+{
+
+}
+
+function addToMessageLog(message, room) {
+    if (messageLog[room] == undefined) {
+        messageLog[room] = [];
     }
-    messageLog.push(message);
-};
+    if (messageLog[room].length >= 20) {
+        messageLog[room].shift();
+    }
+    messageLog[room].push(message);
+}
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('messages', messageLog);
+    var tempLog = [];
+    for(var i in messageLog) {
+        var messageLogRoom = messageLog[i];
+        for(var j in messageLogRoom) {
+            tempLog.push(messageLogRoom[j]);
+        };
+    };
+    socket.emit('messages', tempLog);
     socket.on('message', function (data) {
-        var message = { user: 'Navarr', time: (new Date).getTime(), message: data };
-        addToMessageLog(message);
+        var message = { room: data.room, user: 'Navarr', time: (new Date).getTime(), message: data.message };
+        addToMessageLog(message, data.room);
         io.sockets.emit('messages', [ message ]);
     });
 });

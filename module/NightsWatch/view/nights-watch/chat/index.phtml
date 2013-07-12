@@ -1,19 +1,35 @@
 <?php
+use NightsWatch\Entity\User;
 $this->headScript()->appendFile('/socket.io/socket.io.js');
 $this->headScript()->appendFile('/js/chat.js');
+/** @var \NightsWatch\Entity\User $identity */
 ?>
+<ul class="nav nav-pills" id="chat-nav">
+    <li class="public" data-room="public"><a href="#public">#public</a></li>
+    <?php if($identity->rank >= User::RANK_RECRUIT): ?>
+    <li class="recruit" data-room="recruit"><a href="#recruit">#recruit</a></li>
+    <?php endif; ?>
+    <?php if($identity->rank >= User::RANK_PRIVATE): ?>
+    <li class="private" data-room="private"><a href="#private">#private</a></li>
+    <?php endif; ?>
+    <?php if($identity->rank >= User::RANK_LIEUTENANT): ?>
+    <li class="council" data-room="council"><a href="#council">#council</a></li>
+    <?php endif; ?>
+</ul>
 <div class="row-fluid">
     <div class="span10">
-        <div class="well well-small better-scrollbar" id="chat-message-container">
-            <div id="chat-messages">
-                <ol>
-                    <li style="display:none;" id="chat-message-template">
-                        <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">{user}</a><span class="faux-invisible">&gt; </span>{message}
-                    </li>
-                </ol>
+        <div class="well well-small better-scrollbar loading" id="chat-message-container">
+            <div id="templates" style="display:none;">
+                <li id="chat-message-template">
+                    <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
+                        class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
+                        href="">{user}</a><span class="faux-invisible">&gt; </span>{message}
+                </li>
             </div>
+            <div class="chat-messages public"><ol></ol></div>
+            <div class="chat-messages recruit"><ol></ol></div>
+            <div class="chat-messages private"><ol></ol></div>
+            <div class="chat-messages council"><ol></ol></div>
         </div>
         <form id="chat-message" class="row-fluid">
             <div class="span10">

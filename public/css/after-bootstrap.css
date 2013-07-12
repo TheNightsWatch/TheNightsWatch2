@@ -55,11 +55,19 @@ div.container a.brand {
     overflow-x: hidden;
 }
 
-#chat-messages ol {
+.chat-messages {
+    display: none;
+}
+
+.loading {
+    background: blue;
+}
+
+.chat-messages ol {
     margin: 0;
 }
 
-#chat-messages ol li {
+.chat-messages ol li {
     list-style-type: none;
     word-wrap: break-word;
     margin: 0 0 5px 50px;
@@ -67,7 +75,7 @@ div.container a.brand {
     color: #DDD;
 }
 
-#chat-messages ol li .timestamp {
+.chat-messages ol li .timestamp {
     opacity: 0.25;
 }
 
@@ -89,4 +97,9 @@ div.container a.brand {
 #chat-viewers ol li a img {
     vertical-align: middle;
     width: 16px;
+}
+
+#chat-nav li.unread a,
+#chat-nav li.unread a:hover {
+    color: red;
 }

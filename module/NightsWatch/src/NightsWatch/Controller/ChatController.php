@@ -10,10 +10,11 @@ class ChatController extends ActionController
 {
     public function indexAction()
     {
-        if ($this->disallowRankLessThan(User::RANK_PRIVATE)) {
-            return false;
-        }
         $this->updateLayoutWithIdentity();
-        return new ViewModel([]);
+        return new ViewModel(
+            [
+                'identity' => $this->getIdentityEntity(),
+            ]
+        );
     }
 }

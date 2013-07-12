@@ -1,5 +1,51 @@
 $(document).ready(function () {
-    $('#chat-message').find('input[type=text]').focus();
+    var $chatMessage = $('#chat-message');
+    var $chatNav = $('#chat-nav');
+
+    var currentRoom;
+
+    var afterChatHasLoaded = function()
+    {
+        // Remove the Loading Stuff
+        $('#chat-message-container').removeClass('loading');
+
+        // Navigation Handling
+        $chatNav.on('click', 'li', function(e) {
+            e.preventDefault();
+
+            var $chatContainer = $('#chat-message-container');
+
+            // Mark if the active li is at the bottom of scroll
+            var $active = $chatNav.find('li.active');
+            var atBottom = atBottomOfScrollList('#chat-message-container');
+            if (atBottom) {
+                $active.data('atBottom', true);
+            } else {
+                $active.data('atBottom', false);
+                $active.data('scrollTop', $chatContainer.prop('scrollTop'));
+            }
+
+            var $this = $(this);
+            $chatNav.find('li').removeClass('active');
+            $this.addClass('active').removeClass('unread');
+
+            currentRoom = $this.data('room');
+            $('.chat-messages').hide();
+            var newRoom = $('.chat-messages.' + currentRoom);
+            newRoom.show();
+            if ($this.data('atBottom') || $this.data('atBottom') == undefined) {
+                scrollToBottom($chatContainer);
+            } else {
+                $chatContainer.prop('scrollTop', $this.data('scrollTop'));
+            }
+        });
+        $chatNav.find('.public').trigger('click');
+    };
+
+    // Auto Focus
+    $chatMessage.find('input[type=text]').focus();
+
+    // Handle Receipt of Messages
     var atBottomOfScrollList = function(selector) {
         var $obj = $(selector);
         var height = $obj.height();
@@ -11,7 +57,7 @@ $(document).ready(function () {
         var $obj = $(selector);
         $obj.prop({scrollTop: $obj.prop('scrollHeight')});
     };
-    var socket = io.connect('/');
+    var socket = io.connect('/').on('connect', afterChatHasLoaded);
     var initialLoad = true;
     socket.on('messages', function (messages) {
         var shouldScroll = initialLoad || atBottomOfScrollList('#chat-message-container');
@@ -37,13 +83,22 @@ $(document).ready(function () {
             html = html.replace(/{message}/g, data.message);
             $li.html(html).show();
 
-            $('#chat-messages').find('ol').append($li);
+            var tableClass = '.' + data.room;
+
+            var $nav = $chatNav.find(tableClass);
+            if (!$nav.hasClass('active')) {
+                $nav.addClass('unread');
+            }
+
+            $('.chat-messages' + tableClass).find('ol').append($li);
         }
         if (shouldScroll) {
             scrollToBottom('#chat-message-container');
         }
     });
-    $('#chat-message').on('submit', function (e) {
+
+    // Handle Sending a Chat Message
+    $chatMessage.on('submit', function (e) {
         console.log('submit');
         e.preventDefault();
         var $this = $(this), $text = $this.find('input[type=text]');
@@ -52,7 +107,7 @@ $(document).ready(function () {
             return;
         }
         console.log('message', $text.val());
-        socket.emit('message', $text.val());
+        socket.emit('message', { room: currentRoom, message: $text.val() });
         $text.val('');
     });
 });
