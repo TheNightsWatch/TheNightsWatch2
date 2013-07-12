@@ -41,10 +41,10 @@ function addToMessageLog(message, room) {
     messageLog[room].push(message);
 }
 
-function emitMessageLogTo(to) {
+function emitMessageLogTo(to, rooms) {
     var tempLog = [];
-    for (var i in messageLog) {
-        var messageLogRoom = messageLog[i];
+    for (var i in rooms) {
+        var messageLogRoom = messageLog[rooms[i]];
         for (var j in messageLogRoom) {
             tempLog.push(messageLogRoom[j]);
         }
@@ -66,11 +66,25 @@ function mysqlStoreMessage(data) {
 
 populateTheMessageLog();
 io.sockets.on('connection', function (socket) {
-    emitMessageLogTo(socket);
+    emitMessageLogTo(socket, ['public']);
+    socket.on('token', function (data) {
+
+    });
+    socket.on('disconnect', function (data) {
+        // tell the rooms the user was in that they are no longer there
+        var rooms = io.sockets.manager.roomClients[socket.id];
+        for (var i in rooms) {
+            var room = rooms[i];
+            if (room.substr(0, 1) == '/') {
+                // TODO fill in with user.
+                io.sockets.in(room.substr(1)).emit('leave', { user: 'TODO' });
+            }
+        }
+    });
     socket.on('message', function (data) {
         var message = { room: data.room, user: 'Navarr', time: (new Date).getTime(), message: sanitize(data.message).escape() };
         mysqlStoreMessage(data);
         addToMessageLog(message, data.room);
-        io.sockets.emit('messages', [ message ]);
+        io.sockets.in(data.room).emit('messages', [ message ]);
     });
 });
