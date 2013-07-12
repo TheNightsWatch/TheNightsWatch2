@@ -6,13 +6,13 @@ $this->headScript()->appendFile('/js/chat.js');
 ?>
 <ul class="nav nav-pills" id="chat-nav">
     <li class="public" data-room="public"><a href="#public">#public</a></li>
-    <?php if($identity->rank >= User::RANK_RECRUIT): ?>
+    <?php if(!is_null($identity) && $identity->rank >= User::RANK_RECRUIT): ?>
     <li class="recruit" data-room="recruit"><a href="#recruit">#recruit</a></li>
     <?php endif; ?>
-    <?php if($identity->rank >= User::RANK_PRIVATE): ?>
+    <?php if(!is_null($identity) && $identity->rank >= User::RANK_PRIVATE): ?>
     <li class="private" data-room="private"><a href="#private">#private</a></li>
     <?php endif; ?>
-    <?php if($identity->rank >= User::RANK_LIEUTENANT): ?>
+    <?php if(!is_null($identity) && $identity->rank >= User::RANK_LIEUTENANT): ?>
     <li class="council" data-room="council"><a href="#council">#council</a></li>
     <?php endif; ?>
 </ul>
@@ -31,7 +31,7 @@ $this->headScript()->appendFile('/js/chat.js');
             <div class="chat-messages private"><ol></ol></div>
             <div class="chat-messages council"><ol></ol></div>
         </div>
-        <form id="chat-message" class="row-fluid">
+        <form id="chat-message" class="row-fluid" <?= !is_null($identity) ? 'data-hasidentity="true"' : null ?>>
             <div class="span10">
                 <input type="text" class="span12"/>
             </div>

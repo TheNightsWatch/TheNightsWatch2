@@ -1,4 +1,5 @@
 var mysql = require('mysql'),
+    sanitize = require('validator').sanitize,
     config = require('./config.js'),
     io = require('socket.io').listen(config.port),
     mysqlConnection = mysql.createConnection({
@@ -15,7 +16,7 @@ var messageLog = {};
 function populateTheMessageLog()
 {
 
-}
+};
 
 function addToMessageLog(message, room) {
     if (messageLog[room] == undefined) {
@@ -25,7 +26,7 @@ function addToMessageLog(message, room) {
         messageLog[room].shift();
     }
     messageLog[room].push(message);
-}
+};
 
 io.sockets.on('connection', function (socket) {
     var tempLog = [];
@@ -37,7 +38,7 @@ io.sockets.on('connection', function (socket) {
     };
     socket.emit('messages', tempLog);
     socket.on('message', function (data) {
-        var message = { room: data.room, user: 'Navarr', time: (new Date).getTime(), message: data.message };
+        var message = { room: data.room, user: 'Navarr', time: (new Date).getTime(), message: sanitize(data.message).escape() };
         addToMessageLog(message, data.room);
         io.sockets.emit('messages', [ message ]);
     });

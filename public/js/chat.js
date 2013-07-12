@@ -40,6 +40,11 @@ $(document).ready(function () {
             }
         });
         $chatNav.find('.public').trigger('click');
+
+        // Determine if user can post
+        if($chatMessage.data('hasidentity')) {
+            $chatMessage.fadeIn();
+        }
     };
 
     // Auto Focus

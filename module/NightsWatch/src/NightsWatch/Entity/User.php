@@ -2,12 +2,8 @@
 
 namespace NightsWatch\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-    Zend\InputFilter\InputFilter,
-    Zend\InputFilter\Factory as InputFactory,
-    Zend\InputFilter\InputFilterAwareInterface,
-    Zend\Inputfilter\InputFilterInterface,
-    Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * A User
