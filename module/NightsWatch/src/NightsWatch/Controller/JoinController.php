@@ -2,46 +2,38 @@
 
 namespace NightsWatch\Controller;
 
-use Doctrine\ORM\EntityManager;
 use Navarr\MinecraftAPI\Exception\BadLoginException;
 use Navarr\MinecraftAPI\Exception\BasicException;
 use Navarr\MinecraftAPI\Exception\MigrationException;
 use Navarr\MinecraftAPI\MinecraftAPI;
+use NightsWatch\Authentication\ForceAdapter;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\RegisterForm;
 use NightsWatch\Form\VerifyForm;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\Authentication\Storage\Session;
 use Zend\Crypt\Password\Bcrypt;
-use Zend\Session\Container;
+use Zend\Session\Container as SessionContainer;
 use Zend\View\Model\ViewModel;
 
 class JoinController extends ActionController
 {
-    /** @var EntityManager */
-    protected $entityManager;
-
     /** @var Session */
     protected $session;
 
     public function __construct()
     {
-        $this->session = new Container('NightsWatch\register');
-    }
-
-    /**
-     * @return EntityManager
-     */
-    public function getEntityManager()
-    {
-        if (is_null($this->entityManager)) {
-            $this->entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-        }
-        return $this->entityManager;
+        parent::__construct();
+        $this->session = new SessionContainer('NightsWatch\register');
     }
 
     public function indexAction()
     {
+        if ($this->disallowMember()) {
+            return false;
+        }
+        $this->updateLayoutWithIdentity();
+
         $form = new RegisterForm();
 
         if ($this->getRequest()->isPost()) {
@@ -63,6 +55,11 @@ class JoinController extends ActionController
 
     public function verifyAction()
     {
+        if ($this->disallowMember()) {
+            return false;
+        }
+        $this->updateLayoutWithIdentity();
+
         $form = new VerifyForm();
         $errors = [];
         if (!isset($this->session->username)) {
@@ -86,6 +83,9 @@ class JoinController extends ActionController
                         $user->minecraftId = $minecraft->minecraftID;
                         $this->getEntityManager()->persist($user);
                         $this->getEntityManager()->flush();
+                        $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
+                        $this->redirect()->toRoute('home', ['controller' => 'chat']);
+                        return false;
                     }
                 } catch (\RuntimeException $e) {
                     $errors[] = "Problem querying the API";

@@ -25,15 +25,29 @@ class Adapter implements AdapterInterface
     public function authenticate()
     {
         /** @var \NightsWatch\Entity\User $user */
-        $user = $this->entityManager->getRepository('User')->findOneBy(['username' => $this->username]);
+        $user = $this->entityManager
+            ->getRepository('NightsWatch\Entity\User')
+            ->findOneBy(['username' => $this->username]);
         $bcrypt = new Bcrypt();
 
         if (is_null($user)) {
-            return Result::FAILURE_IDENTITY_NOT_FOUND;
+            return new Result(
+                Result::FAILURE_IDENTITY_NOT_FOUND,
+                [],
+                ['No Such User']
+            );
         } elseif (!$bcrypt->verify($this->password, $user->password)) {
-            return Result::FAILURE_CREDENTIAL_INVALID;
+            return new Result(
+                Result::FAILURE_CREDENTIAL_INVALID,
+                [],
+                ['Invalid Password']
+            );
         } else {
-            return Result::SUCCESS;
+            return new Result(
+                Result::SUCCESS,
+                $user->id,
+                []
+            );
         }
     }
 }

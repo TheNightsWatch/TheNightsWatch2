@@ -2,13 +2,17 @@
 
 namespace NightsWatch\Controller;
 
-use Doctrine\Common\Collections\Criteria;
-use Zend\Mvc\Controller\AbstractActionController;
+use NightsWatch\Mvc\Controller\ActionController;
+use Zend\View\Model\ViewModel;
 
-class ChatController extends AbstractActionController
+class ChatController extends ActionController
 {
     public function indexAction()
     {
-        return;
+        if ($this->disallowGuest()) {
+            return false;
+        }
+        $this->updateLayoutWithIdentity();
+        return new ViewModel([]);
     }
 }

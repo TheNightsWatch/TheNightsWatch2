@@ -23,6 +23,16 @@ return [
                     ],
                 ],
             ],
+            'logout' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '[/]logout[/]',
+                    'defaults' => [
+                        'controller' => 'site',
+                        'action' => 'logout',
+                    ],
+                ],
+            ],
             'home' => [
                 'type' => 'segment',
                 'options' => [
@@ -53,7 +63,8 @@ return [
         ],
         'factories' => [
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
-            'right-navigation' => 'NightsWatch\Navigation\Service\RightNavigationFactory',
+            'right-noauth-navigation' => 'NightsWatch\Navigation\Service\RightNoAuthNavigationFactory',
+            'right-auth-navigation' => 'NightsWatch\Navigation\Service\RightAuthNavigationFactory',
         ],
         'aliases' => [
             'translator' => 'MvcTranslator',
@@ -98,7 +109,7 @@ return [
                 'action' => 'index',
             ],
         ],
-        'right' => [
+        'right-noauth' => [
             [
                 'label' => 'Log In',
                 'route' => 'login',
@@ -107,6 +118,12 @@ return [
                 'label' => 'Register',
                 'route' => 'home',
                 'controller' => 'join',
+            ]
+        ],
+        'right-auth' => [
+            [
+                'label' => 'Log Out',
+                'route' => 'logout',
             ]
         ]
     ],

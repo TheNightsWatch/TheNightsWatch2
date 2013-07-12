@@ -7,12 +7,19 @@ use Zend\Authentication\Result;
 
 class ForceAdapter implements AdapterInterface
 {
-    public function __construct($username, $password)
+    private $id;
+
+    public function __construct($id)
     {
+        $this->id = $id;
     }
 
     public function authenticate()
     {
-        return Result::SUCCESS;
+        return new Result(
+            Result::SUCCESS,
+            $this->id,
+            []
+        );
     }
 }

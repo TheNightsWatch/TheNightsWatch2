@@ -1,4 +1,13 @@
 <?php
 /** @var Zend\View\Model\ViewModel $this */
 /** @var NightsWatch\Form\RegisterForm $form */
-echo $this->bootstrapForm($form, 'horizontal');
+/** @var array $errors */
+?>
+<?php if (count($errors)): ?>
+    <div class="alert alert-error">
+        <?php foreach ($errors as $error): ?>
+            <p><?= $error ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?= $this->bootstrapForm($form, 'horizontal'); ?>

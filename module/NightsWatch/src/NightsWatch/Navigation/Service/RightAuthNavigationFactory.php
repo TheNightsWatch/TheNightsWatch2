@@ -3,10 +3,10 @@ namespace NightsWatch\Navigation\Service;
 
 use Zend\Navigation\Service\DefaultNavigationFactory;
 
-class RightNavigationFactory extends DefaultNavigationFactory
+class RightAuthNavigationFactory extends DefaultNavigationFactory
 {
     protected function getName()
     {
-        return 'right';
+        return 'right-auth';
     }
 }
