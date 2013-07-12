@@ -55,6 +55,9 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],
     ],
     'service_manager' => [
         'abstract_factories' => [
