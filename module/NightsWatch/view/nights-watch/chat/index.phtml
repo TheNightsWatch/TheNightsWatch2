@@ -1,87 +1,16 @@
+<?php
+$this->headScript()->appendFile('/socket.io/socket.io.js');
+$this->headScript()->appendFile('/js/chat.js');
+?>
 <div class="row-fluid">
     <div class="span10">
         <div class="well well-small better-scrollbar" id="chat-message-container">
             <div id="chat-messages">
                 <ol>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
+                    <li style="display:none;" id="chat-message-template">
+                        <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
                             class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
-                    </li>
-                    <li><span class="faux-invisible">[</span><span class="timestamp">20:33</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">Navarr</a><span class="faux-invisible">&gt; </span>Some random message here.
+                            href="">{user}</a><span class="faux-invisible">&gt; </span>{message}
                     </li>
                 </ol>
             </div>

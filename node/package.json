@@ -1,0 +1,10 @@
+{
+    "name": "NightsWatch",
+    "version": "0.0.1",
+    "dependencies": {
+        "socket.io": ">= 0.9.16",
+        "mysql": ">= 2.0.0-alpha8"
+    },
+    "engine": "node 0.10.5",
+    "main": "server.js"
+}
