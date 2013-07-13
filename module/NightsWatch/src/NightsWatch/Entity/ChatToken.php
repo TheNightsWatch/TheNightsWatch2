@@ -32,7 +32,7 @@ class ChatToken
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     protected $token = null;
 
