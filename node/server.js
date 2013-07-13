@@ -151,6 +151,9 @@ io.sockets.on('connection', function (socket) {
             }
             if (rows.length) {
                 var row = rows[0];
+                if (!socketVariables[socket.id]) {
+                    socketVariables[socket.id] = {};
+                }
                 socketVariables[socket.id].username = row.username;
                 socketVariables[socket.id].rank = row.rank;
                 socketVariables[socket.id].userId = row.userId;
