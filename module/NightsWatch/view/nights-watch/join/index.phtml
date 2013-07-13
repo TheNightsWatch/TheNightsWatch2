@@ -1,4 +1,6 @@
 <?php
 /** @var Zend\View\Model\ViewModel $this */
 /** @var NightsWatch\Form\RegisterForm $form */
-echo $this->bootstrapForm($form, 'horizontal');
+?>
+<p class="alert alert-info">Simply registering is no longer joining the Watch.  You will have the ability to do that in a later step.</p>
+<?= $this->bootstrapForm($form, 'horizontal'); ?>
