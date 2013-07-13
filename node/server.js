@@ -1,16 +1,15 @@
 var mysql = require('mysql'),
-    fs = require('fs'),
-    privateKey = fs.readFileSync('../ssl/ssl.key'),
-    certificate = fs.readFileSync('../ssl/ssl-unified.crt'),
     sanitize = require('validator').sanitize,
     config = require('./config.js'),
-    io = require('socket.io').listen(config.port, {key: privateKey, cert: certificate}),
+    io = require('socket.io').listen(config.port),
     mysqlConnection = mysql.createConnection({
         host: config.mysql.server,
         user: config.mysql.username,
         database: config.mysql.database,
         password: config.mysql.password
     });
+
+io.set('log level', 1);
 
 var rooms = ['public', 'recruit', 'private', 'council'];
 
