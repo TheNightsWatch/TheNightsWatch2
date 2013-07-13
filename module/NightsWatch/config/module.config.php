@@ -113,6 +113,11 @@ return [
                 'action' => 'index',
             ],
             [
+                'label' => 'Map',
+                'route' => 'home',
+                'controller' => 'map',
+            ],
+            [
                 'label' => 'Rules of Engagement',
                 'route' => 'home',
                 'controller' => 'rules',

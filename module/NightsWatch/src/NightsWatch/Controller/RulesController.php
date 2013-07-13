@@ -8,6 +8,7 @@ class RulesController extends ActionController
 {
     public function indexAction()
     {
+        $this->updateLayoutWithIdentity();
         return;
     }
 }

@@ -6,6 +6,8 @@ $(document).ready(function () {
 
     var isActive = true;
 
+    var initialLoad = true;
+
     $(window).on('focus', function (e) {
         isActive = true;
         // clear notifications
@@ -59,6 +61,7 @@ $(document).ready(function () {
             } else {
                 $chatContainer.prop('scrollTop', $this.data('scrollTop'));
             }
+            $chatMessage.find('input[type=text]').focus();
         });
         $chatNav.find('.public').trigger('click');
 
@@ -95,11 +98,13 @@ $(document).ready(function () {
         $li.find('img').attr('src', '//minotar.net/helm/' + username + '/16.png');
         $('.chat-viewers.' + room).append($li);
     };
-    var initialLoad = true;
+
     socket.on('messages', function (messages) {
         var shouldScroll = initialLoad || atBottomOfScrollList('#chat-message-container');
         var shouldMarkUnread = !initialLoad;
-        initialLoad = false;
+        if (!$chatMessage.data('hasidentity')) {
+            initialLoad = false;
+        }
         for (var i = 0, l = messages.length; i < l; ++i) {
             data = messages[i];
 
@@ -157,12 +162,30 @@ $(document).ready(function () {
         $('#viewer-' + room + '-' + user).remove();
     });
     socket.on('verified', function() {
+        initialLoad = false;
         $chatMessage.find('input').attr('disabled', false);
         $chatMessage.find('input[type=text]').attr('placeholder', 'Type a Message...').focus();
     });
     socket.on('disconnect', function() {
         $chatMessage.find('input').attr('disabled', true);
         $chatMessage.find('input[type=text]').attr('placeholder', 'Attempt to Connect to Server...');
+    });
+    socket.on('activateChannels', function(channels) {
+        for (var i in channels) {
+            var channel = channels[i];
+            var $channelLi = $chatNav.find('.' + channel);
+            $channelLi.removeClass('hidden').hide().fadeIn().data('atBottom', true);
+        }
+    });
+    socket.on('deactivateChannels', function(channels) {
+        for (var i in channels) {
+            var channel = channels[i];
+            var $channelLi = $chatNav.find('.' + channel);
+            if ($channelLi.hasClass('active')) {
+                $chatNav.find('.public').trigger('click');
+            }
+            $channelLi.fadeOut();
+        }
     });
 
     // Handle Sending a Chat Message

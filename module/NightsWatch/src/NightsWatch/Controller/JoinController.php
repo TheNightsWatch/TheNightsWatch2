@@ -104,4 +104,13 @@ class JoinController extends ActionController
             ]
         );
     }
+
+    public function recruitAction()
+    {
+        if ($this->disallowGuest() || $this->disallowRankGreaterThan(User::RANK_CIVILIAN)) {
+            return false;
+        }
+        $this->updateLayoutWithIdentity();
+        return new ViewModel();
+    }
 }

@@ -106,4 +106,13 @@ class ActionController extends AbstractActionController
         }
         return false;
     }
+
+    protected function disallowRankGreaterThan($rank)
+    {
+        if ($this->getIdentityEntity() && $this->getIdentityEntity()->rank > $rank) {
+            $this->redirect()->toRoute('home');
+            return true;
+        }
+        return false;
+    }
 }

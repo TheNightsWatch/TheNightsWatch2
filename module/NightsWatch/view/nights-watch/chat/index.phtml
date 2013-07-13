@@ -5,18 +5,16 @@ $this->headScript()->appendFile('/socket.io/socket.io.js');
 $this->headScript()->appendFile('/js/chat.js');
 $this->headScript()->appendFile('/js/titlebar.js');
 /** @var \NightsWatch\Entity\User $identity */
+
+$recruitHidden = (is_null($identity) || $identity->rank < User::RANK_RECRUIT)    ? ' hidden' : null;
+$privateHidden = (is_null($identity) || $identity->rank < User::RANK_PRIVATE)    ? ' hidden' : null;
+$councilHidden = (is_null($identity) || $identity->rank < User::RANK_LIEUTENANT) ? ' hidden' : null;
 ?>
 <ul class="nav nav-pills" id="chat-nav">
     <li class="public" data-room="public"><a href="#public">#public</a></li>
-    <?php if (!is_null($identity) && $identity->rank >= User::RANK_RECRUIT): ?>
-        <li class="recruit" data-room="recruit"><a href="#recruit">#recruit</a></li>
-    <?php endif; ?>
-    <?php if (!is_null($identity) && $identity->rank >= User::RANK_PRIVATE): ?>
-        <li class="private" data-room="private"><a href="#private">#private</a></li>
-    <?php endif; ?>
-    <?php if (!is_null($identity) && $identity->rank >= User::RANK_LIEUTENANT): ?>
-        <li class="council" data-room="council"><a href="#council">#council</a></li>
-    <?php endif; ?>
+    <li class="recruit<?= $recruitHidden ?>" data-room="recruit"><a href="#recruit">#recruit</a></li>
+    <li class="private<?= $privateHidden ?>" data-room="private"><a href="#private">#private</a></li>
+    <li class="council<?= $councilHidden ?>" data-room="council"><a href="#council">#council</a></li>
 </ul>
 <div class="row-fluid">
     <div class="span10">
@@ -24,7 +22,7 @@ $this->headScript()->appendFile('/js/titlebar.js');
             <div id="templates" style="display:none;">
                 <ol>
                     <li id="viewer-template">
-                        <a href="{link}"><img /> {user}</a>
+                        <a href="{link}"><img/> {user}</a>
                     </li>
                     <li id="chat-message-template">
                         <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
@@ -48,7 +46,7 @@ $this->headScript()->appendFile('/js/titlebar.js');
         </div>
         <form id="chat-message" class="row-fluid" <?= !is_null($identity) ? 'data-hasidentity="true"' : null ?>>
             <div class="span10">
-                <input type="text" class="span12" disabled placeholder="Please login or register to chat" />
+                <input type="text" class="span12" disabled placeholder="Please login or register to chat"/>
             </div>
             <div class="span2">
                 <input type="submit" class="btn btn-inverse span12" disabled value="Post"/>
@@ -63,7 +61,7 @@ $this->headScript()->appendFile('/js/titlebar.js');
             <ol class="chat-viewers council"></ol>
         </div>
         <?php if (!is_null($identity) && $identity->rank < User::RANK_PRIVATE): ?>
-        <a id="joinTheWatchButton" class="btn btn-primary span12" href="/join/recruit">Join the Watch!</a>
+            <a id="joinTheWatchButton" class="btn btn-primary span12" href="/join/recruit">Join the Watch!</a>
         <?php endif; ?>
     </div>
 </div>

@@ -26,7 +26,7 @@ function populateTheMessageLog() {
                 var row = rows[j];
                 addToMessageLog({ message: sanitize(row.message).escape(), user: row.user, time: row.timestamp.getTime(), room: row.chatroom }, row.chatroom);
             }
-            if(i == rooms.length-1) {
+            if (i == rooms.length - 1) {
                 emitMessageLogTo(io.sockets);
             }
         });
@@ -73,12 +73,60 @@ function emitRoomViewersTo(to, rooms) {
 
 function mysqlStoreMessage(data) {
     var room = data.room;
-    var user = 3;
+    var user = data.userId;
     var message = data.message;
-    mysqlConnection.query("INSERT INTO chatMessage (`user_id`,`chatroom`,`message`,`timestamp`) VALUES (?, ?, ?, CURRENT_TIMESTAMP)", [user, room, message], function(err, result) {
+    mysqlConnection.query("INSERT INTO chatMessage (`user_id`,`chatroom`,`message`,`timestamp`) VALUES (?, ?, ?, CURRENT_TIMESTAMP)", [user, room, message], function (err, result) {
         if (err) {
             console.error(err);
             mysqlStoreMessage(data);
+        }
+    });
+}
+
+function updatePrivileges(socket) {
+    var info = socketVariables[socket.id];
+    mysqlConnection.query('SELECT rank, username FROM user WHERE id=?', [ info.userId ], function(err, rows) {
+        if (err) {
+            console.error(err);
+        }
+        if (rows.length < 1) {
+            socketVariables[socket.id].rank = 0;
+        } else {
+            var row = rows[0];
+            socketVariables[socket.id].rank = row.rank;
+            var channelMap = {};
+            for (var i in info.channels) {
+                channelMap[info.channels[i]] = true;
+            }
+
+            var channelTests = [['recruit', 1], ['private', 2], ['council', 1000]];
+            var activateChannels = [];
+            var deactivateChannels = [];
+            var channels = [];
+            for (var i in channelTests) {
+                var channelName = channelTests[i][0];
+                var rankTest = channelTests[i][1];
+                if (channelMap[channelName] && row.rank < rankTest) {
+                    deactivateChannels.push(channelName);
+                    io.sockets.in(channelName).emit('leave', [channelName, row.username]);
+                    socket.leave(channelName);
+                } else if (!channelMap[channelName] && row.rank >= rankTest) {
+                    channels.push(channelName);
+                    socket.join(channelName);
+                    io.sockets.in(channelName).emit('join', [channelName, row.username]);
+                    activateChannels.push(channelName);
+                }
+                if (row.rank >= rankTest) {
+                    channels.push(channelName);
+                }
+            }
+            socketVariables[socket.id].channels = channels;
+            if (activateChannels.length) {
+                socket.emit('activateChannels', activateChannels);
+            }
+            if (deactivateChannels.length) {
+                socket.emit('deactivateChannels', deactivateChannels);
+            }
         }
     });
 }
@@ -90,8 +138,8 @@ io.sockets.on('connection', function (socket) {
     emitRoomViewersTo(socket, ['public']);
     socket.join('public');
     socket.on('token', function (data) {
-        mysqlConnection.query("SELECT user.username AS username, user.rank AS rank FROM chatToken LEFT JOIN user ON(chatToken.user_id=user.id) WHERE chatToken.token LIKE ? AND chatToken.expires > CURRENT_TIMESTAMP", [data], function(err, rows) {
-            mysqlConnection.query("DELETE FROM `chatToken` WHERE `token` = ? OR `expires` < CURRENT_TIMESTAMP", [data], function(err, result) {
+        mysqlConnection.query("SELECT user.username AS username, user.rank AS rank, user.id AS userId FROM chatToken LEFT JOIN user ON(chatToken.user_id=user.id) WHERE chatToken.token LIKE ? AND chatToken.expires > CURRENT_TIMESTAMP", [data], function (err, rows) {
+            mysqlConnection.query("DELETE FROM `chatToken` WHERE `token` = ? OR `expires` < CURRENT_TIMESTAMP", [data], function (err, result) {
                 if (err) {
                     console.error(err);
                 }
@@ -103,6 +151,7 @@ io.sockets.on('connection', function (socket) {
                 var row = rows[0];
                 socketVariables[socket.id].username = row.username;
                 socketVariables[socket.id].rank = row.rank;
+                socketVariables[socket.id].userId = row.userId;
                 // Subscribe to Channels
                 var channels = [];
                 io.sockets.in('public').emit('join', ['public', row.username]);
@@ -121,8 +170,9 @@ io.sockets.on('connection', function (socket) {
                     socket.join('council');
                     io.sockets.in('recruit').emit('join', ['council', row.username]);
                 }
-                socket.emit('verified');
+                socketVariables[socket.id].channels = channels;
                 emitMessageLogTo(socket, channels);
+                socket.emit('verified');
                 emitRoomViewersTo(socket, channels);
             } else {
                 console.log('Bad Token ', data);
@@ -144,11 +194,21 @@ io.sockets.on('connection', function (socket) {
         delete socketVariables[socket.id];
     });
     socket.on('message', function (data) {
-        if (!socketVariables[socket.id].username) {
+        var info = socketVariables[socket.id];
+        if (!info.username) {
+            return;
+        }
+        var room = data.room.toLowerCase();
+        if ((room == 'recruit' && info.rank < 1) ||
+            (room == 'private' && info.rank < 2) ||
+            (room == 'council' && info.rank < 1000)
+            ) {
             return;
         }
         var message = { room: data.room, user: socketVariables[socket.id].username, time: (new Date).getTime(), message: sanitize(data.message).escape() };
+        data.userId = info.userId;
         mysqlStoreMessage(data);
+        updatePrivileges(socket);
         addToMessageLog(message, data.room);
         io.sockets.in(data.room).emit('messages', [ message ]);
     });
