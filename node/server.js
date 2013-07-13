@@ -24,9 +24,13 @@ function populateTheMessageLog() {
             if (err) {
                 console.error(err);
             }
+            var tempLog = [];
             for (var j in rows) {
                 var row = rows[j];
-                addToMessageLog({ message: sanitize(row.message).escape(), user: row.user, time: row.timestamp.getTime(), room: row.chatroom }, row.chatroom);
+                tempLog.unshift({ message: sanitize(row.message).escape(), user: row.user, time: row.timestamp.getTime(), room: row.chatroom });
+            }
+            for (var j in tempLog) {
+                addToMessageLog(tempLog[j], tempLog[j].room);
             }
             if (i == rooms.length - 1) {
                 emitMessageLogTo(io.sockets);
