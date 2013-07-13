@@ -42,7 +42,7 @@ function addToMessageLog(message, room) {
     if (messageLog[room].length >= 20) {
         messageLog[room].shift();
     }
-    messageLog[room].push(message);
+    messageLog[room].unshift(message);
 }
 
 function emitMessageLogTo(to, rooms) {
