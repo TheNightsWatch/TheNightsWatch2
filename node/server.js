@@ -54,6 +54,23 @@ function emitMessageLogTo(to, rooms) {
     to.emit('messages', tempLog);
 }
 
+function emitRoomViewersTo(to, rooms) {
+    var message = {};
+    for (var roomI in rooms) {
+        var room = rooms[roomI];
+        message[room] = [];
+        var clients = io.sockets.clients(room);
+        for (var clientI in clients) {
+            var client = clients[clientI];
+            var info = socketVariables[client.id];
+            if (info.username != undefined) {
+                message[room].push(info.username);
+            }
+        }
+    }
+    to.emit('members', message);
+}
+
 function mysqlStoreMessage(data) {
     var room = data.room;
     var user = 3;
@@ -70,6 +87,7 @@ populateTheMessageLog();
 io.sockets.on('connection', function (socket) {
     socketVariables[socket.id] = {};
     emitMessageLogTo(socket, ['public']);
+    emitRoomViewersTo(socket, ['public']);
     socket.join('public');
     socket.on('token', function (data) {
         mysqlConnection.query("SELECT user.username AS username, user.rank AS rank FROM chatToken LEFT JOIN user ON(chatToken.user_id=user.id) WHERE chatToken.token LIKE ? AND chatToken.expires > CURRENT_TIMESTAMP", [data], function(err, rows) {
@@ -87,19 +105,25 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].rank = row.rank;
                 // Subscribe to Channels
                 var channels = [];
+                io.sockets.in('public').emit('join', ['public', row.username]);
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
                     socket.join('recruit');
+                    io.sockets.in('recruit').emit('join', ['recruit', row.username]);
                 }
                 if (row.rank >= 2) { // private+
                     channels.push('private');
                     socket.join('private');
+                    io.sockets.in('recruit').emit('join', ['private', row.username]);
                 }
                 if (row.rank >= 1000) { // lieutenant+
                     channels.push('council');
                     socket.join('council');
+                    io.sockets.in('recruit').emit('join', ['council', row.username]);
                 }
+                socket.emit('verified');
                 emitMessageLogTo(socket, channels);
+                emitRoomViewersTo(socket, channels);
             } else {
                 console.log('Bad Token ', data);
             }
@@ -109,17 +133,21 @@ io.sockets.on('connection', function (socket) {
         // tell the rooms the user was in that they are no longer there
         var rooms = io.sockets.manager.roomClients[socket.id];
         console.log(rooms);
-        for (var i in rooms) {
-            var room = i;
+        for (var room in rooms) {
             if (room.substr(0, 1) == '/') {
                 // TODO fill in with user.
-                io.sockets.in(room.substr(1)).emit('leave', { user: 'TODO' });
+                if (socketVariables[socket.id].username) {
+                    io.sockets.in(room.substr(1)).emit('leave', [room.substr(1), socketVariables[socket.id].username]);
+                }
             }
         }
         delete socketVariables[socket.id];
     });
     socket.on('message', function (data) {
-        var message = { room: data.room, user: 'Navarr', time: (new Date).getTime(), message: sanitize(data.message).escape() };
+        if (!socketVariables[socket.id].username) {
+            return;
+        }
+        var message = { room: data.room, user: socketVariables[socket.id].username, time: (new Date).getTime(), message: sanitize(data.message).escape() };
         mysqlStoreMessage(data);
         addToMessageLog(message, data.room);
         io.sockets.in(data.room).emit('messages', [ message ]);

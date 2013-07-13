@@ -43,7 +43,6 @@ div.container a.brand {
 
 #chat-message {
     margin-bottom: 0;
-    display: none;
 }
 
 #chat-message input {
@@ -56,12 +55,14 @@ div.container a.brand {
     overflow-x: hidden;
 }
 
-.chat-messages {
+.chat-messages, .chat-viewers {
     display: none;
 }
 
 .loading {
-    background: blue;
+    background-image: url('/img/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 .chat-messages ol {
@@ -103,4 +104,8 @@ div.container a.brand {
 #chat-nav li.unread a,
 #chat-nav li.unread a:hover {
     color: red;
+}
+
+#joinTheWatchButton {
+    margin-left: 0px;
 }

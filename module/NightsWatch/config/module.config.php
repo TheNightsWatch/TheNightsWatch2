@@ -9,6 +9,7 @@ return [
             'Map' => 'NightsWatch\Controller\MapController',
             'Chat' => 'NightsWatch\Controller\ChatController',
             'Join' => 'NightsWatch\Controller\JoinController',
+            'Rules' => 'NightsWatch\Controller\RulesController',
         ],
     ],
     'router' => [
@@ -110,6 +111,11 @@ return [
                 'route' => 'home',
                 'controller' => 'chat',
                 'action' => 'index',
+            ],
+            [
+                'label' => 'Rules of Engagement',
+                'route' => 'home',
+                'controller' => 'rules',
             ],
         ],
         'right-noauth' => [

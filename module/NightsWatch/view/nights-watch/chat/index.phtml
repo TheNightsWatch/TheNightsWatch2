@@ -1,5 +1,6 @@
 <?php
 use NightsWatch\Entity\User;
+
 $this->headScript()->appendFile('/socket.io/socket.io.js');
 $this->headScript()->appendFile('/js/chat.js');
 $this->headScript()->appendFile('/js/titlebar.js');
@@ -7,47 +8,63 @@ $this->headScript()->appendFile('/js/titlebar.js');
 ?>
 <ul class="nav nav-pills" id="chat-nav">
     <li class="public" data-room="public"><a href="#public">#public</a></li>
-    <?php if(!is_null($identity) && $identity->rank >= User::RANK_RECRUIT): ?>
-    <li class="recruit" data-room="recruit"><a href="#recruit">#recruit</a></li>
+    <?php if (!is_null($identity) && $identity->rank >= User::RANK_RECRUIT): ?>
+        <li class="recruit" data-room="recruit"><a href="#recruit">#recruit</a></li>
     <?php endif; ?>
-    <?php if(!is_null($identity) && $identity->rank >= User::RANK_PRIVATE): ?>
-    <li class="private" data-room="private"><a href="#private">#private</a></li>
+    <?php if (!is_null($identity) && $identity->rank >= User::RANK_PRIVATE): ?>
+        <li class="private" data-room="private"><a href="#private">#private</a></li>
     <?php endif; ?>
-    <?php if(!is_null($identity) && $identity->rank >= User::RANK_LIEUTENANT): ?>
-    <li class="council" data-room="council"><a href="#council">#council</a></li>
+    <?php if (!is_null($identity) && $identity->rank >= User::RANK_LIEUTENANT): ?>
+        <li class="council" data-room="council"><a href="#council">#council</a></li>
     <?php endif; ?>
 </ul>
 <div class="row-fluid">
     <div class="span10">
         <div class="well well-small better-scrollbar loading" id="chat-message-container">
             <div id="templates" style="display:none;">
-                <li id="chat-message-template">
-                    <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
-                        class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                        href="">{user}</a><span class="faux-invisible">&gt; </span>{message}
-                </li>
+                <ol>
+                    <li id="viewer-template">
+                        <a href="{link}"><img /> {user}</a>
+                    </li>
+                    <li id="chat-message-template">
+                        <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
+                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
+                            href="">{user}</a><span class="faux-invisible">&gt; </span>{message}
+                    </li>
+                </ol>
             </div>
-            <div class="chat-messages public"><ol></ol></div>
-            <div class="chat-messages recruit"><ol></ol></div>
-            <div class="chat-messages private"><ol></ol></div>
-            <div class="chat-messages council"><ol></ol></div>
+            <div class="chat-messages public">
+                <ol></ol>
+            </div>
+            <div class="chat-messages recruit">
+                <ol></ol>
+            </div>
+            <div class="chat-messages private">
+                <ol></ol>
+            </div>
+            <div class="chat-messages council">
+                <ol></ol>
+            </div>
         </div>
         <form id="chat-message" class="row-fluid" <?= !is_null($identity) ? 'data-hasidentity="true"' : null ?>>
             <div class="span10">
-                <input type="text" class="span12"/>
+                <input type="text" class="span12" disabled placeholder="Please login or register to chat" />
             </div>
             <div class="span2">
-                <input type="submit" class="btn btn-inverse span12" value="Post"/>
+                <input type="submit" class="btn btn-inverse span12" disabled value="Post"/>
             </div>
         </form>
     </div>
     <div class="span2 hidden-phone hidden-print">
         <div class="well well-small better-scrollbar" id="chat-viewers">
-            <ol>
-                <li><a href=""><img src="//minotar.net/helm/Navarr/16.png"/> Navarr</a></li>
-                <li><a href=""><img src="//minotar.net/helm/sssdl4/16.png"/> sssdl4</a></li>
-            </ol>
+            <ol class="chat-viewers public"></ol>
+            <ol class="chat-viewers recruit"></ol>
+            <ol class="chat-viewers private"></ol>
+            <ol class="chat-viewers council"></ol>
         </div>
+        <?php if (!is_null($identity) && $identity->rank < User::RANK_PRIVATE): ?>
+        <a id="joinTheWatchButton" class="btn btn-primary span12" href="/join/recruit">Join the Watch!</a>
+        <?php endif; ?>
     </div>
 </div>
 

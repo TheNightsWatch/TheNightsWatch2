@@ -89,6 +89,12 @@ class User
      */
     protected $joined = null;
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $deniedJoin = false;
+
     public static function getRankNames()
     {
         return [

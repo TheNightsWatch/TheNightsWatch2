@@ -50,7 +50,9 @@ $(document).ready(function () {
 
             currentRoom = $this.data('room');
             $('.chat-messages').hide();
+            $('.chat-viewers').hide();
             var newRoom = $('.chat-messages.' + currentRoom);
+            $('.chat-viewers.' + currentRoom).show();
             newRoom.show();
             if ($this.data('atBottom') || $this.data('atBottom') == undefined) {
                 scrollToBottom($chatContainer);
@@ -62,6 +64,7 @@ $(document).ready(function () {
 
         // Determine if user can post
         if ($chatMessage.data('hasidentity')) {
+            $chatMessage.find('input[type=text]').attr('placeholder', 'Verifying Identity...');
             $chatMessage.fadeIn();
         }
     };
@@ -82,6 +85,16 @@ $(document).ready(function () {
         $obj.prop({scrollTop: $obj.prop('scrollHeight')});
     };
     var socket = io.connect('/').on('connect', afterChatHasLoaded);
+    var addUserToRoom = function (room, username) {
+        var $li = $('#viewer-template').clone();
+        $li.attr('id', 'viewer-' + room + '-' + username);
+        var html = $li.html();
+        html = html.replace(/{link}/g, '#');
+        html = html.replace(/{user}/g, username);
+        $li.html(html);
+        $li.find('img').attr('src', '//minotar.net/helm/' + username + '/16.png');
+        $('.chat-viewers.' + room).append($li);
+    };
     var initialLoad = true;
     socket.on('messages', function (messages) {
         var shouldScroll = initialLoad || atBottomOfScrollList('#chat-message-container');
@@ -91,6 +104,7 @@ $(document).ready(function () {
             data = messages[i];
 
             var $li = $('#chat-message-template').clone();
+            $li.attr('id', '');
             var html = $li.html();
             var date = new Date();
             date.setTime(data.time);
@@ -123,17 +137,41 @@ $(document).ready(function () {
             scrollToBottom('#chat-message-container');
         }
     });
+    socket.on('members', function (rooms) {
+        for (var room in rooms) {
+            $('.chat-viewers.' + room).html('');
+            for (var i in rooms[room]) {
+                var viewer = rooms[room][i];
+                addUserToRoom(room, viewer);
+            }
+        }
+    });
+    socket.on('join', function (data) {
+        var room = data[0];
+        var user = data[1];
+        addUserToRoom(room, user);
+    });
+    socket.on('leave', function (data) {
+        var room = data[0];
+        var user = data[1];
+        $('#viewer-' + room + '-' + user).remove();
+    });
+    socket.on('verified', function() {
+        $chatMessage.find('input').attr('disabled', false);
+        $chatMessage.find('input[type=text]').attr('placeholder', 'Type a Message...').focus();
+    });
+    socket.on('disconnect', function() {
+        $chatMessage.find('input').attr('disabled', true);
+        $chatMessage.find('input[type=text]').attr('placeholder', 'Attempt to Connect to Server...');
+    });
 
     // Handle Sending a Chat Message
     $chatMessage.on('submit', function (e) {
-        console.log('submit');
         e.preventDefault();
         var $this = $(this), $text = $this.find('input[type=text]');
         if ($text.val().trim() == '') {
-            console.log('bad value');
             return;
         }
-        console.log('message', $text.val());
         socket.emit('message', { room: currentRoom, message: $text.val() });
         $text.val('');
     });
