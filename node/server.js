@@ -178,14 +178,13 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('verified');
                 emitRoomViewersTo(socket, channels);
             } else {
-                console.log('Bad Token ', data);
+                console.error('Bad Token ', data);
             }
         });
     });
     socket.on('disconnect', function (data) {
         // tell the rooms the user was in that they are no longer there
         var rooms = io.sockets.manager.roomClients[socket.id];
-        console.log(rooms);
         for (var room in rooms) {
             if (room.substr(0, 1) == '/') {
                 // TODO fill in with user.
