@@ -150,6 +150,9 @@ function userJoin(socket, room) {
     if (!info.username) {
         return;
     }
+    if (!chatViewers.hasOwnProperty(room)) {
+        chatViewers[room] = {};
+    }
     if (chatViewers[room].hasOwnProperty(info.username)) {
         chatViewers[room][info.username]++;
     } else {
