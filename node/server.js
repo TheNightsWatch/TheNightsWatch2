@@ -202,7 +202,6 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].userId = row.userId;
                 // Subscribe to Channels
                 var channels = [];
-                io.sockets.in('public').emit('join', ['public', row.username]);
                 userJoin(socket, 'public');
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
