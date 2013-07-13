@@ -66,11 +66,13 @@ function emitRoomViewersTo(to, rooms) {
         var room = rooms[roomI];
         message[room] = [];
         var clients = io.sockets.clients(room);
+        var checked = {};
         for (var clientI in clients) {
             var client = clients[clientI];
             var info = socketVariables[client.id];
-            if (info.username != undefined) {
+            if (info.username != undefined && !checked[info.username]) {
                 message[room].push(info.username);
+                checked[info.username] = true;
             }
         }
     }
@@ -192,10 +194,22 @@ io.sockets.on('connection', function (socket) {
         // tell the rooms the user was in that they are no longer there
         var rooms = io.sockets.manager.roomClients[socket.id];
         for (var room in rooms) {
-            if (room.substr(0, 1) == '/') {
+            var room = room.substr(1);
+            if (room == '/') {
                 // TODO fill in with user.
-                if (socketVariables[socket.id].username) {
-                    io.sockets.in(room.substr(1)).emit('leave', [room.substr(1), socketVariables[socket.id].username]);
+                var count = 0;
+                var clients = io.sockets.clients(room);
+                for (var clientI in clients) {
+                    var client =  clients[clientI];
+                    if (!socketVariables[client.id] || !socketVariables[client.id].username) {
+                        continue;
+                    }
+                    if (socketVariables[client.id].username.toLowerCase() == socketVariables[socket.id].username.toLowerCase()) {
+                        ++count;
+                    }
+                }
+                if (count <= 1) {
+                    io.sockets.in(room).emit('leave', [room, socketVariables[socket.id].username]);
                 }
             }
         }
