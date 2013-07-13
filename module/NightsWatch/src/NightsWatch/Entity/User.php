@@ -43,7 +43,7 @@ class User
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     protected $username;
 
@@ -55,7 +55,7 @@ class User
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     protected $minecraftId;
 
