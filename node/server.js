@@ -167,6 +167,9 @@ function userLeave(socket, room) {
     if (!info.username) {
         return;
     }
+    if (!chatViewers.hasOwnProperty(room)) {
+        chatViewers[room] = {};
+    }
     if (chatViewers[room].hasOwnProperty(info.username)) {
         chatViewers[room][info.username]--;
         if (chatViewers[room][info.username] < 1) {
@@ -228,8 +231,9 @@ io.sockets.on('connection', function (socket) {
         // tell the rooms the user was in that they are no longer there
         var rooms = io.sockets.manager.roomClients[socket.id];
         for (var room in rooms) {
+            var isRoom = room.substr(0, 1) == '/';
             var room = room.substr(1);
-            if (room == '/') {
+            if (isRoom) {
                 userLeave(socket, room);
             }
         }
