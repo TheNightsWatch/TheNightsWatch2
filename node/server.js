@@ -1,7 +1,10 @@
 var mysql = require('mysql'),
+    fs = require('fs'),
+    privateKey = fs.readFileSync('../ssl/ssl.key'),
+    certificate = fs.readFileSync('../ssl/ssl-unified.crt'),
     sanitize = require('validator').sanitize,
     config = require('./config.js'),
-    io = require('socket.io').listen(config.port),
+    io = require('socket.io').listen(config.port, {key: privateKey, cert: certificate}),
     mysqlConnection = mysql.createConnection({
         host: config.mysql.server,
         user: config.mysql.username,
