@@ -22,6 +22,9 @@ class ChatController extends ActionController
 
     public function tokenAction()
     {
+        if ($this->disallowGuest()) {
+            return false;
+        }
         $em = $this->getEntityManager();
         $token = new ChatToken();
         $token->user = $this->getIdentityEntity();

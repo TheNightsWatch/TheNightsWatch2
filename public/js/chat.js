@@ -6,21 +6,30 @@ $(document).ready(function () {
 
     var isActive = true;
 
-    $(window).on('focus', function(e) {
+    $(window).on('focus', function (e) {
         isActive = true;
         // clear notifications
     });
-    $(window).on('blur', function(e) {
+    $(window).on('blur', function (e) {
         isActive = false;
     });
 
-    var afterChatHasLoaded = function()
-    {
+    var afterChatHasLoaded = function () {
         // Remove the Loading Stuff
         $('#chat-message-container').removeClass('loading');
 
+        $
+            .ajax({
+                url: '/chat/token',
+                type: 'GET',
+                dataType: 'json'
+            })
+            .success(function (data) {
+                socket.emit('token', data.token);
+            });
+
         // Navigation Handling
-        $chatNav.on('click', 'li', function(e) {
+        $chatNav.on('click', 'li', function (e) {
             e.preventDefault();
 
             var $chatContainer = $('#chat-message-container');
@@ -52,7 +61,7 @@ $(document).ready(function () {
         $chatNav.find('.public').trigger('click');
 
         // Determine if user can post
-        if($chatMessage.data('hasidentity')) {
+        if ($chatMessage.data('hasidentity')) {
             $chatMessage.fadeIn();
         }
     };
@@ -61,14 +70,14 @@ $(document).ready(function () {
     $chatMessage.find('input[type=text]').focus();
 
     // Handle Receipt of Messages
-    var atBottomOfScrollList = function(selector) {
+    var atBottomOfScrollList = function (selector) {
         var $obj = $(selector);
         var height = $obj.height();
         var scrollHeight = $obj.prop('scrollHeight');
         var margins = parseInt($obj.css('margin-top'), 10) + parseInt($obj.css('margin-bottom'));
         return scrollHeight - height - margins <= $obj.prop('scrollTop');
     };
-    var scrollToBottom = function(selector) {
+    var scrollToBottom = function (selector) {
         var $obj = $(selector);
         $obj.prop({scrollTop: $obj.prop('scrollHeight')});
     };

@@ -13,6 +13,8 @@ var rooms = ['public', 'recruit', 'private', 'council'];
 
 var messageLog = {};
 
+var socketVariables = {};
+
 function populateTheMessageLog() {
     for (var i in rooms) {
         var room = rooms[i];
@@ -66,20 +68,55 @@ function mysqlStoreMessage(data) {
 
 populateTheMessageLog();
 io.sockets.on('connection', function (socket) {
+    socketVariables[socket.id] = {};
     emitMessageLogTo(socket, ['public']);
+    socket.join('public');
     socket.on('token', function (data) {
-
+        mysqlConnection.query("SELECT user.username AS username, user.rank AS rank FROM chatToken LEFT JOIN user ON(chatToken.user_id=user.id) WHERE chatToken.token LIKE ? AND chatToken.expires > CURRENT_TIMESTAMP", [data], function(err, rows) {
+            mysqlConnection.query("DELETE FROM `chatToken` WHERE `token` = ? OR `expires` < CURRENT_TIMESTAMP", [data], function(err, result) {
+                if (err) {
+                    console.error(err);
+                }
+            });
+            if (err) {
+                console.error(err);
+            }
+            if (rows.length) {
+                var row = rows[0];
+                socketVariables[socket.id].username = row.username;
+                socketVariables[socket.id].rank = row.rank;
+                // Subscribe to Channels
+                var channels = [];
+                if (row.rank >= 1) { // recruit+
+                    channels.push('recruit');
+                    socket.join('recruit');
+                }
+                if (row.rank >= 2) { // private+
+                    channels.push('private');
+                    socket.join('private');
+                }
+                if (row.rank >= 1000) { // lieutenant+
+                    channels.push('council');
+                    socket.join('council');
+                }
+                emitMessageLogTo(socket, channels);
+            } else {
+                console.log('Bad Token ', data);
+            }
+        });
     });
     socket.on('disconnect', function (data) {
         // tell the rooms the user was in that they are no longer there
         var rooms = io.sockets.manager.roomClients[socket.id];
+        console.log(rooms);
         for (var i in rooms) {
-            var room = rooms[i];
+            var room = i;
             if (room.substr(0, 1) == '/') {
                 // TODO fill in with user.
                 io.sockets.in(room.substr(1)).emit('leave', { user: 'TODO' });
             }
         }
+        delete socketVariables[socket.id];
     });
     socket.on('message', function (data) {
         var message = { room: data.room, user: 'Navarr', time: (new Date).getTime(), message: sanitize(data.message).escape() };
