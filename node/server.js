@@ -17,6 +17,9 @@ var messageLog = {};
 
 var socketVariables = {};
 
+/** chatViewers[chatroom][user] = true **/
+var chatViewers = {};
+
 function populateTheMessageLog() {
     for (var i in rooms) {
         var room = rooms[i];
@@ -93,7 +96,7 @@ function mysqlStoreMessage(data) {
 
 function updatePrivileges(socket) {
     var info = socketVariables[socket.id];
-    mysqlConnection.query('SELECT rank, username FROM user WHERE id=?', [ info.userId ], function(err, rows) {
+    mysqlConnection.query('SELECT rank, username FROM user WHERE id=?', [ info.userId ], function (err, rows) {
         if (err) {
             console.error(err);
         }
@@ -107,7 +110,11 @@ function updatePrivileges(socket) {
                 channelMap[info.channels[i]] = true;
             }
 
-            var channelTests = [['recruit', 1], ['private', 2], ['council', 1000]];
+            var channelTests = [
+                ['recruit', 1],
+                ['private', 2],
+                ['council', 1000]
+            ];
             var activateChannels = [];
             var deactivateChannels = [];
             var channels = [];
@@ -116,12 +123,10 @@ function updatePrivileges(socket) {
                 var rankTest = channelTests[i][1];
                 if (channelMap[channelName] && row.rank < rankTest) {
                     deactivateChannels.push(channelName);
-                    io.sockets.in(channelName).emit('leave', [channelName, row.username]);
-                    socket.leave(channelName);
+                    userLeave(socket, channelName);
                 } else if (!channelMap[channelName] && row.rank >= rankTest) {
                     channels.push(channelName);
-                    socket.join(channelName);
-                    io.sockets.in(channelName).emit('join', [channelName, row.username]);
+                    userJoin(socket, channelName);
                     activateChannels.push(channelName);
                 }
                 if (row.rank >= rankTest) {
@@ -137,6 +142,35 @@ function updatePrivileges(socket) {
             }
         }
     });
+}
+
+function userJoin(socket, room) {
+    socket.join(room);
+    var info = socketVariables[socket.id];
+    if (!info.username) {
+        return;
+    }
+    if (chatViewers[room].hasOwnProperty(info.username)) {
+        chatViewers[room][info.username]++;
+    } else {
+        io.sockets.in(room).emit('join', [room, info.username]);
+        chatViewers[room][info.username] = 1;
+    }
+}
+
+function userLeave(socket, room) {
+    socket.leave(room);
+    var info = socketVariables[socket.id];
+    if (!info.username) {
+        return;
+    }
+    if (chatViewers[room].hasOwnProperty(info.username)) {
+        chatViewers[room][info.username]--;
+        if (chatViewers[room][info.username] < 1) {
+            io.sockets.in(room).emit('leave', [room, info.username]);
+            delete chatViewers[room][info.username];
+        }
+    }
 }
 
 populateTheMessageLog();
@@ -166,20 +200,18 @@ io.sockets.on('connection', function (socket) {
                 // Subscribe to Channels
                 var channels = [];
                 io.sockets.in('public').emit('join', ['public', row.username]);
+                userJoin(socket, 'public');
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
-                    socket.join('recruit');
-                    io.sockets.in('recruit').emit('join', ['recruit', row.username]);
+                    userJoin(socket, 'recruit');
                 }
                 if (row.rank >= 2) { // private+
                     channels.push('private');
-                    socket.join('private');
-                    io.sockets.in('recruit').emit('join', ['private', row.username]);
+                    userJoin(socket, 'private');
                 }
                 if (row.rank >= 1000) { // lieutenant+
                     channels.push('council');
-                    socket.join('council');
-                    io.sockets.in('recruit').emit('join', ['council', row.username]);
+                    userJoin(socket, 'council');
                 }
                 socketVariables[socket.id].channels = channels;
                 emitMessageLogTo(socket, channels);
@@ -196,21 +228,7 @@ io.sockets.on('connection', function (socket) {
         for (var room in rooms) {
             var room = room.substr(1);
             if (room == '/') {
-                // TODO fill in with user.
-                var count = 0;
-                var clients = io.sockets.clients(room);
-                for (var clientI in clients) {
-                    var client =  clients[clientI];
-                    if (!socketVariables[client.id] || !socketVariables[client.id].username) {
-                        continue;
-                    }
-                    if (socketVariables[client.id].username.toLowerCase() == socketVariables[socket.id].username.toLowerCase()) {
-                        ++count;
-                    }
-                }
-                if (count <= 1) {
-                    io.sockets.in(room).emit('leave', [room, socketVariables[socket.id].username]);
-                }
+                userLeave(socket, room);
             }
         }
         delete socketVariables[socket.id];
