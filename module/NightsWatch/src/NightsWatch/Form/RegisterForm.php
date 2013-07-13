@@ -180,12 +180,6 @@ class RegisterForm extends Form
                             ],
                         ],
                         [
-                            'name' => 'Alpha',
-                            'options' => [
-                                'allowWhiteSpace' => false,
-                            ],
-                        ],
-                        [
                             'name' => 'NightsWatch\Validator\MinecraftUsername',
                         ],
                     ]
