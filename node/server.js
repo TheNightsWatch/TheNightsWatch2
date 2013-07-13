@@ -20,7 +20,7 @@ var socketVariables = {};
 function populateTheMessageLog() {
     for (var i in rooms) {
         var room = rooms[i];
-        mysqlConnection.query('SELECT `chatroom`,`timestamp`,`message`,`user`.`username` AS `user` FROM `chatMessage` LEFT JOIN `user` ON(`user`.`id`=`chatMessage`.`user_id`) WHERE chatroom = ? ORDER BY chatMessage.timestamp DESC LIMIT 20', [room], function (err, rows) {
+        mysqlConnection.query('SELECT `chatroom`,`timestamp`,`message`,`user`.`username` AS `user` FROM `chatMessage` LEFT JOIN `user` ON(`user`.`id`=`chatMessage`.`user_id`) WHERE chatroom = ? ORDER BY chatMessage.timestamp DESC, id DESC LIMIT 20', [room], function (err, rows) {
             if (err) {
                 console.error(err);
             }
@@ -50,7 +50,7 @@ function emitMessageLogTo(to, rooms) {
     for (var i in rooms) {
         var messageLogRoom = messageLog[rooms[i]];
         for (var j in messageLogRoom) {
-            tempLog.unshift(messageLogRoom[j]);
+            tempLog.push(messageLogRoom[j]);
         }
     }
     to.emit('messages', tempLog);
