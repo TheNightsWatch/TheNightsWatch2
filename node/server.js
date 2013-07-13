@@ -50,7 +50,7 @@ function emitMessageLogTo(to, rooms) {
     for (var i in rooms) {
         var messageLogRoom = messageLog[rooms[i]];
         for (var j in messageLogRoom) {
-            tempLog.unshift(messageLogRoom[j]);
+            tempLog.push(messageLogRoom[j]);
         }
     }
     to.emit('messages', tempLog);
