@@ -61,7 +61,7 @@ class JoinController extends ActionController
 
         $form = new VerifyForm();
         $errors = [];
-        if (!isset($this->session->username)) {
+        if (!isset($this->session->username) || !isset($this->session->password) || !isset($this->session->email)) {
             $this->redirect()->toRoute('home', ['controller' => 'join', 'action' => 'index']);
         } elseif ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
