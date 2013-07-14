@@ -33,6 +33,10 @@ class User
     const RANK_RECRUIT = 1;
     const RANK_CIVILIAN = 0;
 
+    const ORDER_STEWARD = 0;
+    const ORDER_RANGER = 1;
+    const ORDER_BUILDER = 2;
+
     /**
      * @var int
      * @ORM\Id
@@ -94,6 +98,12 @@ class User
      * @ORM\Column(type="boolean")
      */
     protected $deniedJoin = false;
+
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $order = null;
 
     public static function getRankNames()
     {
