@@ -101,7 +101,7 @@ class User
 
     /**
      * @var integer
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="`order`", type="integer", nullable=true)
      */
     protected $order = null;
 
