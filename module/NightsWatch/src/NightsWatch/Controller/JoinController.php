@@ -111,6 +111,21 @@ class JoinController extends ActionController
             return false;
         }
         $this->updateLayoutWithIdentity();
-        return new ViewModel();
+        $errors = [];
+        $hasJoined = false;
+
+        if ($this->getRequest()->isPost()) {
+            $user = $this->getIdentityEntity();
+            if (!$user->deniedJoin) {
+                $user->rank = User::RANK_RECRUIT;
+                $this->getEntityManager()->persist($user);
+                $this->getEntityManager()->flush();
+                $hasJoined = true;
+            } else {
+                $errors[] = 'You do not have the ability to become a recruit.';
+            }
+        }
+
+        return new ViewModel(['errors' => $errors, 'hasJoined' => $hasJoined]);
     }
 }

@@ -1,3 +1,55 @@
-<p>The ability to rejoin the Watch as a Recruit is coming very soon.  Please be patient.</p>
-<p>While we are getting the new system up, all non-officers are granted a temporary leave from duty.</p>
-<p>Try not to do anything too bad, though - or the Officers might not let you rejoin.</p>
+<?php if (count($errors)): ?>
+    <div class="alert alert-error">
+        <?php foreach ($errors as $error): ?>
+            <p><?= $error ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?php if ($hasJoined): ?>
+    <div class="well">
+        <p>Congratulations. You are now a recruit of The Night's Watch.</p>
+
+        <p>Before you can become a full-fledged member of the Watch, however, there are a few steps you have to go
+            through.</p>
+
+        <p>You should be active in #recruit as often as possible. Lieutenants (or higher) will come around to take
+            recruits and other members out on rangings, generally with some small task they'd like you to complete.</p>
+
+        <p>During these rangings, the higher-ups will be watching you. Gaging your skill, determining how well you can
+            think, prepare, communicate, and interact with the world at large.</p>
+
+        <p>Once you've proven your skill, ability to listen to your superior officer, and that you're not bent on
+            killing everything in your path, the Council will vote to decide if you should become a full-fledged member
+            and decide which order you'll enter into (either the Stewards or the Rangers).</p>
+
+        <p>So, for the mean time, be active in #public and #recruit and hold on! A superior officer should be with you
+            soon to take you out on your first journey as a recruit of The Night's Watch!</p>
+    </div>
+    <?php return; ?>
+<?php endif; ?>
+<div class="well">
+    <p>So, you're interested in joining the Brotherhood of The Night's Watch? (If you're female, please don't let my use
+        of male terms turn you away).</p>
+
+    <p>Before I let you sign up to become a recruit, you should know that joining the Watch - while an honorable and
+        awesome thing to do - really isn't for everyone. Joining the Watch takes a real commitment from you to support
+        your character and to support the cause of the Watch.</p>
+
+    <p>What's the cause of the Watch? Well, of course the cause of the Watch is to protect the realm! We are <strong>The
+            Sword in the Darkness</strong> and all that! And while we don't agree with bandits and may kill them if
+        they're harming people around us, we don't go out of our way to hunt them down. We're not going to try to be the
+        law force of the entire world. If you want to hunt down bandits, you're better off joining another group.</p>
+
+    <p>But if you want to play alongside of a trustworthy group of friends, rank up, gain achievements and honors, and
+        just overal have a good time - you've come to the right place!</p>
+
+    <p>One last thing before you click that button - once you've clicked it, while you are not officially bound to the
+        <strong>Rules of Engagement</strong>, you <em>are</em> expected to follow them. If you haven't read up on them
+        yet, now is probably the the time to do so - before you get yourself into trouble.</p>
+
+    <p>With that out of the way, feel free to Join the Watch and become a Recruit!</p>
+
+    <form method="post" style="text-align:center;">
+        <input type="submit" class="btn btn-primary btn-large" value="Become a Recruit!"/>
+    </form>
+</div>

@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property Honor[] $honors
  * @property int $rank
  * @property bool $admin
+ * @property bool $deniedJoin If true, the user is not allowed to become a recruit
  * @property \DateTime $joined
  */
 class User
