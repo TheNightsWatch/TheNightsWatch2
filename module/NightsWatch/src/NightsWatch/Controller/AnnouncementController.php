@@ -3,6 +3,7 @@
 namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ExpressionBuilder;
 use NightsWatch\Entity\Announcement;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\AnnouncementForm;
@@ -111,7 +112,7 @@ class AnnouncementController extends ActionController
                 ->getRepository('NightsWatch\Entity\User');
 
             $criteria = Criteria::create()
-                ->where(Criteria::expr()->gt('BIT_AND(emailNotifications, ' . User::EMAIL_ANNOUNCEMENT . ')', 0))
+                ->where(Criteria::expr()->bitAnd('emailNotifications', User::EMAIL_ANNOUNCEMENT))
                 ->andWhere(Criteria::expr()->gte('rank', $announcement->lowestReadableRank));
 
             /** @var User[] $users */
