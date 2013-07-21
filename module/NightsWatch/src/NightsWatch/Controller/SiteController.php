@@ -7,6 +7,8 @@ use NightsWatch\Authentication\Adapter as AuthAdapter;
 use Zend\Authentication\Result as AuthResult;
 use NightsWatch\Mvc\Controller\ActionController;
 use NightsWatch\Form\LoginForm;
+use Zend\Authentication\Storage\Session;
+use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 class SiteController extends ActionController
@@ -44,7 +46,14 @@ class SiteController extends ActionController
                     $form->get('password')->getValue(),
                     $this->getEntityManager()
                 );
+
+                if ($form->get('rememberme')->getValue()) {
+                    $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
+                    $authNamespace->getManager()->rememberMe(2000);
+                }
+
                 $result = $this->getAuthenticationService()->authenticate($authAdapter);
+
                 switch ($result->getCode()) {
                     case AuthResult::SUCCESS:
                         $this->redirect()->toRoute('home', ['controller' => 'chat']);

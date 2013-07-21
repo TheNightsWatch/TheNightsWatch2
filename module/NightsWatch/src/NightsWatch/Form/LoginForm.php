@@ -40,6 +40,22 @@ class LoginForm extends Form
 
         $this->add(
             [
+                'name' => 'rememberme',
+                'type' => 'checkbox',
+                'attributes' => [
+                    'id' => 'rememberme',
+                ],
+                'options' => [
+                    'label' => 'Remember Me',
+                    'use_hidden_element' => true,
+                    'checked_value' => 1,
+                    'unchecked_value' => 0,
+                ]
+            ]
+        );
+
+        $this->add(
+            [
                 'name' => 'submit',
                 'attributes' => [
                     'type' => 'submit',
