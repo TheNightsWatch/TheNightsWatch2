@@ -1,0 +1,27 @@
+<?php
+/** @var \NightsWatch\Entity\Announcement $announcement */
+use Carbon\Carbon;
+
+if (!isset($useArticleLink)) {
+    $useArticleLink = true;
+}
+$date = Carbon::instance($announcement->timestamp);
+$postUrl = $this->url('id', ['controller' => 'announcement', 'action' => 'view', 'id' => $announcement->id]);
+?>
+<article class="announcement">
+    <header>
+        <h2>
+            <img alt="" src="<?= $announcement->user->getAvatar(32) ?>" class="announcement-avatar"/>
+            <?= $useArticleLink ? "<a href=\"{$postUrl}\">" : null ?>
+                <?= htmlspecialchars($announcement->title); ?>
+            <?= $useArticleLink ? '</a>' : null ?>
+        </h2>
+    </header>
+    <div class="well well-small">
+        <?= $announcement->getParsedContent(); ?>
+    </div>
+    <footer>
+        posted <time pubdate datetime="<?= $date->format(Carbon::ISO8601); ?>"><?= $date->diffForHumans() ?></time>
+        by <a rel="author"><?= htmlspecialchars($announcement->user->username) ?></a>
+    </footer>
+</article>

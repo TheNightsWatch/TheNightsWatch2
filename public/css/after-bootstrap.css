@@ -109,3 +109,39 @@ div.container a.brand {
 #joinTheWatchButton {
     margin-left: 0px;
 }
+
+.announcement-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    vertical-align: text-top;
+}
+
+article.announcement {
+    margin-bottom: 35px;
+}
+
+article.announcement .well {
+    margin-bottom: 0;
+}
+
+article.announcement footer {
+    overflow: hidden;
+    margin: 5px 0;
+    font-style: italic;
+}
+
+option {
+    background: rgb(32,32,32);
+}
+
+#announcement input[type=text],
+#announcement textarea,
+#announcement select {
+    box-sizing: content-box;
+    width: 500px;
+}
+
+#announcement textarea {
+    min-height: 300px;
+}

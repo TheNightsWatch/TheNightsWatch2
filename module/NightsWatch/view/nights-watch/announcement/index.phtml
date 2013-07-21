@@ -1,0 +1,10 @@
+<?php
+/** @var \NightsWatch\Entity\Announcement[] $announcements */
+/** @var \Zend\View\Model\ViewModel $this */
+if (!count($announcements)) {
+    echo '<p class="alert alert-info">There are no announcements viewable by your rank.</p>';
+} else {
+    foreach ($announcements as $announcement) {
+        echo $this->partial('nights-watch/announcement/partials/announcement', ['announcement' => $announcement]);
+    }
+}

@@ -1,0 +1,18 @@
+<?php
+/** @var Zend\View\Model\ViewModel $this */
+/** @var NightsWatch\Entity\User $identity */
+/** @var NightsWatch\Form\AnnouncementForm $form */
+
+if (!$form->get('preview')->getValue()) {
+    echo $this->bootstrapForm($form, 'horizontal');
+} else {
+    $tempAnnouncement = new \NightsWatch\Entity\Announcement();
+    $tempAnnouncement->timestamp = new DateTime();
+    $tempAnnouncement->user = $identity;
+    $tempAnnouncement->title = $form->get('title')->getValue();
+    $tempAnnouncement->content = $form->get('content')->getValue();
+    $form->get('title')->setAttribute('type', 'hidden');
+    $form->get('content')->setAttribute('type', 'hidden');
+    echo $this->partial('nights-watch/announcement/partials/announcement', ['announcement' => $tempAnnouncement]);
+    echo $this->bootstrapForm($form, 'horizontal');
+}

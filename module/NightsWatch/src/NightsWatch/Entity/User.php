@@ -161,4 +161,14 @@ class User
             $this->{$key} = $value;
         }
     }
+
+    public static function getAvatarForUser($username, $size = 16)
+    {
+        return "//minotar.net/helm/{$username}/{$size}.png";
+    }
+
+    public function getAvatar($size = 16)
+    {
+        return static::getAvatarForUser($this->username, $size);
+    }
 }

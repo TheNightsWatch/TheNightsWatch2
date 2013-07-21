@@ -10,14 +10,25 @@ return [
             'Chat' => 'NightsWatch\Controller\ChatController',
             'Join' => 'NightsWatch\Controller\JoinController',
             'Rules' => 'NightsWatch\Controller\RulesController',
+            'Announcement' => 'NightsWatch\Controller\AnnouncementController',
         ],
     ],
     'router' => [
         'routes' => [
+            'home' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '[/][:controller][/:action]',
+                    'defaults' => [
+                        'controller' => 'site',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
             'login' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '[/]login[/]',
+                    'route' => '/login',
                     'defaults' => [
                         'controller' => 'site',
                         'action' => 'login',
@@ -27,21 +38,22 @@ return [
             'logout' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '[/]logout[/]',
+                    'route' => '/logout',
                     'defaults' => [
                         'controller' => 'site',
                         'action' => 'logout',
                     ],
                 ],
             ],
-            'home' => [
+            'id' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '[/][:controller][/:action]',
+                    'route' => '[/]:controller/[:id][/:action]',
+                    'constraints' => [
+                        'id' => '\d+',
+                    ],
                     'defaults' => [
-                        //'__NAMESPACE__' => 'NightsWatch\Controller',
-                        'controller' => 'site',
-                        'action' => 'index',
+                        'action' => 'view',
                     ],
                 ],
             ],
@@ -110,7 +122,10 @@ return [
                 'label' => 'Chat',
                 'route' => 'home',
                 'controller' => 'chat',
-                'action' => 'index',
+            ],
+            [
+                'label' => 'Announcements',
+                'controller' => 'announcement',
             ],
             [
                 'label' => 'Map',

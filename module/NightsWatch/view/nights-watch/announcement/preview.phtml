@@ -1,0 +1,5 @@
+<p class="alert alert-info">This is a preview of the announcement you are about to create.  It will not be published until you press the "Publish" button at the bottom.</p>
+<?= $this->partial('nights-watch/announcement/partials/announcement', ['announcement' => $announcement, 'useArticleLink' => false]); ?>
+<form method="post">
+    <input type="submit" value="Publish" class="btn btn-primary" />
+</form>
