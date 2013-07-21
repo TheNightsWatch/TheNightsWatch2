@@ -20,7 +20,7 @@ String.prototype.markdown2html = function () {
     // Auto-detect links and convert them to markdown
     text = text.replace(/(\]\()?((https?|ftp|dict):[^'">\s]+)/gi, function($0, $1, $2) { return $1?$0:"[" + $2 + "](" + $2 + ")"});
     // Inline Links
-    text = text.replace(/(\[((?:\[[^\]]*\]|[^\[\]])*)\]\([ \t]*()<?(.*?(?:\(.*?\).*?)?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g, '<a href="$4">$2</a>');
+    text = text.replace(/(\[((?:\[[^\]]*\]|[^\[\]])*)\]\([ \t]*()<?(.*?(?:\(.*?\).*?)?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g, '<a href="$4" target="_blank">$2</a>');
     return text;
 };
 
