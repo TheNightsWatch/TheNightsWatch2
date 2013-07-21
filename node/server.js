@@ -44,7 +44,8 @@ function populateTheMessageLog() {
             var tempLog = [];
             for (var j in rows) {
                 var row = rows[j];
-                tempLog.unshift({ message: sanitize(row.message).escape(), user: row.user, time: row.timestamp.getTime(), room: row.chatroom });
+                var message = sanitize(row.message).escape().markdown2html();
+                tempLog.unshift({ message: message, user: row.user, time: row.timestamp.getTime(), room: row.chatroom });
             }
             for (var j in tempLog) {
                 addToMessageLog(tempLog[j], tempLog[j].room);
