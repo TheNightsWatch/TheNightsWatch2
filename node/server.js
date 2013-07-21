@@ -14,9 +14,9 @@ io.set('log level', 1);
 String.prototype.markdown2html = function () {
     var text = this;
     // Bold
-    text = text.replace(/(\*\*|__)(?=\S)([^\r]*?\S[*_]*)\1/g, "<strong>$2</strong>");
+    text = text.replace(/(\*\*)(?=\S)([^\r]*?\S[*_]*)\1/g, "<strong>$2</strong>");
     // Italics
-    text = text.replace(/(\*|_)(?=\S)([^\r]*?\S)\1/g, "<em>$2</em>");
+    text = text.replace(/(\*)(?=\S)([^\r]*?\S)\1/g, "<em>$2</em>");
     // Auto-detect links and convert them to markdown
     text = text.replace(/(\]\()?((https?|ftp|dict):[^'">\s]+)/gi, function($0, $1, $2) { return $1?$0:"[" + $2 + "](" + $2 + ")"});
     // Inline Links
