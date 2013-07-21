@@ -20,6 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property bool $admin
  * @property bool $deniedJoin If true, the user is not allowed to become a recruit
  * @property \DateTime $joined
+ * @property int $emailNotifications
  */
 class User
 {
@@ -34,9 +35,13 @@ class User
     const RANK_RECRUIT = 1;
     const RANK_CIVILIAN = 0;
 
+    // Order Constants
     const ORDER_STEWARD = 0;
     const ORDER_RANGER = 1;
     const ORDER_BUILDER = 2;
+
+    // Email Notification Constants, used as bitwise
+    const EMAIL_ANNOUNCEMENT = 0b1;
 
     /**
      * @var int
@@ -101,10 +106,16 @@ class User
     protected $deniedJoin = false;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(name="`order`", type="integer", nullable=true)
      */
     protected $order = null;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    protected $emailNotifications = self::EMAIL_ANNOUNCEMENT;
 
     public static function getRankNames()
     {

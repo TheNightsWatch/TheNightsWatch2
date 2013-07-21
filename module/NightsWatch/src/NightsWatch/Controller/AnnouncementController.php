@@ -7,7 +7,13 @@ use NightsWatch\Entity\Announcement;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\AnnouncementForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use Zend\Mail\Address;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Sendmail;
+use Zend\Mime\Mime;
 use Zend\View\Model\ViewModel;
+use Zend\Mime\Message as MimeBody;
+use Zend\Mime\Part as MimePart;
 use Zend\Session\Container as SessionContainer;
 
 class AnnouncementController extends ActionController
@@ -100,6 +106,37 @@ class AnnouncementController extends ActionController
         if ($this->getRequest()->isPost()) {
             $this->getEntityManager()->persist($announcement);
             $this->getEntityManager()->flush();
+
+            $userRepo = $this->getEntityManager()
+                ->getRepository('NightsWatch\Entity\User');
+
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->gt('BIT_AND(emailNotifications, ' . User::EMAIL_ANNOUNCEMENT . ')', 0))
+                ->andWhere(Criteria::expr()->gte('rank', $announcement->lowestReadableRank));
+
+            /** @var User[] $users */
+            $users = $userRepo->matching($criteria);
+
+            $mail = new Message();
+            $mail->setSubject($announcement->title);
+            $mail->setFrom(new Address('noreply@minez-nightswatch.com', $announcement->user->username));
+            $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
+            $mail->setEncoding('UTF-8');
+
+            $body = new MimeBody();
+            $bodyHtml = new MimePart($announcement->getParsedContent());
+            $bodyHtml->type = Mime::TYPE_HTML;
+            $bodyText = new MimePart($announcement->content);
+            $bodyText->type = Mime::TYPE_TEXT;
+            $body->setParts([$bodyHtml, $bodyText]);
+            $mail->setBody($body);
+
+            foreach ($users as $user) {
+                $mail->addBcc(new Address($user->email, $user->username));
+            }
+            $transport = new Sendmail();
+            $transport->send($mail);
+
             $this->redirect()->toRoute('id', ['controller' => 'announcement', 'id' => $announcement->id]);
         }
 
