@@ -35,7 +35,7 @@ class AnnouncementController extends ActionController
         /** @var \NightsWatch\Entity\Announcement[] $announcements */
         $announcements = $announcementRepo->matching($criteria);
 
-        return new ViewModel(['announcements' => $announcements]);
+        return new ViewModel(['announcements' => $announcements, 'identity' => $this->getIdentityEntity()]);
     }
 
     public function viewAction()
@@ -69,6 +69,16 @@ class AnnouncementController extends ActionController
         }
 
         $form = new AnnouncementForm();
+        $session = new SessionContainer('NightsWatch\Announcement\Create');
+        if (!empty($session->title)) {
+            $form->setData(
+                [
+                    'title' => $session->title,
+                    'content' => $session->content,
+                    'lowrank' => $session->rank,
+                ]
+            );
+        }
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -148,6 +158,7 @@ class AnnouncementController extends ActionController
             $transport = new Sendmail();
             $transport->send($mail);
 
+            $session->title = "";
             $this->redirect()->toRoute('id', ['controller' => 'announcement', 'id' => $announcement->id]);
         }
 

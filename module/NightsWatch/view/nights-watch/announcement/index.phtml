@@ -1,6 +1,10 @@
 <?php
 /** @var \NightsWatch\Entity\Announcement[] $announcements */
+/** @var \NightsWatch\Entity\User $identity */
 /** @var \Zend\View\Model\ViewModel $this */
+if ($identity->rank >= \NightsWatch\Entity\User::RANK_LIEUTENANT) {
+    echo '<a class="btn btn-primary" style="float:right;" href="' . $this->url('home', ['controller' => 'announcement', 'action' => 'create']) . '">Post Announcement</a>';
+}
 if (!count($announcements)) {
     echo '<p class="alert alert-info">There are no announcements viewable by your rank.</p>';
 } else {
