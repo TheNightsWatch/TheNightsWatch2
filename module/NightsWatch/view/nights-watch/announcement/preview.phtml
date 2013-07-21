@@ -1,10 +1,11 @@
-<p class="alert alert-info">This is a preview of the announcement you are about to create. It will not be published
+<p class="alert alert-info"><a href="#" class="close" data-dismiss="alert">&times;</a>This is a preview of the announcement you are about to create. It will not be published
     until you press the "Publish" button at the bottom.</p>
 <?=
 $this->partial(
     'nights-watch/announcement/partials/announcement',
     ['announcement' => $announcement, 'useArticleLink' => false]
 ); ?>
+<p class="alert"><a href="#" class="close" data-dismiss="alert">&times;</a>Pressing "Publish" will notify all possible viewers of this announcement via email.</p>
 <form method="post">
     <a href="<?= $this->url('home', ['controller' => 'announcement', 'action' => 'create']); ?>"
        class="btn btn-warning">Edit</a>
