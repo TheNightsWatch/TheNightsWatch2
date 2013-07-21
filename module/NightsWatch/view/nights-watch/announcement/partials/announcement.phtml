@@ -22,6 +22,6 @@ $postUrl = $this->url('id', ['controller' => 'announcement', 'action' => 'view',
     </div>
     <footer>
         posted <time pubdate datetime="<?= $date->format(Carbon::ISO8601); ?>"><?= $date->diffForHumans() ?></time>
-        by <a rel="author"><?= htmlspecialchars($announcement->user->username) ?></a>
+        by <a rel="author"><?= htmlspecialchars($announcement->user->getTitleWithName()) ?></a>
     </footer>
 </article>

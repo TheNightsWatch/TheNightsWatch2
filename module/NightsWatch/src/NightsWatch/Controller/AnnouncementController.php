@@ -123,6 +123,15 @@ class AnnouncementController extends ActionController
             $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
             $mail->setEncoding('UTF-8');
 
+            // Create a signature for email
+            if (!is_null($announcement->user->title)) {
+                $title = trim(sprintf($announcement->user->title, '', User::getOrderName($announcement->user->order)));
+            } else {
+                $title = User::getRankName($announcement->user->rank);
+            }
+            $announcement->content = $announcement->content .= "\n\n"
+                . $announcement->user->username . "  \n" . "*" . $title . "*";
+
             $body = new MimeBody();
             $bodyHtml = new MimePart($announcement->getParsedContent());
             $bodyHtml->type = Mime::TYPE_HTML;

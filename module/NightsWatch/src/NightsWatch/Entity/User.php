@@ -117,6 +117,13 @@ class User
      */
     protected $emailNotifications = self::EMAIL_ANNOUNCEMENT;
 
+    /**
+     * An honorary title, %1$s is username, %2$s is order
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $title = null;
+
     public static function getRankNames()
     {
         return [
@@ -134,6 +141,56 @@ class User
     public static function getRankName($rank)
     {
         return static::getRankNames()[$rank];
+    }
+
+    public static function getOrderNames()
+    {
+        return [
+            static::ORDER_STEWARD => 'Steward',
+            static::ORDER_RANGER => 'Ranger',
+            static::ORDER_BUILDER => 'Builder',
+        ];
+    }
+
+    public static function getOrderName($order)
+    {
+        return static::getOrderNames()[$order];
+    }
+
+    public function getTitleWithName()
+    {
+        if (!is_null($this->title)) {
+            return sprintf($this->title, $this->username, static::getOrderName($this->order));
+        }
+        switch ($this->rank) {
+            case static::RANK_RECRUIT:
+                return $this->username . ', ' . static::getRankName($this->rank);
+            case static::RANK_PRIVATE:
+                return 'Private ' . $this->username . ', ' . static::getOrderName($this->order);
+            case static::RANK_CORPORAL:
+                return 'Corporal ' . $this->username . ', ' . static::getOrderName($this->order);
+            case static::RANK_LIEUTENANT:
+                return 'Lieutenant ' . $this->username . ', ' . static::getOrderName($this->order);
+            case static::RANK_GENERAL:
+                $rank = 'First ';
+                switch ($this->order) {
+                    case static::ORDER_BUILDER:
+                        $rank .= 'Builder ';
+                        break;
+                    case static::ORDER_RANGER:
+                        $rank .= 'Ranger ';
+                        break;
+                    case static::ORDER_STEWARD:
+                        $rank .= 'Steward ';
+                        break;
+                }
+                $rank .= $this->username;
+                return $rank;
+            case static::RANK_COMMANDER:
+                return 'Lord Commander ' . $this->username;
+            default:
+                return $this->username;
+        }
     }
 
     public function __construct()
