@@ -11,6 +11,20 @@ var mysql = require('mysql'),
 
 io.set('log level', 1);
 
+String.prototype.markdown2html = function () {
+    var text = this;
+    // Bold
+    text = text.replace(/(\*\*|__)(?=\S)([^\r]*?\S[*_]*)\1/g, "<strong>$2</strong>");
+    // Italics
+    text = text.replace(/(\*|_)(?=\S)([^\r]*?\S)\1/g, "<em>$2</em>");
+    // Auto-detect links and convert them to markdown
+    text = text.replace(/(\]\()?((https?|ftp|dict):[^'">\s]+)/gi, function($0, $1, $2) { return $1?$0:"[" + $2 + "](" + $2 + ")"});
+    // Inline Links
+    text = text.replace(/(\[((?:\[[^\]]*\]|[^\[\]])*)\]\([ \t]*()<?(.*?(?:\(.*?\).*?)?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g, '<a href="$4">$2</a>');
+    return text;
+};
+
+
 var rooms = ['public', 'recruit', 'private', 'council'];
 
 var messageLog = {};
@@ -251,7 +265,8 @@ io.sockets.on('connection', function (socket) {
             ) {
             return;
         }
-        var message = { room: data.room, user: socketVariables[socket.id].username, time: (new Date).getTime(), message: sanitize(data.message).escape() };
+        var htmlMessage = sanitize(data.message).escape().markdown2html();
+        var message = { room: data.room, user: socketVariables[socket.id].username, time: (new Date).getTime(), message: htmlMessage };
         data.userId = info.userId;
         mysqlStoreMessage(data);
         updatePrivileges(socket);
