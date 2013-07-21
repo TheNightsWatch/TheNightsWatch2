@@ -112,8 +112,7 @@ class AnnouncementController extends ActionController
                 ->getRepository('NightsWatch\Entity\User');
 
             $criteria = Criteria::create()
-                ->where(Criteria::expr()->bitAnd('emailNotifications', User::EMAIL_ANNOUNCEMENT))
-                ->andWhere(Criteria::expr()->gte('rank', $announcement->lowestReadableRank));
+                ->where(Criteria::expr()->gte('rank', $announcement->lowestReadableRank));
 
             /** @var User[] $users */
             $users = $userRepo->matching($criteria);
@@ -133,7 +132,9 @@ class AnnouncementController extends ActionController
             $mail->setBody($body);
 
             foreach ($users as $user) {
-                $mail->addBcc(new Address($user->email, $user->username));
+                if ($user->emailNotifications & User::EMAIL_ANNOUNCEMENT > 0) {
+                    $mail->addBcc(new Address($user->email, $user->username));
+                }
             }
             $transport = new Sendmail();
             $transport->send($mail);
