@@ -41,16 +41,15 @@ class SiteController extends ActionController
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
+                if ($form->get('rememberme')->getValue()) {
+                    $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
+                    $authNamespace->getManager()->rememberMe(60 * 60 * 24 * 30);
+                }
                 $authAdapter = new AuthAdapter(
                     $form->get('username')->getValue(),
                     $form->get('password')->getValue(),
                     $this->getEntityManager()
                 );
-
-                if ($form->get('rememberme')->getValue()) {
-                    $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
-                    $authNamespace->getManager()->rememberMe(60 * 60 * 24 * 30);
-                }
 
                 $result = $this->getAuthenticationService()->authenticate($authAdapter);
 
