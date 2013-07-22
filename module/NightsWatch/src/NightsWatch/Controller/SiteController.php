@@ -49,7 +49,7 @@ class SiteController extends ActionController
 
                 if ($form->get('rememberme')->getValue()) {
                     $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
-                    $authNamespace->getManager()->rememberMe(2000);
+                    $authNamespace->getManager()->rememberMe(60 * 60 * 24 * 30);
                 }
 
                 $result = $this->getAuthenticationService()->authenticate($authAdapter);
