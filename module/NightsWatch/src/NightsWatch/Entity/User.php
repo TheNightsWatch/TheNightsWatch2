@@ -157,6 +157,24 @@ class User
         return static::getOrderNames()[$order];
     }
 
+    public function getTitleOrRank()
+    {
+        if (!is_null($this->title)) {
+            return sprintf($this->title, '', $this->order);
+        }
+        if ($this->rank == User::RANK_GENERAL) {
+            switch ($this->order) {
+                case User::ORDER_BUILDER:
+                    return 'First Builder';
+                case User::ORDER_STEWARD:
+                    return 'First Steward';
+                case User::ORDER_RANGER:
+                    return 'First Ranger';
+            }
+        }
+        return static::getRankName($this->rank);
+    }
+
     public function getTitleWithName()
     {
         if (!is_null($this->title)) {
