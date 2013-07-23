@@ -44,6 +44,7 @@ class AnnouncementController extends ActionController
             $this->redirect()->toRoute('home', ['controller' => 'announcement', 'action' => 'index']);
             return false;
         }
+        $this->updateLayoutWithIdentity();
 
         /** @var \NightsWatch\Entity\Announcement $announcement */
         $announcement = $this->getEntityManager()
