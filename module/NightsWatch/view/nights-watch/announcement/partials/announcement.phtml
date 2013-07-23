@@ -1,6 +1,7 @@
 <?php
 /** @var \NightsWatch\Entity\Announcement $announcement */
 use Carbon\Carbon;
+use \NightsWatch\Entity\User;
 
 if (!isset($useArticleLink)) {
     $useArticleLink = true;
@@ -17,6 +18,9 @@ $postUrl = $this->url('id', ['controller' => 'announcement', 'action' => 'view',
             <?= $useArticleLink ? '</a>' : null ?>
         </h2>
     </header>
+    <?php if ($announcement->lowestReadableRank > User::RANK_CIVILIAN): ?>
+        <p class="alert alert-error">This post is classified.  The contents are privileged information, only available to members of rank <?= User::getRankName($announcement->lowestReadableRank); ?> and up. <a href="#" class="close" data-dismiss="alert">&times;</a></p>
+    <?php endif; ?>
     <div class="well well-small">
         <?= $announcement->getParsedContent(); ?>
     </div>
