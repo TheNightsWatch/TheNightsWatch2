@@ -19,7 +19,7 @@ $postUrl = $this->url('id', ['controller' => 'announcement', 'action' => 'view',
         </h2>
     </header>
     <?php if ($announcement->lowestReadableRank > User::RANK_CIVILIAN): ?>
-        <p class="alert alert-error">This post is classified.  The contents are privileged information, only available to members of rank <?= User::getRankName($announcement->lowestReadableRank); ?> and up. <a href="#" class="close" data-dismiss="alert">&times;</a></p>
+        <p class="alert alert-error fade in">This post is classified.  The contents are privileged information, only available to members of rank <?= User::getRankName($announcement->lowestReadableRank); ?> and up. <a href="#" class="close" data-dismiss="alert">&times;</a></p>
     <?php endif; ?>
     <div class="well well-small">
         <?= $announcement->getParsedContent(); ?>
