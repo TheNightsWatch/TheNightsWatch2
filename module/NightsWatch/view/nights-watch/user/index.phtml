@@ -7,15 +7,18 @@ use \NightsWatch\Entity\User;
 // list to auto-compile for moving and unsetting ranks
 $ranksToSeparate = [User::RANK_COMMANDER, User::RANK_GENERAL, User::RANK_LIEUTENANT];
 $councilRanks = [];
+$councilCount = 0;
 foreach ($ranksToSeparate as $rank) {
     if (isset($usersByRank[$rank])) {
         $councilRanks[] = $usersByRank[$rank];
+        $councilCount = count($usersByRank[$rank]);
         unset($usersByRank[$rank]);
     }
 }
 
 // Display Council Members First
-echo '<h2>Council Members</h2>','<div class="well well-small"><table class="user-table">';
+echo '<h2>Council Members <span class="badge">' . $councilCount . '</span></h2>',
+'<div class="well well-small"><table class="user-table">';
 foreach ($councilRanks as $rank => $users) {
     foreach ($users as $user) {
         echo $this->partial('nights-watch/user/partials/listDescription', ['user' => $user]);
@@ -25,7 +28,10 @@ echo '</table></div>';
 
 $ranksToDisplay = [User::RANK_CORPORAL, User::RANK_PRIVATE, User::RANK_RECRUIT];
 foreach ($ranksToDisplay as $rank) {
-    echo '<h2>',User::getRankName($rank),'s</h2>';
+    if (!isset($usersByRank[$rank])) {
+        continue;
+    }
+    echo '<h2>', User::getRankName($rank), 's <span class="badge"> ' . count($usersByRank[$rank]) . '</span></h2>';
     echo '<div class="well well-small">';
     foreach ($usersByRank[$rank] as $user) {
         echo $this->partial('nights-watch/user/partials/listHead', ['user' => $user]);

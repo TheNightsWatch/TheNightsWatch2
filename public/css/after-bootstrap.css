@@ -153,3 +153,7 @@ option {
     width: 25px;
     height: 25px;
 }
+
+h2 .badge {
+    vertical-align: middle;
+}
