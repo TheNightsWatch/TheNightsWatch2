@@ -92,7 +92,7 @@ $(document).ready(function () {
         var $li = $('#viewer-template').clone();
         $li.attr('id', 'viewer-' + room + '-' + username);
         var html = $li.html();
-        html = html.replace(/{link}/g, '#');
+        html = html.replace(/{link}/g, '/user/' + data.user);
         html = html.replace(/{user}/g, username);
         $li.html(html);
         $li.find('img').attr('src', '//minotar.net/helm/' + username + '/16.png');
@@ -125,6 +125,7 @@ $(document).ready(function () {
             html = html.replace(/{user}/g, data.user);
             html = html.replace(/{time}/g, stamp);
             html = html.replace(/{message}/g, data.message);
+            html = html.replace(/{link}/g, '/user/' + data.user);
             $li.html(html).show();
 
             var tableClass = '.' + data.room;

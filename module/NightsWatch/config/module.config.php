@@ -11,6 +11,7 @@ return [
             'Join' => 'NightsWatch\Controller\JoinController',
             'Rules' => 'NightsWatch\Controller\RulesController',
             'Announcement' => 'NightsWatch\Controller\AnnouncementController',
+            'User' => 'NightsWatch\Controller\UserController',
         ],
     ],
     'router' => [
@@ -21,6 +22,25 @@ return [
                     'route' => '[/][:controller][/:action]',
                     'defaults' => [
                         'controller' => 'site',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'homePlural' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '[/][:controller]s[/:action]',
+                    'defaults' => [
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'rules' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/rules[/:action]',
+                    'defaults' => [
+                        'controller' => 'rules',
                         'action' => 'index',
                     ],
                 ],
@@ -53,6 +73,16 @@ return [
                         'id' => '\d+',
                     ],
                     'defaults' => [
+                        'action' => 'view',
+                    ],
+                ],
+            ],
+            'user' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/user/[:username][/:action]',
+                    'defaults' => [
+                        'controller' => 'user',
                         'action' => 'view',
                     ],
                 ],
@@ -125,7 +155,13 @@ return [
             ],
             [
                 'label' => 'Announcements',
+                'route' => 'homePlural',
                 'controller' => 'announcement',
+            ],
+            [
+                'label' => 'Members',
+                'route' => 'homePlural',
+                'controller' => 'user',
             ],
             [
                 'label' => 'Map',
@@ -134,8 +170,7 @@ return [
             ],
             [
                 'label' => 'Rules of Engagement',
-                'route' => 'home',
-                'controller' => 'rules',
+                'route' => 'rules',
             ],
         ],
         'right-noauth' => [

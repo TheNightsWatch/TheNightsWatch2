@@ -3,7 +3,6 @@
 namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ExpressionBuilder;
 use NightsWatch\Entity\Announcement;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\AnnouncementForm;

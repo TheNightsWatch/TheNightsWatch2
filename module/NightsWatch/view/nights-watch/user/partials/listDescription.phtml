@@ -1,0 +1,7 @@
+<?php /** @var \NightsWatch\Entity\User $user */ ?>
+<tr>
+    <td><?= $this->partial('nights-watch/user/partials/listHead', ['user' => $user]); ?></td>
+    <td class="title">
+        <em><?= $user->getTitleWithName() ?></em>
+    </td>
+</tr>

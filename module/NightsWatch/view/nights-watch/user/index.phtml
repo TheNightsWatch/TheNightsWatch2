@@ -1,0 +1,38 @@
+<?php
+
+use \NightsWatch\Entity\User;
+
+/** @var array $usersByRank */
+
+// list to auto-compile for moving and unsetting ranks
+$ranksToSeparate = [User::RANK_COMMANDER, User::RANK_GENERAL, User::RANK_LIEUTENANT];
+$councilRanks = [];
+foreach ($ranksToSeparate as $rank) {
+    if (isset($usersByRank[$rank])) {
+        $councilRanks[] = $usersByRank[$rank];
+        unset($usersByRank[$rank]);
+    }
+}
+
+// Display Council Members First
+echo '<h2>Council Members</h2>','<div class="well well-small"><table class="user-table">';
+foreach ($councilRanks as $rank => $users) {
+    foreach ($users as $user) {
+        echo $this->partial('nights-watch/user/partials/listDescription', ['user' => $user]);
+    }
+}
+echo '</table></div>';
+
+foreach ($usersByRank as $rank => $users) {
+    if ($rank == User::RANK_ADMIN || $rank == User::RANK_CIVILIAN) {
+        continue;
+    }
+    $partial = 'nights-watch/user/partials/listHead';
+
+    echo '<h2>',User::getRankName($rank),'s</h2>';
+    echo '<div class="well well-small">';
+    foreach ($users as $user) {
+        echo $this->partial($partial, ['user' => $user]);
+    }
+    echo '</div>';
+}

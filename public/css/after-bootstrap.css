@@ -145,3 +145,11 @@ option {
 #announcement textarea {
     min-height: 300px;
 }
+.user-table .title {
+    padding-left: 10px;
+}
+
+.list-head {
+    width: 25px;
+    height: 25px;
+}
