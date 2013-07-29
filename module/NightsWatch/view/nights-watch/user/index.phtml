@@ -23,16 +23,12 @@ foreach ($councilRanks as $rank => $users) {
 }
 echo '</table></div>';
 
-foreach ($usersByRank as $rank => $users) {
-    if ($rank == User::RANK_ADMIN || $rank == User::RANK_CIVILIAN) {
-        continue;
-    }
-    $partial = 'nights-watch/user/partials/listHead';
-
+$ranksToDisplay = [User::RANK_CORPORAL, User::RANK_PRIVATE, User::RANK_RECRUIT];
+foreach ($ranksToDisplay as $rank) {
     echo '<h2>',User::getRankName($rank),'s</h2>';
     echo '<div class="well well-small">';
-    foreach ($users as $user) {
-        echo $this->partial($partial, ['user' => $user]);
+    foreach ($usersByRank[$rank] as $user) {
+        echo $this->partial('nights-watch/user/partials/listHead', ['user' => $user]);
     }
     echo '</div>';
 }

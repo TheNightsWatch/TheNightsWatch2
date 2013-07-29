@@ -30,6 +30,15 @@ class SiteController extends ActionController
         return false;
     }
 
+    public function testAction()
+    {
+        echo '<pre>';
+        var_dump(\NightsWatch\Entity\User::getOrderNames());
+        var_dump(\NightsWatch\Entity\User::getOrderName(0));
+        echo '</pre>';
+        die();
+    }
+
     public function loginAction()
     {
         if ($this->disallowMember()) {
