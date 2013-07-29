@@ -11,7 +11,7 @@ $councilCount = 0;
 foreach ($ranksToSeparate as $rank) {
     if (isset($usersByRank[$rank])) {
         $councilRanks[] = $usersByRank[$rank];
-        $councilCount = count($usersByRank[$rank]);
+        $councilCount += count($usersByRank[$rank]);
         unset($usersByRank[$rank]);
     }
 }
