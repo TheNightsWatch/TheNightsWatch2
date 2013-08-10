@@ -25,7 +25,7 @@ String.prototype.markdown2html = function () {
 };
 
 
-var rooms = ['public', 'recruit', 'private', 'council'];
+var rooms = ['public', 'recruit', 'private', 'corporal','council'];
 
 var messageLog = {};
 
@@ -128,6 +128,7 @@ function updatePrivileges(socket) {
             var channelTests = [
                 ['recruit', 1],
                 ['private', 2],
+                ['corporal', 500],
                 ['council', 1000]
             ];
             var activateChannels = [];
@@ -229,6 +230,10 @@ io.sockets.on('connection', function (socket) {
                     channels.push('private');
                     userJoin(socket, 'private');
                 }
+                if (row.rank >= 500) { // corporal+
+                    channels.push('corporal');
+                    userJoin(socket, 'corporal');
+                }
                 if (row.rank >= 1000) { // lieutenant+
                     channels.push('council');
                     userJoin(socket, 'council');
@@ -262,6 +267,7 @@ io.sockets.on('connection', function (socket) {
         var room = data.room.toLowerCase();
         if ((room == 'recruit' && info.rank < 1) ||
             (room == 'private' && info.rank < 2) ||
+            (room == 'corporal' && info.rank < 500) ||
             (room == 'council' && info.rank < 1000)
             ) {
             return;
