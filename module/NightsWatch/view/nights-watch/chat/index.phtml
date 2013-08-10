@@ -9,11 +9,13 @@ $this->headScript()->appendFile('/js/titlebar.js');
 $recruitHidden = (is_null($identity) || $identity->rank < User::RANK_RECRUIT)    ? ' hidden' : null;
 $privateHidden = (is_null($identity) || $identity->rank < User::RANK_PRIVATE)    ? ' hidden' : null;
 $councilHidden = (is_null($identity) || $identity->rank < User::RANK_LIEUTENANT) ? ' hidden' : null;
+$corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) ? ' hidden' : null;
 ?>
 <ul class="nav nav-pills" id="chat-nav">
     <li class="public" data-room="public"><a href="#public">#public</a></li>
     <li class="recruit<?= $recruitHidden ?>" data-room="recruit"><a href="#recruit">#recruit</a></li>
     <li class="private<?= $privateHidden ?>" data-room="private"><a href="#private">#private</a></li>
+    <li class="private<?= $corporalHidden ?>" data-room="corporal"><a href="#corporal">#corporal</a></li>
     <li class="council<?= $councilHidden ?>" data-room="council"><a href="#council">#council</a></li>
 </ul>
 <div class="row-fluid">
@@ -38,6 +40,9 @@ $councilHidden = (is_null($identity) || $identity->rank < User::RANK_LIEUTENANT)
                 <ol></ol>
             </div>
             <div class="chat-messages private">
+                <ol></ol>
+            </div>
+            <div class="chat-messages corporal">
                 <ol></ol>
             </div>
             <div class="chat-messages council">
