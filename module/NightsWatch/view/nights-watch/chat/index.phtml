@@ -63,6 +63,7 @@ $corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) 
             <ol class="chat-viewers public"></ol>
             <ol class="chat-viewers recruit"></ol>
             <ol class="chat-viewers private"></ol>
+            <ol class="chat-viewers corporal"></ol>
             <ol class="chat-viewers council"></ol>
         </div>
         <?php if (!is_null($identity) && $identity->rank < User::RANK_PRIVATE): ?>
