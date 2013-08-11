@@ -15,7 +15,7 @@ $corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) 
     <li class="public" data-room="public"><a href="#public">#public</a></li>
     <li class="recruit<?= $recruitHidden ?>" data-room="recruit"><a href="#recruit">#recruit</a></li>
     <li class="private<?= $privateHidden ?>" data-room="private"><a href="#private">#private</a></li>
-    <li class="private<?= $corporalHidden ?>" data-room="corporal"><a href="#corporal">#corporal</a></li>
+    <li class="corporal<?= $corporalHidden ?>" data-room="corporal"><a href="#corporal">#corporal</a></li>
     <li class="council<?= $councilHidden ?>" data-room="council"><a href="#council">#council</a></li>
 </ul>
 <div class="row-fluid">
