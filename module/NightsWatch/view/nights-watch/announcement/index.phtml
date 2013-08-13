@@ -2,7 +2,7 @@
 /** @var \NightsWatch\Entity\Announcement[] $announcements */
 /** @var \NightsWatch\Entity\User $identity */
 /** @var \Zend\View\Model\ViewModel $this */
-if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_LIEUTENANT) {
+if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_GENERAL) {
     echo '<a class="btn btn-primary" style="float:right;" href="' . $this->url('home', ['controller' => 'announcement', 'action' => 'create']) . '">Post Announcement</a>';
 }
 if (!count($announcements)) {
