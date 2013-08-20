@@ -5,6 +5,11 @@
  */
 chdir(dirname(__DIR__));
 
+if (file_exists(__DIR__ . "/../maintenance")) {
+    require_once("maintenance.html");
+    die();
+}
+
 if ($_SERVER['APPLICATION_ENV'] == 'development') {
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
