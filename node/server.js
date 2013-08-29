@@ -115,6 +115,9 @@ function updatePrivileges(socket) {
         if (err) {
             console.error(err);
         }
+        if (!socketVariables[socket.id]) {
+            return;
+        }
         if (rows.length < 1) {
             socketVariables[socket.id].rank = 0;
         } else {
