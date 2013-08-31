@@ -24,12 +24,12 @@ $corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) 
             <div id="templates" style="display:none;">
                 <ol>
                     <li id="viewer-template">
-                        <a href="{link}"><img/> {user}</a>
+                        <a href="{link}" target="_blank"><img/> {user}</a>
                     </li>
                     <li id="chat-message-template">
                         <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
                             class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="">{user}</a><span class="faux-invisible">&gt; </span>{message}
+                            href="{link}" target="_blank">{user}</a><span class="faux-invisible">&gt; </span>{message}
                     </li>
                 </ol>
             </div>
