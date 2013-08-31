@@ -36,8 +36,20 @@ class UserController extends ActionController
         return new ViewModel(['usersByRank' => $ranks]);
     }
 
-    public function viewAction()
+    public function viewAction($username = "")
     {
-        return;
+        $this->updateLayoutWithIdentity();
+
+        $username = $this->params()->fromRoute('username');
+        $user = $this->getEntityManager()
+            ->getRepository('NightsWatch\Entity\User')
+            ->findOneBy(['username' => $username]);
+
+        if (!$user) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        return new ViewModel(['user' => $user]);
     }
 }
