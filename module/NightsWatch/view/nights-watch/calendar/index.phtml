@@ -1,0 +1,90 @@
+<?php
+$today = date("Y-m-d");
+/** @var string $year */
+/** @var string $month */
+/** @var array $days */
+?>
+<div id="calendar-container">
+    <div class="well well-small" id="calendar-well">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="7">
+                    <h2><?= DateTime::createFromFormat('Y-n', "{$year}-{$month}")->format('F Y'); ?></h2>
+                </th>
+            </tr>
+            <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php for ($i = 1, $l = count($days); $i <= $l; ++$i): $day = $days[$i - 1]; ?>
+                <?php if (!($i - 1 % 7)): ?><tr><?php endif; ?>
+                <td class="
+                    <?= $day['month'] != $month ? 'othermonth ' : null ?>
+                    <?= $day['stamp'] == $today ? 'today' : null ?>
+                ">
+                    <div class="date"><?= $day['day'] ?></div>
+                    <?php if($day['events']): ?>
+                        <a class="badge badge-info" href="#"><?= $day['events'] ?></a>
+                    <?php endif; ?>
+                </td>
+                <?php if (!($i % 7)): ?></tr><?php endif; ?>
+            <?php endfor; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    table {
+        border: 1px solid #666;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        border: 1px solid #666;
+        padding: 5px;
+        text-align: center;
+    }
+
+    td {
+        width: 90px;
+        height: 90px;
+        position: relative;
+    }
+
+    td.othermonth {
+        opacity: 0.5;
+    }
+
+    td.today .date {
+        color: #45caff;
+    }
+
+    td .date {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-style: solid;
+        border-color: #666;
+        border-width: 0 0 1px 1px;
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    #calendar-container {
+        text-align: center;
+    }
+
+    #calendar-well {
+        display: inline-block;
+        text-align: left;
+    }
+</style>

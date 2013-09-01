@@ -42,13 +42,6 @@ class SiteController extends ActionController
         return new ViewModel(['settings' => $mumble, 'user' => $this->getIdentityEntity()]);
     }
 
-    public function calendarAction()
-    {
-        $month = $this->params()->fromQuery('month', date('n'));
-        $year = $this->params()->fromQuery('year', date('Y'));
-        return new ViewModel(['month' => $month, 'year' => $year]);
-    }
-
     public function loginAction()
     {
         if ($this->disallowMember()) {

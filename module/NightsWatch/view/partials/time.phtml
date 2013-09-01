@@ -1,0 +1,15 @@
+<?php
+$name = isset($name) ? $name : 'time';
+?>
+<div style="display:inline-block;">
+    <select name="<?= $name ?>[hour]" class="span1" style="text-align:right;">
+        <?php for ($i = 0; $i < 24; ++$i): ?>
+            <option value="<?= $i ?>"><?= $i ?></option>
+        <?php endfor; ?>
+    </select>
+    :
+    <select name="<?= $name ?>[minute]" class="span1">
+        <option value="0" >00</option>
+        <option value="30">30</option>
+    </select>
+</div>

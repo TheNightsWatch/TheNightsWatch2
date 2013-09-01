@@ -20,6 +20,8 @@
         ->appendStylesheet($this->basePath() . '/css/before-bootstrap.css')
         ->appendStylesheet($this->basePath() . '/css/bootstrap.min.css')
         ->appendStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css')
+        ->appendStylesheet($this->basePath() . '/css/datepicker.css')
+        ->appendStylesheet($this->basePath() . '/css/bootstrap-timepicker.min.css')
         ->appendStylesheet($this->basePath() . '/css/darkstrap.min.css')
         ->appendStylesheet($this->basePath() . '/css/after-bootstrap.css')
     ?>
@@ -27,7 +29,10 @@
     <!-- Scripts -->
     <?php
     echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/global.js')
         ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile($this->basePath() . '/js/bootstrap-timepicker.min.js')
+        ->prependFile($this->basePath() . '/js/bootstrap-datepicker.js')
         ->prependFile($this->basePath() . '/js/bootstrap.min.js')
         ->prependFile($this->basePath() . '/js/jquery.min.js') ?>
 

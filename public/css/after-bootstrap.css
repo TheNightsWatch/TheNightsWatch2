@@ -18,8 +18,8 @@ div.container a.brand {
     min-height: 28px;
     padding-top: 100px;
     background-clip: padding-box;
-    background-color: rgba(255,255,255,0.2);
-    -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,0.1),inset 0 -1px 0 rgba(0,0,0,0.07);
+    background-color: rgba(255, 255, 255, 0.2);
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.07);
 }
 
 .better-scrollbar::-webkit-scrollbar-button {
@@ -132,7 +132,7 @@ article.announcement footer {
 }
 
 option {
-    background: rgb(32,32,32);
+    background: rgb(32, 32, 32);
 }
 
 #announcement input[type=text],
@@ -145,6 +145,7 @@ option {
 #announcement textarea {
     min-height: 300px;
 }
+
 .user-table .title {
     padding: 5px 0 5px 10px;
 }
@@ -156,4 +157,29 @@ option {
 
 h2 .badge {
     vertical-align: middle;
+}
+
+/* Datepicker Fixes for Darkstrap */
+.dropdown-menu {
+    background-color: #202020;
+}
+.datepicker table {
+    border: 0;
+}
+.datepicker table tr td.day:hover,
+.datepicker thead tr:first-child th:hover,
+.datepicker tfoot tr th:hover {
+    background-color: #666;
+}
+.datepicker-dropdown.datepicker-orient-bottom:before {
+    border-top-color: #252525;
+}
+.datepicker-dropdown.datepicker-orient-bottom:after {
+    border-top-color: #202020;
+}
+.datepicker-dropdown.datepicker-orient-top:before {
+    border-bottom-color: #252525;
+}
+.datepicker-dropdown.datepicker-orient-top:after {
+    border-bottom-color: #202020;
 }

@@ -12,6 +12,7 @@ return [
             'Rules' => 'NightsWatch\Controller\RulesController',
             'Announcement' => 'NightsWatch\Controller\AnnouncementController',
             'User' => 'NightsWatch\Controller\UserController',
+            'Calendar' => 'NightsWatch\Controller\CalendarController',
         ],
     ],
     'router' => [
@@ -97,6 +98,21 @@ return [
                     ],
                 ],
             ],
+            'calendarDate' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/calendar/[:year]/[:month]/[:day]',
+                    'constraints' => [
+                        'year' => '\d+',
+                        'month' => '\d+',
+                        'day' => '\d+',
+                    ],
+                    'defaults' => [
+                        'controller' => 'calendar',
+                        'action' => 'date',
+                    ]
+                ]
+            ]
         ],
     ],
     'view_manager' => [
@@ -167,6 +183,11 @@ return [
                 'label' => 'Announcements',
                 'route' => 'homePlural',
                 'controller' => 'announcement',
+            ],
+            [
+                'label' => 'Calendar',
+                'route' => 'home',
+                'controller' => 'calendar',
             ],
             [
                 'label' => 'Members',
