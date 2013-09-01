@@ -7,9 +7,8 @@ use \NightsWatch\Entity\User;
  * @var \NightsWatch\Entity\User $user
  */
 ?>
+<h2>About</h2>
 <div class="well">
-    <h4>About</h4>
-
     <p>Currently, Voice Chat is available to anyone wishing to communicate with members of The Night's Watch.</p>
 
     <p>There are four mumble rooms, each one represents different levels of access to classified information:</p>
@@ -25,8 +24,10 @@ use \NightsWatch\Entity\User;
         </li>
         <li><strong>#council</strong> - Council Members only, for council duties.</li>
     </ul>
-    <h4>Connecting</h4>
+</div>
 
+<h2>Connecting</h2>
+<div class="well">
     <p>As this is a mumble server, you'll want to <a href="http://mumble.sourceforge.net/">download the latest stable
             version of mumble</a>. (Check under the "Get Mumble" header)</p>
 
@@ -39,24 +40,29 @@ use \NightsWatch\Entity\User;
         <dt>Username</dt>
         <dd><?= $user->username ?></dd>
     </dl>
-    <?php if ($user->rank >= User::RANK_RECRUIT): ?>
-        <h4>Access Tokens</h4>
+</div>
+<?php if ($user->rank >= User::RANK_RECRUIT): ?>
+    <h2>Access Tokens</h2>
+
+    <div class="well">
         <p>In order to gain access to restricted rooms (#recruit, #private) you need to enter an <strong>Access
-                Token</strong>. You can do this by clicking the <strong>Access Tokens</strong> item under the <strong>
-                Server</strong> header in your client's menubar.</p>
+                Token</strong>. You can do this by clicking the <strong>Access Tokens</strong> item under the
+            <strong>Server</strong> header in your client's menubar.</p>
+
         <p>Once you're on that screen, simply click Add and enter the tokens corresponding to the chatrooms you have
-            access to.  Those chatrooms, and their respective tokens, are:</p>
+            access to. Those chatrooms, and their respective tokens, are:</p>
         <dl>
             <dt>#recruit</dt>
             <dd><?= $settings['recruitToken'] ?></dd>
             <?php if ($user->rank >= User::RANK_PRIVATE): ?>
-            <dt>#private</dt>
-            <dd><?= $settings['privateToken'] ?></dd>
+                <dt>#private</dt>
+                <dd><?= $settings['privateToken'] ?></dd>
             <?php endif; ?>
         </dl>
         <p>If, at any time after entering the token, you have problems accessing the chatroom, be sure to check back
             on this page to make sure the token has not changed.</p>
-        <p>And <strong>always remember</strong> not to share these tokens with anyone else.  If someone wants the token
-            to one of the mumble rooms, <strong>ALWAYS</strong> point them to this page.</p>
-    <?php endif; ?>
-</div>
+
+        <p>And <strong>always remember</strong> not to share these tokens with anyone else. If someone wants the
+            token to one of the mumble rooms, <strong>ALWAYS</strong> point them to this page.</p>
+    </div>
+<?php endif; ?>
