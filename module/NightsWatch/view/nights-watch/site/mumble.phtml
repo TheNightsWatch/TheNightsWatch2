@@ -1,0 +1,62 @@
+<?php
+
+use \NightsWatch\Entity\User;
+
+/**
+ * @var array $settings
+ * @var \NightsWatch\Entity\User $user
+ */
+?>
+<div class="well">
+    <h4>About</h4>
+
+    <p>Currently, Voice Chat is available to anyone wishing to communicate with members of The Night's Watch.</p>
+
+    <p>There are four mumble rooms, each one represents different levels of access to classified information:</p>
+    <ul>
+        <li><strong>#public</strong> - Anyone can access and talk in #public. Information classified for Recruit+ ranks
+            should never be spoken of in the public chatrooms.
+        </li>
+        <li><strong>#recruit</strong> - Anyone with the rank of Recruit or above is allowed to access the recruit room.
+            Information about Member events and the Private access token should not be discussed in this channel.
+        </li>
+        <li><strong>#private</strong> - Anyone with the rank of Private or above is allowed to access this channel.
+            #private is the appropriate place to discuss events that are for members of the Watch.
+        </li>
+        <li><strong>#council</strong> - Council Members only, for council duties.</li>
+    </ul>
+    <h4>Connecting</h4>
+
+    <p>As this is a mumble server, you'll want to <a href="http://mumble.sourceforge.net/">download the latest stable
+            version of mumble</a>. (Check under the "Get Mumble" header)</p>
+
+    <p>When you attempt to connect to a server, you'll need to enter the following details to connect to ours:</p>
+    <dl>
+        <dt>Address</dt>
+        <dd><?= $settings['server'] ?></dd>
+        <dt>Port</dt>
+        <dd><?= $settings['port'] ?></dd>
+        <dt>Username</dt>
+        <dd><?= $user->username ?></dd>
+    </dl>
+    <?php if ($user->rank >= User::RANK_RECRUIT): ?>
+        <h4>Access Tokens</h4>
+        <p>In order to gain access to restricted rooms (#recruit, #private) you need to enter an <strong>Access
+                Token</strong>. You can do this by clicking the <strong>Access Tokens</strong> item under the <strong>
+                Server</strong> header in your client's menubar.</p>
+        <p>Once you're on that screen, simply click Add and enter the tokens corresponding to the chatrooms you have
+            access to.  Those chatrooms, and their respective tokens, are:</p>
+        <dl>
+            <dt>#recruit</dt>
+            <dd><?= $settings['recruitToken'] ?></dd>
+            <?php if ($user->rank >= User::RANK_PRIVATE): ?>
+            <dt>#private</dt>
+            <dd><?= $settings['privateToken'] ?></dd>
+            <?php endif; ?>
+        </dl>
+        <p>If, at any time after entering the token, you have problems accessing the chatroom, be sure to check back
+            on this page to make sure the token has not changed.</p>
+        <p>And <strong>always remember</strong> not to share these tokens with anyone else.  If someone wants the token
+            to one of the mumble rooms, <strong>ALWAYS</strong> point them to this page.</p>
+    <?php endif; ?>
+</div>

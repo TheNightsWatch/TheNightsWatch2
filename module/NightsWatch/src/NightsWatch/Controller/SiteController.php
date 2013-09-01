@@ -30,13 +30,16 @@ class SiteController extends ActionController
         return false;
     }
 
-    public function testAction()
+    public function mumbleAction()
     {
-        echo '<pre>';
-        var_dump(\NightsWatch\Entity\User::getOrderNames());
-        var_dump(\NightsWatch\Entity\User::getOrderName(0));
-        echo '</pre>';
-        die();
+        if ($this->disallowGuest()) {
+            return false;
+        }
+        $this->updateLayoutWithIdentity();
+
+        $mumble = $this->getServiceLocator()->get('config')['NightsWatch']['mumble'];
+
+        return new ViewModel(['settings' => $mumble, 'user' => $this->getIdentityEntity()]);
     }
 
     public function loginAction()

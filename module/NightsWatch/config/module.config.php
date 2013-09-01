@@ -45,8 +45,18 @@ return [
                     ],
                 ],
             ],
+            'mumble' => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/mumble',
+                    'defaults' => [
+                        'controller' => 'site',
+                        'action' => 'mumble',
+                    ],
+                ],
+            ],
             'login' => [
-                'type' => 'segment',
+                'type' => 'literal',
                 'options' => [
                     'route' => '/login',
                     'defaults' => [
@@ -56,7 +66,7 @@ return [
                 ],
             ],
             'logout' => [
-                'type' => 'segment',
+                'type' => 'literal',
                 'options' => [
                     'route' => '/logout',
                     'defaults' => [
@@ -169,9 +179,13 @@ return [
                 'controller' => 'map',
             ],
             [
-                'label' => 'Rules of Engagement',
+                'label' => 'Rules',
                 'route' => 'rules',
             ],
+            [
+                'label' => 'Mumble',
+                'route' => 'mumble',
+            ]
         ],
         'right-noauth' => [
             [
