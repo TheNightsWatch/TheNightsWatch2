@@ -12,7 +12,7 @@ return [
             'Rules' => 'NightsWatch\Controller\RulesController',
             'Announcement' => 'NightsWatch\Controller\AnnouncementController',
             'User' => 'NightsWatch\Controller\UserController',
-            'Calendar' => 'NightsWatch\Controller\CalendarController',
+            'Event' => 'NightsWatch\Controller\EventController',
         ],
     ],
     'router' => [
@@ -76,6 +76,16 @@ return [
                     ],
                 ],
             ],
+            'calendar' => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/calendar',
+                    'defaults' => [
+                        'controller' => 'event',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
             'id' => [
                 'type' => 'segment',
                 'options' => [
@@ -108,11 +118,11 @@ return [
                         'day' => '\d+',
                     ],
                     'defaults' => [
-                        'controller' => 'calendar',
+                        'controller' => 'event',
                         'action' => 'date',
                     ]
                 ]
-            ]
+            ],
         ],
     ],
     'view_manager' => [
@@ -186,8 +196,8 @@ return [
             ],
             [
                 'label' => 'Calendar',
-                'route' => 'home',
-                'controller' => 'calendar',
+                'route' => 'calendar',
+                'controller' => 'event',
             ],
             [
                 'label' => 'Members',

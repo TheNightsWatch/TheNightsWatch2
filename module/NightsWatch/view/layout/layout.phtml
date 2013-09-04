@@ -30,6 +30,7 @@
     <?php
     echo $this->headScript()
         ->prependFile($this->basePath() . '/js/global.js')
+        ->prependFile($this->basePath() . '/js/date.js')
         ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
         ->prependFile($this->basePath() . '/js/bootstrap-timepicker.min.js')
         ->prependFile($this->basePath() . '/js/bootstrap-datepicker.js')

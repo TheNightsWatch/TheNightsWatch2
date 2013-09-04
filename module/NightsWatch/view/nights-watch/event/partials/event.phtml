@@ -1,0 +1,49 @@
+<?php
+/** @var \NightsWatch\Entity\Event $event */
+use \NightsWatch\Entity\User;
+
+if (!isset($useEventLink)) {
+    $useEventLink = true;
+}
+$eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
+?>
+<article class="event span6 offset4">
+    <header>
+        <time datetime="<?= $event->start->format(DateTime::ISO8601); ?>" data-format="H:i"
+              data-unix="<?= $event->start->getTimestamp(); ?>">
+            <?= $event->start->format('H:i T'); ?>
+        </time>
+        <h2>
+            <?= $useEventLink ? "<a href=\"{$eventUrl}\">" : null ?>
+            <?= htmlspecialchars($event->name); ?>
+            <?= $useEventLink ? '</a>' : null ?>
+        </h2>
+    </header>
+    <?php if ($event->lowestViewableRank > User::RANK_CIVILIAN): ?>
+        <p class="alert alert-error fade in">This post is classified. The contents are privileged information, only
+            available to members of rank <?= User::getRankName($event->lowestViewableRank); ?> and up.
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+        </p>
+    <?php endif; ?>
+    <div class="well well-small">
+        <?= $event->getParsedDescription(); ?>
+    </div>
+    <footer>
+        posted by <a rel="author"><?= htmlspecialchars($event->user->getTitleWithName()) ?></a>
+    </footer>
+</article>
+
+<style>
+    .event {
+        position: relative;
+    }
+    .event header time {
+        display: block;
+        position: absolute;
+        left: -85px;
+        width: 60px;
+        top: 20px;
+        font-weight: bold;
+        font-size: 14pt;
+    }
+</style>

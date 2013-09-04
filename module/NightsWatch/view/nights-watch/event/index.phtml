@@ -31,8 +31,13 @@ $today = date("Y-m-d");
                     <?= $day['stamp'] == $today ? 'today' : null ?>
                 ">
                     <div class="date"><?= $day['day'] ?></div>
-                    <?php if($day['events']): ?>
-                        <a class="badge badge-info" href="#"><?= $day['events'] ?></a>
+                    <?php if($day['events']):
+                        $url = $this->url(
+                            'calendarDate',
+                            ['year' => $day['year'], 'month' => $day['month'], 'day' => $day['day']]
+                        );
+                        ?>
+                        <a class="badge badge-info" href="<?= $url ?>"><?= $day['events'] ?></a>
                     <?php endif; ?>
                 </td>
                 <?php if (!($i % 7)): ?></tr><?php endif; ?>

@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Criteria;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\View\Model\ViewModel;
 
-class CalendarController extends ActionController
+class EventController extends ActionController
 {
     public function indexAction()
     {
@@ -56,8 +56,66 @@ class CalendarController extends ActionController
     {
         $this->updateLayoutWithIdentity();
 
-        
+        $user = $this->getIdentityEntity();
+
+        $year = intval($this->params()->fromRoute('year'), 10);
+        $month = intval($this->params()->fromRoute('month'), 10);
+        $day = intval($this->params()->fromRoute('day'), 10);
+
+        $start = new \DateTime("{$year}-{$month}-{$day}");
+        $end = clone $start;
+        $end->add(new \DateInterval('P1D'));
+
+        // Get any events from th Database.
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->lte('lowestViewableRank', $user->rank))
+            ->andWhere(Criteria::expr()->gte('start', $start))
+            ->andWhere(Criteria::expr()->lt('start', $end))
+            ->orderBy(['start' => 'ASC']);
+
+        /** @var \NightsWatch\Entity\Event[] $events */
+        $events = $this->getEntityManager()
+            ->getRepository('NightsWatch\Entity\Event')
+            ->matching($criteria);
+
+        return new ViewModel(['events' => $events]);
     }
+
+    public function viewAction()
+    {
+        $this->updateLayoutWithIdentity();
+
+        $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
+        $id = $this->params()->fromRoute('id');
+
+        /** @var \NightsWatch\Entity\Event $event */
+        $event = $this->getEntityManager()
+            ->getRepository('NightsWatch\Entity\Event')
+            ->find($id);
+
+        if (is_null($event)) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        if ($rank < $event->lowestViewableRank) {
+            $this->getResponse()->setStatusCode(403);
+            return;
+        }
+
+        return new ViewModel(['event' => $event]);
+    }
+
+    public function rsvpAction()
+    {
+        // TODO RSVP For Events
+    }
+
+    public function createAction()
+    {
+        // TODO Create Events
+    }
+
     // We're going to create $days = [ [month: '', day: '', events: 0] ]
     // outer is month, first child is weeks, second child is days
     private static function createDaysArrayForCalendar($month, $year)
@@ -75,6 +133,7 @@ class CalendarController extends ActionController
         while ($date->format('n') < $month + 1 || $date->format('w') != 0) {
             $days[] = [
                 'stamp' => $date->format('Y-m-d'),
+                'year' => $date->format('Y'),
                 'month' => $date->format('m'),
                 'day' => $date->format('d'),
                 'events' => 0

@@ -1,0 +1,14 @@
+<?php
+/**
+ * @var \NightsWatch\Entity\Event[] $events
+ */
+if (!count($events)) {
+    echo '<p class="alert alert-info">There are no events on this day viewable by your rank.</p>';
+} else {
+    foreach ($events as $event) {
+        echo '<div class="row">';
+        echo $this->partial('nights-watch/event/partials/event', ['event' => $event]);
+        echo '</div>';
+    }
+}
+
