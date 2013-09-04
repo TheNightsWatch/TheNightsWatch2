@@ -10,7 +10,13 @@ $today = date("Y-m-d");
             <thead>
             <tr>
                 <th colspan="7">
-                    <h2><?= DateTime::createFromFormat('Y-n', "{$year}-{$month}")->format('F Y'); ?></h2>
+                    <h2>
+                        <?= DateTime::createFromFormat('Y-n', "{$year}-{$month}")->format('F Y'); ?>
+                        <?php if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_LIEUTENANT):
+                            $url = $this->url('home', ['controller' => 'event', 'action' => 'create']); ?>
+                            <a href="<?= $url ?>" class="pull-right btn btn-primary post-event-button">Post Event</a>
+                        <?php endif; ?>
+                    </h2>
                 </th>
             </tr>
             <tr>

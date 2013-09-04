@@ -7,4 +7,7 @@ $(function() {
             $this.text(date($this.data('format'), parseInt($this.data('unix'), 10)));
         }
     });
+
+    var jsOffset = (new Date).getTimezoneOffset() * 60;
+    $('.jsoffset').val(jsOffset);
 });

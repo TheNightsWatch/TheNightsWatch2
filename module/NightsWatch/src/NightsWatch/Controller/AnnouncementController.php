@@ -156,6 +156,7 @@ class AnnouncementController extends ActionController
 
             $session->title = "";
             $this->redirect()->toRoute('id', ['controller' => 'announcement', 'id' => $announcement->id]);
+            return false;
         }
 
         return new ViewModel(['announcement' => $announcement]);

@@ -10,8 +10,12 @@
 namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
+use NightsWatch\Entity\Event;
+use NightsWatch\Entity\User;
+use NightsWatch\Form\EventForm;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container as SessionContainer;
 
 class EventController extends ActionController
 {
@@ -49,7 +53,8 @@ class EventController extends ActionController
             $days[$dayIncrement]['events']++;
         }
 
-        return new ViewModel(['days' => $days, 'month' => $month, 'year' => $year]);
+        $identity = $this->getIdentityEntity();
+        return new ViewModel(['days' => $days, 'month' => $month, 'year' => $year, 'identity' => $identity]);
     }
 
     public function dateAction()
@@ -113,7 +118,77 @@ class EventController extends ActionController
 
     public function createAction()
     {
-        // TODO Create Events
+        $this->updateLayoutWithIdentity();
+
+        if ($this->disallowRankLessThan(User::RANK_LIEUTENANT)) {
+            return false;
+        }
+
+        $form = new EventForm();
+        $session = new SessionContainer('NightsWatch\Event\Create');
+        if (!empty($session->name)) {
+            $form->setData(
+                [
+                    'name' => $session->name,
+                    'description' => $session->description,
+                    'lowrank' => $session->rank,
+                    'date' => $session->date,
+                    'time' => $session->time,
+                    'offset' => $session->offset,
+                ]
+            );
+        }
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $session = new SessionContainer('NightsWatch\Event\Create');
+                $session->name = $form->get('name')->getValue();
+                $session->description = $form->get('description')->getValue();
+                $session->rank = $form->get('lowrank')->getValue();
+                $session->date = $form->get('date')->getValue();
+                $session->time = $form->get('time')->getValue();
+                $session->offset = $form->get('offset')->getValue();
+                $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
+                return false;
+            }
+        }
+        return new ViewModel(['form' => $form, 'identity' => $this->getIdentityEntity()]);
+    }
+
+    public function previewAction()
+    {
+        $this->updateLayoutWithIdentity();
+
+        if ($this->disallowRankLessThan(User::RANK_LIEUTENANT)) {
+            return false;
+        }
+
+        $session = new SessionContainer('NightsWatch\Event\Create');
+        if (empty($session->name)) {
+            $this->redirect()->toRoute('home', ['contoller' => 'event', 'action' => 'create']);
+            return false;
+        }
+
+        $event = new Event();
+        $event->name = $session->name;
+        $event->description = $session->description;
+        $event->user = $this->getIdentityEntity();
+        $event->start = new \DateTime($session->date . ' ' . $session->time);
+        $offset = $session->offset + date('Z');
+        $event->start->sub(new \DateInterval('PT' . $offset . 'S'));
+        $event->lowestViewableRank = $session->rank;
+
+        if ($this->getRequest()->isPost()) {
+            $this->getEntityManager()->persist($event);
+            $this->getEntityManager()->flush();
+
+            $session->name = '';
+
+            $this->redirect()->toRoute('id', ['controller' => 'event', 'id' => $event->id]);
+            return false;
+        }
+
+        return new ViewModel(['event' => $event]);
     }
 
     // We're going to create $days = [ [month: '', day: '', events: 0] ]

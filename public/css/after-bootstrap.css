@@ -137,12 +137,17 @@ option {
 
 #announcement input[type=text],
 #announcement textarea,
-#announcement select {
+#announcement select,
+#event input[type=text],
+#event input[type=time],
+#event textarea,
+#event select {
     box-sizing: content-box;
     width: 500px;
 }
 
-#announcement textarea {
+#announcement textarea,
+#event textarea {
     min-height: 300px;
 }
 
@@ -182,4 +187,8 @@ h2 .badge {
 }
 .datepicker-dropdown.datepicker-orient-top:after {
     border-bottom-color: #202020;
+}
+
+.head-well {
+    line-height: 32px;
 }

@@ -32,7 +32,7 @@ foreach ($ranksToDisplay as $rank) {
         continue;
     }
     echo '<h2>', User::getRankName($rank), 's <span class="badge"> ' . count($usersByRank[$rank]) . '</span></h2>';
-    echo '<div class="well well-small">';
+    echo '<div class="well well-small head-well">';
     foreach ($usersByRank[$rank] as $user) {
         echo $this->partial('nights-watch/user/partials/listHead', ['user' => $user]);
     }

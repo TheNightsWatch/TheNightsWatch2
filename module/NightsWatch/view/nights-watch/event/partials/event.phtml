@@ -20,8 +20,8 @@ $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' 
         </h2>
     </header>
     <?php if ($event->lowestViewableRank > User::RANK_CIVILIAN): ?>
-        <p class="alert alert-error fade in">This post is classified. The contents are privileged information, only
-            available to members of rank <?= User::getRankName($event->lowestViewableRank); ?> and up.
+        <p class="alert alert-error fade in">This event is classified. All information concerning it is classified and
+            only available to members of rank <?= User::getRankName($event->lowestViewableRank); ?> and up.
             <a href="#" class="close" data-dismiss="alert">&times;</a>
         </p>
     <?php endif; ?>

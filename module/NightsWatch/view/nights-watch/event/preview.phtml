@@ -1,0 +1,23 @@
+<p class="alert alert-info"><a href="#" class="close" data-dismiss="alert">&times;</a>This is a preview of the event you
+    are about to create. It will not be published until you press the "Publish" button at the bottom.</p>
+<div class="row">
+    <?=
+    $this->partial(
+        'nights-watch/event/partials/event',
+        ['event' => $event, 'useArticleLink' => false]
+    ); ?>
+    <div class="span6 offset4">
+        <br/>
+
+        <!--
+        <p class="alert clearfix"><a href="#" class="close" data-dismiss="alert">&times;</a>Pressing "Publish" will
+            notify all possible attendees of this event via email.</p>
+        -->
+
+        <form method="post">
+            <a href="<?= $this->url('home', ['controller' => 'event', 'action' => 'create']); ?>"
+               class="btn btn-warning">Edit</a>
+            <input type="submit" value="Publish" class="btn btn-primary"/>
+        </form>
+    </div>
+</div>
