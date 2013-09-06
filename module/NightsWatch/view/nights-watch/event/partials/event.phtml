@@ -5,8 +5,11 @@ use \NightsWatch\Entity\User;
 if (!isset($useEventLink)) {
     $useEventLink = true;
 }
+if (!isset($showRsvp)) {
+    $showRsvp = false;
+}
 $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
-$iso8601 = $event->start->format(DateTime::ISO8601); ?>
+$iso8601 = $event->start->format(DateTime::ISO8601);
 ?>
 <article class="event span6 offset4">
     <header>
@@ -25,9 +28,10 @@ $iso8601 = $event->start->format(DateTime::ISO8601); ?>
         </h2>
     </header>
     <?php if ($event->lowestViewableRank > User::RANK_CIVILIAN): ?>
-        <p class="alert alert-error fade in">This event is classified. All information concerning it is classified and
-            only available to members of rank <?= User::getRankName($event->lowestViewableRank); ?> and up.
+        <p class="alert alert-error fade in">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
+            This event is classified. All information concerning it is classified and only available to members of
+            rank <?= User::getRankName($event->lowestViewableRank); ?> and up.
         </p>
     <?php endif; ?>
     <div class="well well-small">
@@ -35,5 +39,12 @@ $iso8601 = $event->start->format(DateTime::ISO8601); ?>
     </div>
     <footer>
         posted by <a rel="author"><?= htmlspecialchars($event->user->getTitleWithName()) ?></a>
+        <br /><br />
+        <?php
+        if ($showRsvp) {
+            $form = new \NightsWatch\Form\RsvpForm($event);
+            echo $this->bootstrapForm($form);
+        }
+        ?>
     </footer>
 </article>

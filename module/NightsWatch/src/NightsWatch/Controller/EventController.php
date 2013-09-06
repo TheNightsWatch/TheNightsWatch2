@@ -11,6 +11,7 @@ namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
 use NightsWatch\Entity\Event;
+use NightsWatch\Entity\EventRsvp;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\EventForm;
 use NightsWatch\Mvc\Controller\ActionController;
@@ -113,7 +114,8 @@ class EventController extends ActionController
 
     public function rsvpAction()
     {
-        // TODO RSVP For Events
+        // Expects a post containing the Event ID and RSVP Status
+
     }
 
     public function createAction()
