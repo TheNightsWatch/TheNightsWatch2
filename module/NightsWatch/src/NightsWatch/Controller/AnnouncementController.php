@@ -27,6 +27,21 @@ class AnnouncementController extends ActionController
         $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
 
         $maxResults = 15;
+
+        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+        $rsm->addScalarResult('theCount', 'count');
+        $result = $this->getEntityManager()
+            ->createNativeQuery(
+                "SELECT COUNT(id) AS theCount FROM announcement WHERE lowestReadableRank <= {$rank}",
+                $rsm
+            )
+            ->execute();
+
+        $pages = ceil($result[0]['count'] / $maxResults);
+        if ($page > $pages) {
+            $page = $pages;
+        }
+
         $offset = ($page - 1) * $maxResults;
 
         $announcementRepo = $this->getEntityManager()
@@ -39,17 +54,6 @@ class AnnouncementController extends ActionController
 
         /** @var \NightsWatch\Entity\Announcement[] $announcements */
         $announcements = $announcementRepo->matching($criteria);
-
-        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
-        $rsm->addScalarResult('theCount', 'count');
-        $result = $this->getEntityManager()
-            ->createNativeQuery(
-                "SELECT COUNT(id) AS theCount FROM announcement WHERE lowestReadableRank <= {$rank}",
-                $rsm
-            )
-            ->execute();
-
-        $pages = ceil($result[0]['count'] / $maxResults);
 
         return new ViewModel(
             [
