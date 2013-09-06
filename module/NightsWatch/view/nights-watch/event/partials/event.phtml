@@ -6,12 +6,17 @@ if (!isset($useEventLink)) {
     $useEventLink = true;
 }
 $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
+$iso8601 = $event->start->format(DateTime::ISO8601); ?>
 ?>
 <article class="event span6 offset4">
     <header>
-        <time datetime="<?= $event->start->format(DateTime::ISO8601); ?>" data-format="H:i"
-              data-unix="<?= $event->start->getTimestamp(); ?>">
-            <?= $event->start->format('H:i T'); ?>
+        <time class="time" datetime="<?= $iso8601; ?>" title="<?= $iso8601 ?>">
+            <span class="dateformat" data-format="H:i" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('H:i T'); ?>
+            </span>
+            <span class="date dateformat" data-format="M j" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('M j'); ?>
+            </span>
         </time>
         <h2>
             <?= $useEventLink ? "<a href=\"{$eventUrl}\">" : null ?>
@@ -32,18 +37,3 @@ $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' 
         posted by <a rel="author"><?= htmlspecialchars($event->user->getTitleWithName()) ?></a>
     </footer>
 </article>
-
-<style>
-    .event {
-        position: relative;
-    }
-    .event header time {
-        display: block;
-        position: absolute;
-        left: -85px;
-        width: 60px;
-        top: 20px;
-        font-weight: bold;
-        font-size: 14pt;
-    }
-</style>

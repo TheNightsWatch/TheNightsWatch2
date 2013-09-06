@@ -164,6 +164,23 @@ h2 .badge {
     vertical-align: middle;
 }
 
+.event {
+    position: relative;
+}
+.event header time {
+    display: block;
+    position: absolute;
+    left: -85px;
+    width: 60px;
+    top: 20px;
+    font-weight: bold;
+    font-size: 14pt;
+    text-align: center;
+}
+.event header time .date {
+    font-size: 10pt;
+}
+
 /* Datepicker Fixes for Darkstrap */
 .dropdown-menu {
     background-color: #202020;
