@@ -61,8 +61,12 @@ class Announcement
     public function getParsedContent()
     {
         // Replace old announcements
-        $oldAnnouncementDiv = '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:justify;' .
-            'line-height:14pt;font-size:12pt;">';
+        $oldAnnouncementDiv = [
+            '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:justify;line-height:14pt;' .
+            'font-size:12pt;">',
+            '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:left;line-height:14pt;' .
+            'font-size:12pt;">',
+        ];
         $newOldAnnouncementDiv = '<div style="width:400px;font-family:Georgia, serif;text-align:justify;' .
             'line-height:14pt;font-size:12pt;">';
         $content = str_replace($oldAnnouncementDiv, $newOldAnnouncementDiv, $this->content);
