@@ -30,7 +30,7 @@ if ($pages > 5 && $pagesAfter < 2) {
     $pagesAfter += 2 - $pagesBefore;
 }
 $pagination[] = '<li' . ($page == 1 ? ' class="disabled"' : null) . '><a href="' . $url . '">&laquo;</a></li>';
-for ($i = $pagesBefore; $i >= $page-$pagesBefore; ++$i) {
+for ($i = $pagesBefore; $i >= $page-$pagesBefore; --$i) {
     $pageNum = $page - $i;
     $pageLink = $url . '?page=' . $pageNum;
     $pagination[] = '<li><a href="' . $pageLink . '">' . $pageNum . '</a></li>';
