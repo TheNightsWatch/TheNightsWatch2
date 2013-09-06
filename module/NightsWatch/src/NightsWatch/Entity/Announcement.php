@@ -60,7 +60,13 @@ class Announcement
 
     public function getParsedContent()
     {
-        return MarkdownExtra::defaultTransform($this->content);
+        // Replace old announcements
+        $oldAnnouncementDiv = '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:justify;' .
+            'line-height:14pt;font-size:12pt;">';
+        $newOldAnnouncementDiv = '<div style="width:400px;font-family:Georgia, serif;text-align:justify;' .
+            'line-height:14pt;font-size:12pt;">';
+        $content = str_replace($oldAnnouncementDiv, $newOldAnnouncementDiv, $this->content);
+        return MarkdownExtra::defaultTransform($content);
     }
 
     public function __get($property)
