@@ -28,7 +28,7 @@ class AnnouncementController extends ActionController
             ->getRepository('NightsWatch\Entity\Announcement');
         $criteria = Criteria::create()
             ->where(Criteria::expr()->lte('lowestReadableRank', $rank))
-            ->orderBy(['id' => 'DESC'])
+            ->orderBy(['timestamp' => 'DESC'])
             ->setMaxResults(15);
 
         /** @var \NightsWatch\Entity\Announcement[] $announcements */
