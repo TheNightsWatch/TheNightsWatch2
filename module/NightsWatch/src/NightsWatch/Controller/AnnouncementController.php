@@ -22,19 +22,43 @@ class AnnouncementController extends ActionController
     {
         $this->updateLayoutWithIdentity();
 
+        $page = intval($this->params()->fromQuery('page', 1), 10);
+
         $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
+
+        $maxResults = 15;
+        $offset = ($page - 1) * $maxResults;
 
         $announcementRepo = $this->getEntityManager()
             ->getRepository('NightsWatch\Entity\Announcement');
         $criteria = Criteria::create()
             ->where(Criteria::expr()->lte('lowestReadableRank', $rank))
             ->orderBy(['timestamp' => 'DESC'])
-            ->setMaxResults(15);
+            ->setFirstResult($offset)
+            ->setMaxResults($maxResults);
 
         /** @var \NightsWatch\Entity\Announcement[] $announcements */
         $announcements = $announcementRepo->matching($criteria);
 
-        return new ViewModel(['announcements' => $announcements, 'identity' => $this->getIdentityEntity()]);
+        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+        $rsm->addScalarResult('theCount', 'count');
+        $result = $this->getEntityManager()
+            ->createNativeQuery(
+                "SELECT COUNT(id) AS theCount FROM announcement WHERE lowestReadableRank <= {$rank}",
+                $rsm
+            )
+            ->execute();
+
+        $pages = ceil($result[0]['count'] / $maxResults);
+
+        return new ViewModel(
+            [
+                'announcements' => $announcements,
+                'pages' => $pages,
+                'page' => $page,
+                'identity' => $this->getIdentityEntity()
+            ]
+        );
     }
 
     public function viewAction()

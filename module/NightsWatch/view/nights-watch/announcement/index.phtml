@@ -1,9 +1,16 @@
 <?php
-/** @var \NightsWatch\Entity\Announcement[] $announcements */
-/** @var \NightsWatch\Entity\User $identity */
-/** @var \Zend\View\Model\ViewModel $this */
+/**
+ * @var \NightsWatch\Entity\Announcement[] $announcements
+ * @var \NightsWatch\Entity\User $identity
+ * @var \Zend\View\Model\ViewModel $this
+ * @var int $pages
+ * @var int $page
+ */
 if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_GENERAL) {
-    echo '<a class="btn btn-primary" style="float:right;" href="' . $this->url('home', ['controller' => 'announcement', 'action' => 'create']) . '">Post Announcement</a>';
+    echo '<a class="btn btn-primary" style="float:right;" href="' . $this->url(
+            'home',
+            ['controller' => 'announcement', 'action' => 'create']
+        ) . '">Post Announcement</a>';
 }
 if (!count($announcements)) {
     echo '<p class="alert alert-info">There are no announcements viewable by your rank.</p>';
@@ -12,3 +19,40 @@ if (!count($announcements)) {
         echo $this->partial('nights-watch/announcement/partials/announcement', ['announcement' => $announcement]);
     }
 }
+
+$pagination = [];
+$url = $this->url('home', ['controller' => 'announcement', 'action' => 'index']);
+$pagesBefore = $page - 1;
+$pagesAfter = $pages - $page;
+if ($pages > 5 && $pagesAfter < 2) {
+    $pagesBefore += 2 - $pagesAfter;
+} elseif ($pages > 5 && $pagesBefore < 2) {
+    $pagesAfter += 2 - $pagesBefore;
+}
+for ($i = 1; $i <= $pagesBefore; ++$i) {
+    $pageNum = $page - $i;
+    $pageLink = $url . '?page=' . $pageNum;
+    $pagination[] = '<li><a href="' . $pageLink . '">' . $pageNum . '</a></li>';
+}
+$pageLink = $url . '?page='.$page;
+$pagination[] = '<li class="active"><a href="'.$pageLink.'">'.$page.'</a></li>';
+for ($i = 1; $i <= $pagesAfter; ++$i) {
+    $pageNum = $page + $i;
+    $pageLink = $url . '?page=' . $pageNum;
+    $pagination[] = '<li><a href="' . $pageLink . '">' . $pageNum . '</a></li>';
+}
+
+$pagination[] = '<li' . $page == 1 ? ' class="disabled"' : null . '><a href="' . $url . '">&laquo;</a></li>';
+
+$pagination[] = '<li' . $page == $pages ? ' class="disabled"' : null . '><a href="' . $url . '?page=' . $pages . '">' .
+    '&raquo;</a></li>';
+?>
+<div class="pagination pagination-centered">
+    <ul>
+        <?php
+        foreach ($pagination as $pageLink) {
+            echo $pageLink;
+        }
+        ?>
+    </ul>
+</div>
