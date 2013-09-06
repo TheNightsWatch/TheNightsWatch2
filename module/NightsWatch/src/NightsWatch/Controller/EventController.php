@@ -29,7 +29,7 @@ class EventController extends ActionController
         $days = static::createDaysArrayForCalendar($month, $year);
 
         $first = $days[0]['stamp'];
-        $last = $days[count($days)-1]['stamp'];
+        $last = $days[count($days) - 1]['stamp'];
 
         // Query for Events
         $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
@@ -175,7 +175,14 @@ class EventController extends ActionController
         $event->user = $this->getIdentityEntity();
         $event->start = new \DateTime($session->date . ' ' . $session->time);
         $offset = $session->offset + date('Z');
-        $event->start->sub(new \DateInterval('PT' . $offset . 'S'));
+        $add = $offset > 0 ? true : false;
+        $offset = abs($offset);
+        $interval = new \DateInterval('PT' . $offset . 'S');
+        if ($add) {
+            $event->start->add($interval);
+        } else {
+            $event->start->sub($interval);
+        }
         $event->lowestViewableRank = $session->rank;
 
         if ($this->getRequest()->isPost()) {
