@@ -29,7 +29,7 @@ if ($pages > 5 && $pagesAfter < 2) {
 } elseif ($pages > 5 && $pagesBefore < 2) {
     $pagesAfter += 2 - $pagesBefore;
 }
-$pagination[] = '<li' . $page == 1 ? ' class="disabled"' : null . '><a href="' . $url . '">&laquo;</a></li>';
+$pagination[] = '<li' . ($page == 1 ? ' class="disabled"' : null) . '><a href="' . $url . '">&laquo;</a></li>';
 for ($i = 1; $i <= $pagesBefore; ++$i) {
     $pageNum = $page - $i;
     $pageLink = $url . '?page=' . $pageNum;
@@ -42,8 +42,8 @@ for ($i = 1; $i <= $pagesAfter; ++$i) {
     $pageLink = $url . '?page=' . $pageNum;
     $pagination[] = '<li><a href="' . $pageLink . '">' . $pageNum . '</a></li>';
 }
-$pagination[] = '<li' . $page == $pages ? ' class="disabled"' : null . '><a href="' . $url . '?page=' . $pages . '">' .
-    '&raquo;</a></li>';
+$pagination[] = '<li' . ($page == $pages ? ' class="disabled"' : null) . '><a href="' . $url . '?page=' . $pages . '">'
+    . '&raquo;</a></li>';
 ?>
 <div class="pagination pagination-centered">
     <ul>
