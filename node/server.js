@@ -25,7 +25,7 @@ String.prototype.markdown2html = function () {
 };
 
 
-var rooms = ['public', 'recruit', 'private', 'corporal','council'];
+var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'interview'];
 
 var messageLog = {};
 
@@ -201,9 +201,10 @@ function userLeave(socket, room) {
 populateTheMessageLog();
 io.sockets.on('connection', function (socket) {
     socketVariables[socket.id] = {};
-    emitMessageLogTo(socket, ['public']);
-    emitRoomViewersTo(socket, ['public']);
+    emitMessageLogTo(socket, ['public', 'interview']);
+    emitRoomViewersTo(socket, ['public', 'interview']);
     socket.join('public');
+    socket.join('interview');
     socket.on('token', function (data) {
         mysqlConnection.query("SELECT user.username AS username, user.rank AS rank, user.id AS userId FROM chatToken LEFT JOIN user ON(chatToken.user_id=user.id) WHERE chatToken.token LIKE ? AND chatToken.expires > CURRENT_TIMESTAMP", [data], function (err, rows) {
             mysqlConnection.query("DELETE FROM `chatToken` WHERE `token` = ? OR `expires` < CURRENT_TIMESTAMP", [data], function (err, result) {
@@ -225,6 +226,7 @@ io.sockets.on('connection', function (socket) {
                 // Subscribe to Channels
                 var channels = [];
                 userJoin(socket, 'public');
+                userJoin(socket, 'interview');
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
                     userJoin(socket, 'recruit');
