@@ -94,7 +94,7 @@ $(document).ready(function () {
         var $li = $('#viewer-template').clone();
         $li.attr('id', 'viewer-' + room + '-' + username);
         var html = $li.html();
-        html = html.replace(/{link}/g, '/user/' + data.user);
+        html = html.replace(/{link}/g, '/user/' + username);
         html = html.replace(/{user}/g, username);
         $li.html(html);
         $li.find('img').attr('src', '//minotar.net/helm/' + username + '/16.png');
