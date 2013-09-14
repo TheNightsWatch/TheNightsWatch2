@@ -8,6 +8,8 @@ $(document).ready(function () {
 
     var initialLoad = true;
 
+    var lastTenMessages = [];
+
     $(window).on('focus', function (e) {
         isActive = true;
         // clear notifications
@@ -106,7 +108,19 @@ $(document).ready(function () {
             initialLoad = false;
         }
         for (var i = 0, l = messages.length; i < l; ++i) {
-            data = messages[i];
+            var data = messages[i];
+
+            var uniqueString = data.user + "|" + data.message;
+            var cont = false;
+            for(var j = 0, m = lastTenMessages.length;j < m;++j) {
+                if (uniqueString == lastTenMessages[j]) {
+                    cont = true;
+                    break;
+                }
+            }
+            if (cont) {
+                continue;
+            }
 
             var $li = $('#chat-message-template').clone();
             $li.attr('id', '');
