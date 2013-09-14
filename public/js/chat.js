@@ -110,7 +110,7 @@ $(document).ready(function () {
         for (var i = 0, l = messages.length; i < l; ++i) {
             var data = messages[i];
 
-            var uniqueString = data.user + "|" + data.message;
+            var uniqueString = data.user + "|" + data.room + "|" + data.message;
             var cont = false;
             var m = lastTenMessages.length;
             for(var j = 0;j < m;++j) {
