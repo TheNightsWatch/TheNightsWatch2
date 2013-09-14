@@ -112,7 +112,8 @@ $(document).ready(function () {
 
             var uniqueString = data.user + "|" + data.message;
             var cont = false;
-            for(var j = 0, m = lastTenMessages.length;j < m;++j) {
+            var m = lastTenMessages.length;
+            for(var j = 0;j < m;++j) {
                 if (uniqueString == lastTenMessages[j]) {
                     cont = true;
                     break;
@@ -120,6 +121,11 @@ $(document).ready(function () {
             }
             if (cont) {
                 continue;
+            } else {
+                lastTenMessages.push(uniqueString);
+                if (m >= 10) {
+                    lastTenMessages.unshift();
+                }
             }
 
             var $li = $('#chat-message-template').clone();
