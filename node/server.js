@@ -129,10 +129,12 @@ function updatePrivileges(socket) {
             }
 
             var channelTests = [
+                ['public', 0],
                 ['recruit', 1],
                 ['private', 2],
                 ['corporal', 500],
-                ['council', 1000]
+                ['council', 1000],
+                ['interview', 0]
             ];
             var activateChannels = [];
             var deactivateChannels = [];
@@ -266,7 +268,7 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on('message', function (data) {
         var info = socketVariables[socket.id];
-        if (!info.username) {
+        if (!info.username || !data.room || !data.message) {
             return;
         }
         var room = data.room.toLowerCase();
