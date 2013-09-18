@@ -139,6 +139,7 @@ function updatePrivileges(socket) {
             var activateChannels = [];
             var deactivateChannels = [];
             var channels = [];
+            var forcedJoin = 'public';
             for (var i in channelTests) {
                 var channelName = channelTests[i][0];
                 var rankTest = channelTests[i][1];
@@ -152,6 +153,9 @@ function updatePrivileges(socket) {
                 }
                 if (row.rank >= rankTest) {
                     channels.push(channelName);
+                    if (channelName == 'public' || channelName == 'recruit' || channelName == 'private') {
+                        forcedJoin = channelName;
+                    }
                 }
             }
             socketVariables[socket.id].channels = channels;
@@ -161,6 +165,7 @@ function updatePrivileges(socket) {
             if (deactivateChannels.length) {
                 socket.emit('deactivateChannels', deactivateChannels);
             }
+            socket.emit('defaultChannel', forcedJoin);
         }
     });
 }

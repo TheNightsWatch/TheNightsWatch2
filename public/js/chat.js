@@ -8,6 +8,8 @@ $(document).ready(function () {
 
     var initialLoad = true;
 
+    var initialJoin = true;
+
     var lastTenMessages = [];
 
     $(window).on('focus', function (e) {
@@ -207,6 +209,9 @@ $(document).ready(function () {
             }
             $channelLi.fadeOut();
         }
+    });
+    socket.on('defaultChannel', function(channel) {
+        $chatNav.find('li.' + channel).trigger('click');
     });
 
     // Handle Sending a Chat Message
