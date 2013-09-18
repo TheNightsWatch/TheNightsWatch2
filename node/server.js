@@ -231,16 +231,19 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].rank = row.rank;
                 socketVariables[socket.id].userId = row.userId;
                 // Subscribe to Channels
+                var defaultChannel = 'public';
                 var channels = [];
                 userJoin(socket, 'public');
                 userJoin(socket, 'interview');
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
                     userJoin(socket, 'recruit');
+                    defaultChannel = 'recruit';
                 }
                 if (row.rank >= 2) { // private+
                     channels.push('private');
                     userJoin(socket, 'private');
+                    defaultChannel = 'private';
                 }
                 if (row.rank >= 500) { // corporal+
                     channels.push('corporal');
@@ -253,6 +256,7 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].channels = channels;
                 emitMessageLogTo(socket, channels);
                 socket.emit('verified');
+                socket.emit('defaultChannel', defaultChannel);
                 emitRoomViewersTo(socket, channels);
             } else {
                 console.error('Bad Token ', data);

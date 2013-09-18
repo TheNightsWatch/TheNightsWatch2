@@ -211,7 +211,10 @@ $(document).ready(function () {
         }
     });
     socket.on('defaultChannel', function(channel) {
-        $chatNav.find('li.' + channel).trigger('click');
+        if (initialJoin) {
+            $chatNav.find('li.' + channel).trigger('click');
+            initialJoin = false;
+        }
     });
 
     // Handle Sending a Chat Message
