@@ -67,7 +67,9 @@ $(document).ready(function () {
             }
             $chatMessage.find('input[type=text]').focus();
         });
-        $chatNav.find('.public').trigger('click');
+        if (initialJoin) {
+            $chatNav.find('.public').trigger('click');
+        }
 
         // Determine if user can post
         if ($chatMessage.data('hasidentity')) {
