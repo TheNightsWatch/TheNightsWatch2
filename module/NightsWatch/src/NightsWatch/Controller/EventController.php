@@ -254,6 +254,9 @@ CALENDAR;
             $bodyText->type = Mime::TYPE_TEXT;
             $bodyEvent = new MimePart($eventRaw);
             $bodyEvent->type = "text/calendar";
+            $bodyEvent->disposition = Mime::DISPOSITION_INLINE;
+            $bodyEvent->encoding = Mime::ENCODING_8BIT;
+            $bodyEvent->filename = 'calendar.ics';
             $body->setParts([$bodyHtml, $bodyText, $bodyEvent]);
             $mail->setBody($body);
 
