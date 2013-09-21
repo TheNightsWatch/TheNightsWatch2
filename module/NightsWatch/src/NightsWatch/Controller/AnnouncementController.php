@@ -156,7 +156,7 @@ class AnnouncementController extends ActionController
             $users = $userRepo->matching($criteria);
 
             $mail = new Message();
-            $mail->setSubject($announcement->title);
+            $mail->setSubject('[NightsWatch] ' . $announcement->title);
             $mail->setFrom(new Address('noreply@minez-nightswatch.com', $announcement->user->username));
             $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
             $mail->setEncoding('UTF-8');

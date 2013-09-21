@@ -15,7 +15,12 @@ use NightsWatch\Entity\EventRsvp;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\EventForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use Zend\Mail\Address;
+use Zend\Mail\Transport\Sendmail;
+use Zend\Mime\Mime;
 use Zend\View\Model\ViewModel;
+use Zend\Mime\Message as MimeBody;
+use Zend\Mime\Part as MimePart;
 use Zend\Session\Container as SessionContainer;
 
 class EventController extends ActionController
@@ -192,6 +197,73 @@ class EventController extends ActionController
             $this->getEntityManager()->flush();
 
             $session->name = '';
+
+            // Send out the Emails
+
+            $userRepo = $this->getEntityManager()->getRepository('NightsWatch\Entity\User');
+
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->gte('rank', $event->lowestViewableRank));
+
+            /** @var User[] $users */
+            $users = $userRepo->matching($criteria);
+
+            $mail = new \Zend\Mail\Message();
+            $mail->setSubject('[NightsWatch] Event: ' . $event->name);
+            $mail->setFrom(new Address('noreply@minez-nightswatch.com', $event->user->username));
+            $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
+            $mail->setEncoding('UTF-8');
+
+            $niceDate = $event->start->format('M j, Y');
+            $niceTime = $event->start->format('H:i T');
+            // Create a signature
+            $title = trim($event->user->getTitleOrRank());
+            $event->description = "A new event has been posted to the calendar.  All information concerning this event"
+                . "is classified and only available to members of rank " . User::getRankName($event->lowestViewableRank)
+                . " and up.\n\n"
+                . $event->description
+                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}"
+                . "\n\n"
+                . "{$event->user->username}  \n*{$title}*";
+
+            // Event Stuff
+            // Not Yet Working.  Not sure why.
+
+            $start = clone $event->start;
+            $start->setTimezone(new \DateTimeZone("UTC"));
+            $dtstart = $start->format("Ymd\\THis\\Z");
+            $eventRaw = <<<CALENDAR
+BEGIN:VCALENDAR
+PRODID:-//NightsWatch//Nights Watch Event Creator//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:event-{$event->id}@minez-nightswatch.com
+DTSTART:{$dtstart}
+ORGANIZER;CN=Night's Watch:noreply@minez-nightswatch.com
+SUMMARY:{$event->name}
+END:VEVENT
+END:VCALENDAR
+CALENDAR;
+
+            $body = new MimeBody();
+            $bodyHtml = new MimePart($event->getParsedDescription());
+            $bodyHtml->type = Mime::TYPE_HTML;
+            $bodyText = new MimePart($event->description);
+            $bodyText->type = Mime::TYPE_TEXT;
+            $bodyEvent = new MimePart($eventRaw);
+            $bodyEvent->type = "text/calendar";
+            $body->setParts([$bodyHtml, $bodyText, $bodyEvent]);
+            $mail->setBody($body);
+
+            foreach ($users as $user) {
+                if ($user->emailNotifications & User::EMAIL_ANNOUNCEMENT > 0) {
+                    $mail->addBcc(new Address($user->email, $user->username));
+                }
+            }
+            $transport = new Sendmail();
+            $transport->send($mail);
 
             $this->redirect()->toRoute('id', ['controller' => 'event', 'id' => $event->id]);
             return false;
