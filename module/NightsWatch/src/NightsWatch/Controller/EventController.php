@@ -218,7 +218,7 @@ class EventController extends ActionController
             $niceTime = $event->start->format('H:i T');
             // Create a signature
             $title = trim($event->user->getTitleOrRank());
-            $event->description = "A new event has been posted to the calendar.  All information concerning this event"
+            $event->description = "A new event has been posted to the calendar.  All information concerning this event "
                 . "is classified and only available to members of rank " . User::getRankName($event->lowestViewableRank)
                 . " and up.\n\n"
                 . $event->description

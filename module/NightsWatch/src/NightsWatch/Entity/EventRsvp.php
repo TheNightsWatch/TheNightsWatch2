@@ -49,6 +49,12 @@ class EventRsvp
     protected $attendance;
 
     /**
+     * @var int
+     * @ORM\Column(type="boolean")
+     */
+    protected $attended;
+
+    /**
      * @var \DateTime
      * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
      */
