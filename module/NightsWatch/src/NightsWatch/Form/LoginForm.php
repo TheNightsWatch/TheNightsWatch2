@@ -34,6 +34,12 @@ class LoginForm extends Form
                 ],
                 'options' => [
                     'label' => 'Password',
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => '<a href="/join/reset">Reset Password</a>',
+                        ]
+                    ]
                 ],
             ]
         );

@@ -10,6 +10,7 @@ use NightsWatch\Authentication\ForceAdapter;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\RegisterForm;
 use NightsWatch\Form\VerifyForm;
+use NightsWatch\Form\ResetForm;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\Authentication\Storage\Session;
 use Zend\Crypt\Password\Bcrypt;
@@ -91,7 +92,8 @@ class JoinController extends ActionController
                 } catch (BadLoginException $e) {
                     $errors[] = "Invalid username or Password";
                 } catch (MigrationException $e) {
-                    $errors[] = "Your Minecraft account has been migrated to a Mojang account.  Please enter your Mojang email and try again";
+                    $errors[] = "Your Minecraft account has been migrated to a Mojang account.  "
+                        ."Please enter your Mojang email and try again";
                 } catch (BasicException $e) {
                     $errors[] = "This is not a premium Minecraft Account";
                 }
@@ -107,7 +109,7 @@ class JoinController extends ActionController
 
     public function recruitAction()
     {
-        if ($this->disallowGuest() || $this->disallowRankGreaterThan(User::RANK_CIVILIAN)) {
+        if ($this->disallowGuest() && $this->disallowRankGreaterThan(User::RANK_RECRUIT)) {
             return false;
         }
         $this->updateLayoutWithIdentity();
@@ -127,5 +129,55 @@ class JoinController extends ActionController
         }
 
         return new ViewModel(['errors' => $errors, 'hasJoined' => $hasJoined]);
+    }
+
+    public function resetAction()
+    {
+        $this->updateLayoutWithIdentity();
+
+        $form = new ResetForm();
+        $errors = [];
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                try {
+                    $minecraft = new MinecraftAPI(
+                        $form->get('username')->getValue(),
+                        $form->get('mojangPassword')->getValue()
+                    );
+
+                    $user = $this->getEntityManager()
+                        ->getRepository('NightsWatch\Entity\User')
+                        ->findOneBy(['username' => $minecraft->username]);
+
+                    if (!$user) {
+                        $errors[] = "No Such User";
+                    } else {
+                        $bcrypt = new Bcrypt();
+                        $user->password = $bcrypt->create($form->get('password')->getValue());
+                        $this->getEntityManager()->persist($user);
+                        $this->getEntityManager()->flush();
+                        $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
+                        return new ViewModel(['done' => true]);
+                    }
+                } catch (\RuntimeException $e) {
+                    $errors[] = "Problem querying the API";
+                } catch (BadLoginException $e) {
+                    $errors[] = "Invalid username or Password";
+                } catch (MigrationException $e) {
+                    $errors[] = "Your Minecraft account has been migrated to a Mojang account.  "
+                        ."Please enter your Mojang email and try again";
+                } catch (BasicException $e) {
+                    $errors[] = "This is not a premium Minecraft Account";
+                }
+            }
+        }
+        return new ViewModel(
+            [
+                'done' => false,
+                'errors' => $errors,
+                'form' => $form,
+            ]
+        );
     }
 }

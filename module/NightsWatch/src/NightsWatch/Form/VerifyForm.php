@@ -27,7 +27,8 @@ class VerifyForm extends Form
                     'bootstrap' => [
                         'help' => [
                             'style' => 'block',
-                            'content' => 'This is the username you log into Minecraft with.  If you have migrated your account, it will be an email address.',
+                            'content' => 'This is the username you log into Minecraft with.  If you have migrated your'
+                            . 'account, it will be an email address.',
                         ],
                     ],
                 ],
@@ -47,7 +48,8 @@ class VerifyForm extends Form
                     'bootstrap' => [
                         'help' => [
                             'style' => 'block',
-                            'content' => 'This password will be used once to verify your account.  It will not be saved.',
+                            'content' => 'This password will be used once to verify your account.'
+                            . 'It will not be saved.',
                         ],
                     ],
                 ],
