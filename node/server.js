@@ -178,7 +178,7 @@ function userJoin(socket, room) {
     if (!chatViewers.hasOwnProperty(room)) {
         chatViewers[room] = {};
     }
-    if (chatViewers[room].hasOwnProperty(info.username)) {
+    if (chatViewers[room].hasOwnProperty(info.username) && chatViewers[room][info.username] > 0) {
         chatViewers[room][info.username]++;
     } else {
         io.sockets.in(room).emit('join', [room, info.username]);
@@ -195,10 +195,10 @@ function userLeave(socket, room) {
     if (!chatViewers.hasOwnProperty(room)) {
         chatViewers[room] = {};
     }
+    io.sockets.in(room).emit('leave', [room, info.username]);
     if (chatViewers[room].hasOwnProperty(info.username)) {
         chatViewers[room][info.username]--;
         if (chatViewers[room][info.username] < 1) {
-            io.sockets.in(room).emit('leave', [room, info.username]);
             delete chatViewers[room][info.username];
         }
     }
