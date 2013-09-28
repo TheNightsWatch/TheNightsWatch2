@@ -72,6 +72,9 @@ class SiteController extends ActionController
                     case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
                         $errors[] = "Identity not Registered";
                         break;
+                    case -5:
+                        $errors[] = "Your account has been banned";
+                        break;
                     default:
                         $errors[] = "Invalid Password";
                         break;

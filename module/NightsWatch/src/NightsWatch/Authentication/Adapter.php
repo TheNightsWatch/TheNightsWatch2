@@ -42,6 +42,12 @@ class Adapter implements AdapterInterface
                 [],
                 ['Invalid Password']
             );
+        } elseif ($user->banned) {
+            return new Result(
+                -5,
+                [],
+                ['Account Banned']
+            );
         } else {
             return new Result(
                 Result::SUCCESS,
