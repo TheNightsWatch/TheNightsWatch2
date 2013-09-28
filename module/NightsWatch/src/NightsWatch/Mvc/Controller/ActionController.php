@@ -19,8 +19,8 @@ class ActionController extends AbstractActionController
 
     public function updateLayoutWithIdentity()
     {
-        $this->layout()->setVariable('hasIdentity', $this->getAuthenticationService()->hasIdentity());
         $this->layout()->setVariable('identity', $this->getIdentityEntity());
+        $this->layout()->setVariable('hasIdentity', !is_null($this->getIdentityEntity()));
     }
 
     /**
@@ -44,8 +44,9 @@ class ActionController extends AbstractActionController
                 $identity = $this->getEntityManager()
                     ->find('NightsWatch\Entity\User', $this->getAuthenticationService()->getIdentity());
                 $this->identityEntity = $identity;
-                if (is_null($identity)) {
+                if (is_null($identity) || $identity->banned) {
                     $this->getAuthenticationService()->clearIdentity();
+                    $this->identityEntity = null;
                 }
             } else {
                 $this->identityEntity = null;

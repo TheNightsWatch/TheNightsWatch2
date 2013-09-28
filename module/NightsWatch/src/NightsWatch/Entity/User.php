@@ -21,6 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property bool $deniedJoin If true, the user is not allowed to become a recruit
  * @property \DateTime $joined
  * @property int $emailNotifications
+ * @property bool $banned
  */
 class User
 {
@@ -123,6 +124,12 @@ class User
      * @ORM\Column(type="string", nullable=true)
      */
     protected $title = null;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $banned = false;
 
     public static function getRankNames()
     {
