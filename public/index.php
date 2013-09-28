@@ -6,6 +6,8 @@
 chdir(dirname(__DIR__));
 
 if (file_exists(__DIR__ . "/../maintenance")) {
+    http_response_code(503);
+    header("Retry-After: 600");
     require_once("maintenance.html");
     die();
 }
