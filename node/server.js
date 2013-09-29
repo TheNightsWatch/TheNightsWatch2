@@ -195,10 +195,10 @@ function userLeave(socket, room) {
     if (!chatViewers.hasOwnProperty(room)) {
         chatViewers[room] = {};
     }
-    io.sockets.in(room).emit('leave', [room, info.username]);
     if (chatViewers[room].hasOwnProperty(info.username)) {
         chatViewers[room][info.username]--;
         if (chatViewers[room][info.username] < 1) {
+            io.sockets.in(room).emit('leave', [room, info.username]);
             delete chatViewers[room][info.username];
         }
     }
