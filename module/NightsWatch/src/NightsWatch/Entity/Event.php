@@ -62,7 +62,7 @@ class Event
      * @var \NightsWatch\Entity\EventRsvp[]
      * @ORM\OneToMany(targetEntity="EventRsvp", mappedBy="event")
      */
-    protected $rsvps;
+    protected $rsvps = [];
 
     public function getParsedDescription()
     {

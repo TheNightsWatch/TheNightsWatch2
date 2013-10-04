@@ -315,7 +315,7 @@ CALENDAR;
             return false;
         }
 
-        return new ViewModel(['event' => $event]);
+        return new ViewModel(['event' => $event, 'user' => $this->getIdentityEntity()]);
     }
 
     // We're going to create $days = [ [month: '', day: '', events: 0] ]

@@ -46,13 +46,13 @@ class EventRsvp
      * @var int
      * @ORM\Column(type="integer", options={"unsigned"=true})
      */
-    protected $attendance;
+    protected $attendance = 0;
 
     /**
      * @var int
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $attended;
+    protected $attended = null;
 
     /**
      * @var \DateTime
