@@ -265,7 +265,7 @@ class EventController extends ActionController
                 . "is classified and only available to members of rank " . User::getRankName($event->lowestViewableRank)
                 . " and up.\n\n"
                 . $event->description
-                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}\nRSVP: [{$url}]({$url})"
+                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}\n  RSVP: [{$url}]({$url})"
                 . "\n\n"
                 . "{$event->user->username}  \n*{$title}*";
 
