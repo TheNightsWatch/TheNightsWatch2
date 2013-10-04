@@ -209,3 +209,7 @@ h2 .badge {
 .head-well {
     line-height: 32px;
 }
+
+#rsvp select {
+    margin-bottom: 0px;
+}

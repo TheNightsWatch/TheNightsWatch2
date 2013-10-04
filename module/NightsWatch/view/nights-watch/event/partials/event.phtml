@@ -1,6 +1,8 @@
 <?php
 /** @var \NightsWatch\Entity\Event $event */
+/** @var \NightsWatch\Entity\User $user */
 use \NightsWatch\Entity\User;
+use \NightsWatch\Entity\EventRsvp as RSVP;
 
 if (!isset($useEventLink)) {
     $useEventLink = true;
@@ -10,6 +12,26 @@ if (!isset($showRsvp)) {
 }
 $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
 $iso8601 = $event->start->format(DateTime::ISO8601);
+
+// Generate the RSVP groups
+
+$rsvpGroups = [
+    RSVP::RSVP_ATTENDING => [],
+    RSVP::RSVP_MAYBE => [],
+    RSVP::RSVP_ABSENT => [],
+];
+
+$usersAttendance = RSVP::RSVP_ABSENT;
+
+// This is for the Sharknado.
+// SHARKNADO ALWAYS RSVP's ATTENDING
+foreach ($event->rsvps as $rsvp) {
+    $rsvpGroups[$rsvp->attendance][] = $rsvp->user;
+    if (!is_null($user) && $rsvp->user->username == $user->username) {
+        $usersAttendance = $rsvp->attendance;
+    }
+}
+
 ?>
 <article class="event span6 offset4">
     <header>
@@ -39,12 +61,34 @@ $iso8601 = $event->start->format(DateTime::ISO8601);
     </div>
     <footer>
         posted by <a rel="author"><?= htmlspecialchars($event->user->getTitleWithName()) ?></a>
-        <br /><br />
-        <?php
-        if ($showRsvp) {
-            $form = new \NightsWatch\Form\RsvpForm($event);
-            echo $this->bootstrapForm($form);
-        }
-        ?>
+        <?php if (!$showRsvp && $event->start->getTimestamp() > time()): ?>
+            <br/>
+            <em>
+                <?= count($rsvpGroups[RSVP::RSVP_ATTENDING]); ?> attending
+                &middot;
+                <a href="<?= $eventUrl ?>">RSVP</a>
+            </em>
+        <?php endif; ?>
     </footer>
+    <?php if (!is_null($user) && $showRsvp && $event->start->getTimestamp() > time()): ?>
+        <hr/>
+        <aside>
+            <h3>Attendance</h3>
+            <?php foreach ($rsvpGroups as $rsvpType => $rsvpGroup): ?>
+                <h4><?= RSVP::getRsvpNameFromType($rsvpType); ?> <span
+                        class="badge badge-info"><?= count($rsvpGroup); ?></span></h4>
+                <div class="well well-small">
+                    <?php foreach ($rsvpGroup as $user): ?>
+                        <?= $this->partial('partials/listHead', ['user' => $user]); ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+            <?php
+            $form = new \NightsWatch\Form\RsvpForm($event);
+            $form->setAttribute('action', $this->url('home', ['controller' => 'event', 'action' => 'rsvp']));
+            $form->get('attendance')->setValue($usersAttendance);
+            echo $this->bootstrapForm($form);
+            ?>
+        </aside>
+    <?php endif; ?>
 </article>

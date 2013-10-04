@@ -14,6 +14,7 @@ use NightsWatch\Entity\Event;
 use NightsWatch\Entity\EventRsvp;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\EventForm;
+use NightsWatch\Form\RsvpForm;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\Mail\Address;
 use Zend\Mail\Transport\Sendmail;
@@ -89,7 +90,7 @@ class EventController extends ActionController
             ->getRepository('NightsWatch\Entity\Event')
             ->matching($criteria);
 
-        return new ViewModel(['events' => $events]);
+        return new ViewModel(['events' => $events, 'user' => $this->getIdentityEntity()]);
     }
 
     public function viewAction()
@@ -114,13 +115,53 @@ class EventController extends ActionController
             return;
         }
 
-        return new ViewModel(['event' => $event]);
+        return new ViewModel(['event' => $event, 'user' => $this->getIdentityEntity()]);
     }
 
     public function rsvpAction()
     {
-        // Expects a post containing the Event ID and RSVP Status
+        if($this->disallowGuest()) {
+            return;
+        }
 
+        /** @var \NightsWatch\Entity\Event $event */
+        $event = $this->getEntityManager()
+            ->getRepository('NightsWatch\Entity\Event')
+            ->find($this->params()->fromPost('event'));
+
+        if ($this->disallowRankLessThan($event->lowestViewableRank)) {
+            return;
+        }
+
+        if (!$event) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $form = new RsvpForm($event);
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                // First try to find an RSVP for the user
+                $rsvp = $this->getEntityManager()
+                    ->getRepository('NightsWatch\Entity\EventRsvp')
+                    ->findOneBy(['event' => $event, 'user' => $this->getIdentityEntity()]);
+
+                if ($rsvp == null) {
+                    $rsvp = new EventRsvp();
+                    $rsvp->user = $this->getIdentityEntity();
+                    $rsvp->event = $event;
+                }
+
+                $rsvp->attendance = $form->get('attendance')->getValue();
+                $rsvp->timestamp = new \DateTime();
+
+                $this->getEntityManager()->persist($rsvp);
+                $this->getEntityManager()->flush();
+            }
+        }
+
+        $this->redirect()->toRoute('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
     }
 
     public function createAction()
@@ -214,6 +255,8 @@ class EventController extends ActionController
             $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
             $mail->setEncoding('UTF-8');
 
+            $url = $this->url()->fromRoute('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id], ['force_canonical' => true]);
+
             $niceDate = $event->start->format('M j, Y');
             $niceTime = $event->start->format('H:i T');
             // Create a signature
@@ -222,7 +265,7 @@ class EventController extends ActionController
                 . "is classified and only available to members of rank " . User::getRankName($event->lowestViewableRank)
                 . " and up.\n\n"
                 . $event->description
-                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}"
+                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}\nRSVP: [{$url}]({$url})"
                 . "\n\n"
                 . "{$event->user->username}  \n*{$title}*";
 

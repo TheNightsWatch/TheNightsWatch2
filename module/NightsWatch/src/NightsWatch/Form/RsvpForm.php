@@ -14,18 +14,18 @@ class RsvpForm extends Form
 
         $this->add(
             [
-                'name' => 'status',
+                'name' => 'attendance',
                 'type' => 'select',
                 'attributes' => [
-                    'id' => 'status',
+                    'id' => 'attendance',
                     'required' => true,
                     'value' => RSVP::RSVP_ATTENDING,
                 ],
                 'options' => [
                     'value_options' => [
-                        RSVP::RSVP_ATTENDING => 'Attending',
-                        RSVP::RSVP_MAYBE => 'Possibly Attending',
-                        RSVP::RSVP_ABSENT => 'Not Attending',
+                        RSVP::RSVP_ATTENDING => RSVP::getRsvpNameFromType(RSVP::RSVP_ATTENDING),
+                        RSVP::RSVP_MAYBE => RSVP::getRsvpNameFromType(RSVP::RSVP_MAYBE),
+                        RSVP::RSVP_ABSENT => RSVP::getRsvpNameFromType(RSVP::RSVP_ABSENT),
                     ],
                 ],
             ]

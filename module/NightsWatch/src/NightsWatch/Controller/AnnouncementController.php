@@ -162,7 +162,7 @@ class AnnouncementController extends ActionController
             $mail->setEncoding('UTF-8');
 
             // Create a signature for email
-            $title = $announcement->user->getTitleOrRank();
+            $title = trim($announcement->user->getTitleOrRank());
             $announcement->content = $announcement->content .= "\n\n"
                 . $announcement->user->username . "  \n" . "*" . $title . "*";
 

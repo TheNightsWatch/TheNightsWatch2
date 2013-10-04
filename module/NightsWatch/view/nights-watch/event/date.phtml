@@ -7,7 +7,7 @@ if (!count($events)) {
 } else {
     foreach ($events as $event) {
         echo '<div class="row">';
-        echo $this->partial('nights-watch/event/partials/event', ['event' => $event]);
+        echo $this->partial('nights-watch/event/partials/event', ['event' => $event, 'user' => $user]);
         echo '</div>';
     }
 }

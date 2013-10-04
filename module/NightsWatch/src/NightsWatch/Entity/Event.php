@@ -16,6 +16,7 @@ use Michelf\MarkdownExtra;
  * @property \DateTime $start
  * @property int $lowestViewableRank
  * @property \NightsWatch\Entity\User $user
+ * @property \NightsWatch\Entity\EventRsvp $rsvps
  */
 class Event
 {
@@ -56,6 +57,12 @@ class Event
      * @ORM\ManyToOne(targetEntity="User")
      */
     protected $user;
+
+    /**
+     * @var \NightsWatch\Entity\EventRsvp[]
+     * @ORM\OneToMany(targetEntity="EventRsvp", mappedBy="event")
+     */
+    protected $rsvps;
 
     public function getParsedDescription()
     {

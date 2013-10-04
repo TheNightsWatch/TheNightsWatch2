@@ -74,4 +74,21 @@ class EventRsvp
     {
         $this->{$property} = $value;
     }
+
+    /**
+     * @param int $type
+     * @return string
+     */
+    public static function getRsvpNameFromType($type)
+    {
+        switch ($type) {
+            case static::RSVP_ATTENDING:
+                return 'Attending';
+            case static::RSVP_MAYBE:
+                return 'Possibly Attending';
+            case static::RSVP_ABSENT:
+            default:
+                return 'Not Attending';
+        }
+    }
 }
