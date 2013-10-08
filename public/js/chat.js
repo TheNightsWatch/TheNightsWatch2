@@ -10,8 +10,8 @@ $(document).ready(function () {
 
     var initialJoin = true;
 
-    // make lastTenMessages PER ROOM
-    var lastTenMessages = {};
+    // make messageOverflowCache PER ROOM
+    var messageOverflowCache = {};
 
     $(window).on('focus', function (e) {
         isActive = true;
@@ -115,15 +115,15 @@ $(document).ready(function () {
         for (var i = 0, l = messages.length; i < l; ++i) {
             var data = messages[i];
 
-            if (!lastTenMessages.hasOwnProperty(data.room)) {
-                lastTenMessages[data.room] = [];
+            if (!messageOverflowCache.hasOwnProperty(data.room)) {
+                messageOverflowCache[data.room] = [];
             }
 
             var uniqueString = data.time + "|" + data.user + "|" + data.room + "|" + data.message;
             var cont = false;
-            var m = lastTenMessages[data.room].length;
+            var m = messageOverflowCache[data.room].length;
             for(var j = 0;j < m;++j) {
-                if (uniqueString == lastTenMessages[data.room][j]) {
+                if (uniqueString == messageOverflowCache[data.room][j]) {
                     cont = true;
                     break;
                 }
@@ -131,9 +131,9 @@ $(document).ready(function () {
             if (cont) {
                 continue;
             } else {
-                lastTenMessages[data.room].push(uniqueString);
-                if (lastTenMessages[data.room].length >= 10) {
-                    lastTenMessages[data.room].unshift();
+                messageOverflowCache[data.room].push(uniqueString);
+                if (messageOverflowCache[data.room].length >= 20) {
+                    messageOverflowCache[data.room].unshift();
                 }
             }
 
