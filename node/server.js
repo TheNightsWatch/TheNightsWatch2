@@ -25,7 +25,10 @@ String.prototype.markdown2html = function () {
 };
 
 
-var rooms = ['public', 'recruit', 'private', 'corporal', 'council'];
+var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'interview'];
+
+// Map of users that can talk in #interview (minus Corporal+ and boogaert)
+var interviewPrivileged = {};
 
 var messageLog = {};
 
@@ -101,7 +104,8 @@ function mysqlStoreMessage(data) {
     var room = data.room;
     var user = data.userId;
     var message = data.message;
-    mysqlConnection.query("INSERT INTO chatMessage (`user_id`,`chatroom`,`message`,`timestamp`) VALUES (?, ?, ?, CURRENT_TIMESTAMP)", [user, room, message], function (err, result) {
+    var timestamp = data.timestamp / 1000;
+    mysqlConnection.query("INSERT INTO chatMessage (`user_id`,`chatroom`,`message`,`timestamp`) VALUES (?, ?, ?, FROM_UNIXTIME(?))", [user, room, message, timestamp], function (err, result) {
         if (err) {
             console.error(err);
             mysqlStoreMessage(data);
@@ -129,6 +133,7 @@ function updatePrivileges(socket) {
             }
 
             var channelTests = [
+                ['interview', 0],
                 ['public', 0],
                 ['recruit', 1],
                 ['private', 2],
@@ -230,8 +235,9 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].userId = row.userId;
                 // Subscribe to Channels
                 var defaultChannel = 'public';
-                var channels = [];
+                var channels = ['public','interview'];
                 userJoin(socket, 'public');
+                userJoin(socket, 'interview');
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
                     userJoin(socket, 'recruit');
@@ -274,19 +280,38 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on('message', function (data) {
         var info = socketVariables[socket.id];
+        var tokens = data.message.split(' ');
         if (!info.username || !data.room || !data.message) {
             return;
         }
+        // Special stuff for #interview
+        if ((info.username == 'boogaert' || info.username == 'Navarr') && data.message.substr(0, 11) == '/interview ' && tokens[1]) {
+            interviewPrivileged[tokens[1].toLowerCase()] = true;
+            socket.emit('messages',[{ room: 'interview', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can now speak in #interview'}]);
+            return;
+        }
+        if ((info.username == 'boogaert' || info.username == 'Navarr') && data.message.substr(0, 7) == '/eject ' && tokens[1]) {
+            delete interviewPrivileged[tokens[1].toLowerCase()];
+            socket.emit('messages', [{ room: 'interview', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can no longer speak in #interview'}]);
+            return;
+        }
+
+        // Check Room Privileges
         var room = data.room.toLowerCase();
         if ((room == 'recruit' && info.rank < 1) ||
             (room == 'private' && info.rank < 2) ||
             (room == 'corporal' && info.rank < 500) ||
-            (room == 'council' && info.rank < 1000)
+            (room == 'council' && info.rank < 1000) ||
+            (room == 'interview' && info.rank < 500 && info.username != 'boogaert' && !interviewPrivileged.hasOwnProperty(info.username.toLowerCase()))
             ) {
+            socket.emit('messages', [{ room: data.room, user: 'System', time: (new Date).getTime(), message: 'You do not have permission to speak in this room.' }]);
             return;
         }
+        console.log('Can send message!');
         var htmlMessage = sanitize(data.message).escape().markdown2html();
-        var message = { room: data.room, user: socketVariables[socket.id].username, time: (new Date).getTime(), message: htmlMessage };
+
+        data.timestamp = Math.floor((new Date).getTime() / 1000) * 1000;
+        var message = { room: data.room, user: socketVariables[socket.id].username, time: data.timestamp, message: htmlMessage };
         data.userId = info.userId;
         mysqlStoreMessage(data);
         updatePrivileges(socket);

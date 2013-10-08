@@ -10,7 +10,8 @@ $(document).ready(function () {
 
     var initialJoin = true;
 
-    var lastTenMessages = [];
+    // make lastTenMessages PER ROOM
+    var lastTenMessages = {};
 
     $(window).on('focus', function (e) {
         isActive = true;
@@ -114,11 +115,15 @@ $(document).ready(function () {
         for (var i = 0, l = messages.length; i < l; ++i) {
             var data = messages[i];
 
-            var uniqueString = data.user + "|" + data.room + "|" + data.message;
+            if (!lastTenMessages.hasOwnProperty(data.room)) {
+                lastTenMessages[data.room] = [];
+            }
+
+            var uniqueString = data.time + "|" + data.user + "|" + data.room + "|" + data.message;
             var cont = false;
-            var m = lastTenMessages.length;
+            var m = lastTenMessages[data.room].length;
             for(var j = 0;j < m;++j) {
-                if (uniqueString == lastTenMessages[j]) {
+                if (uniqueString == lastTenMessages[data.room][j]) {
                     cont = true;
                     break;
                 }
@@ -126,9 +131,9 @@ $(document).ready(function () {
             if (cont) {
                 continue;
             } else {
-                lastTenMessages.push(uniqueString);
-                if (m >= 10) {
-                    lastTenMessages.unshift();
+                lastTenMessages[data.room].push(uniqueString);
+                if (lastTenMessages[data.room].length >= 10) {
+                    lastTenMessages[data.room].unshift();
                 }
             }
 
