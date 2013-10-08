@@ -307,7 +307,6 @@ io.sockets.on('connection', function (socket) {
             socket.emit('messages', [{ room: data.room, user: 'System', time: (new Date).getTime(), message: 'You do not have permission to speak in this room.' }]);
             return;
         }
-        console.log('Can send message!');
         var htmlMessage = sanitize(data.message).escape().markdown2html();
 
         data.timestamp = Math.floor((new Date).getTime() / 1000) * 1000;
