@@ -42,6 +42,12 @@ class SiteController extends ActionController
         return new ViewModel(['settings' => $mumble, 'user' => $this->getIdentityEntity()]);
     }
 
+    public function mcstatusAction()
+    {
+        header('Access-Control-Allow-Origin: http://shotbow.net/');
+        echo file_get_contents('http://xpaw.ru/mcstatus/status.json');
+    }
+
     public function loginAction()
     {
         if ($this->disallowMember()) {
