@@ -45,7 +45,9 @@ class SiteController extends ActionController
     public function mcstatusAction()
     {
         header('Access-Control-Allow-Origin: http://shotbow.net/');
+        header('Content-Type: application/json');
         echo file_get_contents('http://xpaw.ru/mcstatus/status.json');
+        return false;
     }
 
     public function loginAction()
