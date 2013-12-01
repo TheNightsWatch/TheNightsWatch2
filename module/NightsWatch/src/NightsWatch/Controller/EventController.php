@@ -340,11 +340,6 @@ CALENDAR;
             $date->sub($oneDay);
         }
 
-        $whileWereNotNextMonth = $date->format('n') < $month + 1;
-        $whileWereNotJanuary = $date->format('n') != 1 && $month == 12;
-
-
-
         while ($date < $nextMonthDate || $date->format('w') != 0) {
             $days[] = [
                 'stamp' => $date->format('Y-m-d'),
