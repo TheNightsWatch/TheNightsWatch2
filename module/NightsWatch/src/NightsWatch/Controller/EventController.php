@@ -327,12 +327,25 @@ CALENDAR;
         $date = \DateTime::createFromFormat('Y n j', "{$year} {$month} 1");
         $oneDay = new \DateInterval('P1D');
 
+        // Calculate the Next Month
+        $nextMonthDate = clone $date;
+        $oneMonth = new \DateInterval('P1M');
+        $nextMonthDate->add($oneMonth);
+        $nextMonthYear = $nextMonthDate->format('Y');
+        $nextMonthMonth = $nextMonthDate->format('n');
+        $nextMonthDate = \DateTime::createFromFormat('Y n j', "{$nextMonthYear} {$nextMonthMonth} 1");
+
         // Back up to a Sunday
         while ($date->format('w') > 0) {
             $date->sub($oneDay);
         }
 
-        while ($date->format('n') < $month + 1 || $date->format('w') != 0) {
+        $whileWereNotNextMonth = $date->format('n') < $month + 1;
+        $whileWereNotJanuary = $date->format('n') != 1 && $month == 12;
+
+
+
+        while ($date < $nextMonthDate || $date->format('w') != 0) {
             $days[] = [
                 'stamp' => $date->format('Y-m-d'),
                 'year' => $date->format('Y'),
