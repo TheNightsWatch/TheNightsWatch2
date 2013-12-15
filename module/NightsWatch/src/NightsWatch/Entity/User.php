@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property int $rank
  * @property bool $admin
  * @property bool $deniedJoin If true, the user is not allowed to become a recruit
+ * @property bool $deserted If true, the user has deserted the Watch
  * @property \DateTime $joined
  * @property int $emailNotifications
  * @property bool $banned
@@ -131,6 +132,12 @@ class User
      */
     protected $banned = false;
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $deserter = false;
+
     public static function getRankNames()
     {
         return [
@@ -179,6 +186,9 @@ class User
                     return 'First Ranger';
             }
         }
+        if ($this->deserter) {
+            return 'Deserter';
+        }
         return static::getRankName($this->rank);
     }
 
@@ -186,6 +196,9 @@ class User
     {
         if (!is_null($this->title)) {
             return sprintf($this->title, $this->username, static::getOrderName($this->order));
+        }
+        if ($this->deserter) {
+            return $this->username . ', Deserter';
         }
         switch ($this->rank) {
             case static::RANK_RECRUIT:
