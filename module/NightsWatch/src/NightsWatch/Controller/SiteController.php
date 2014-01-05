@@ -46,7 +46,15 @@ class SiteController extends ActionController
     {
         header('Access-Control-Allow-Origin: http://shotbow.net');
         header('Content-Type: application/json');
-        echo file_get_contents('http://xpaw.ru/mcstatus/status.json');
+        $context = stream_context_create(
+            [
+                'http' => [
+                    'method' => 'GET',
+                    'header' => "Accept: */*\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36"
+                ]
+            ]
+        );
+        echo file_get_contents('http://xpaw.ru/mcstatus/status.json', false, $context);
         return $this->response;
     }
 
