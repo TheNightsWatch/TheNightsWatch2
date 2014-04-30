@@ -27,7 +27,7 @@ String.prototype.markdown2html = function () {
 
 var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'interview'];
 
-// Map of users that can talk in #interview (minus Corporal+ and boogaert)
+// Map of users that can talk in #interview (minus Corporal+)
 var interviewPrivileged = {};
 
 var messageLog = {};
@@ -285,12 +285,12 @@ io.sockets.on('connection', function (socket) {
             return;
         }
         // Special stuff for #interview
-        if ((info.username == 'boogaert' || info.username == 'Navarr') && data.message.substr(0, 11) == '/interview ' && tokens[1]) {
+        if ((info.username == 'Navarr') && data.message.substr(0, 11) == '/interview ' && tokens[1]) {
             interviewPrivileged[tokens[1].toLowerCase()] = true;
             socket.emit('messages',[{ room: 'interview', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can now speak in #interview'}]);
             return;
         }
-        if ((info.username == 'boogaert' || info.username == 'Navarr') && data.message.substr(0, 7) == '/eject ' && tokens[1]) {
+        if ((info.username == 'Navarr') && data.message.substr(0, 7) == '/eject ' && tokens[1]) {
             delete interviewPrivileged[tokens[1].toLowerCase()];
             socket.emit('messages', [{ room: 'interview', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can no longer speak in #interview'}]);
             return;
@@ -302,7 +302,7 @@ io.sockets.on('connection', function (socket) {
             (room == 'private' && info.rank < 2) ||
             (room == 'corporal' && info.rank < 500) ||
             (room == 'council' && info.rank < 1000) ||
-            (room == 'interview' && info.rank < 500 && info.username != 'boogaert' && !interviewPrivileged.hasOwnProperty(info.username.toLowerCase()))
+            (room == 'interview' && info.rank < 500 && !interviewPrivileged.hasOwnProperty(info.username.toLowerCase()))
             ) {
             socket.emit('messages', [{ room: data.room, user: 'System', time: (new Date).getTime(), message: 'You do not have permission to speak in this room.' }]);
             return;
