@@ -60,9 +60,7 @@ div.container a.brand {
 }
 
 .loading {
-    background-image: url('/img/ajax-loader.gif');
-    background-repeat: no-repeat;
-    background-position: center center;
+    background: url('/img/ajax-loader.gif') no-repeat center center;
 }
 
 .chat-messages ol {
@@ -107,7 +105,7 @@ div.container a.brand {
 }
 
 #joinTheWatchButton {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .announcement-avatar {
@@ -211,5 +209,42 @@ h2 .badge {
 }
 
 #rsvp select {
-    margin-bottom: 0px;
+    margin-bottom: 0;
+}
+
+/** falling_dutchman's chat changes (expandable chat) **/
+@media(min-height: 640px) and (max-height: 739px){
+    #chat-message-container {
+        height: 400px;
+    }
+    #chat-viewers {
+        height: 400px;
+    }
+}
+
+@media(min-height: 740px) and (max-height: 839px){
+    #chat-message-container {
+        height: 500px;
+    }
+    #chat-viewers {
+        height: 500px;
+    }
+}
+
+@media(min-height: 840px) and (max-height: 939px){
+    #chat-message-container {
+        height: 600px;
+    }
+    #chat-viewers {
+        height: 600px;
+    }
+}
+
+@media(min-height: 940px) {
+    #chat-message-container {
+        height: 700px;
+    }
+    #chat-viewers {
+        height: 700px;
+    }
 }
