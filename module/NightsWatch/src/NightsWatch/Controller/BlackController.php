@@ -10,16 +10,16 @@ class BlackController extends ActionController
 {
     public function indexAction()
     {
-        if (!$this->disallowGuest()) {
-            $this->redirect()->toRoute('login');
+        if ($this->disallowGuest()) {
+            return false;
         }
         $this->updateLayoutWithIdentity();
     }
 
     public function downloadAction()
     {
-        if (!$this->disallowGuest()) {
-            $this->redirect()->toRoute('login');
+        if ($this->disallowGuest()) {
+            return false;
         }
         $keepHat = !!intval($this->params()->fromQuery('keepHat', 0));
 
