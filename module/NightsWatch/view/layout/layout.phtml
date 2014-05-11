@@ -73,10 +73,10 @@
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-2330128-19', 'minez-nightswatch.com');
-    ga('send', 'pageview');
-    <?php if ($this->hasIdentity): ?>
+<?php if ($this->hasIdentity): ?>
     ga('set', '&uid', '<?= $this->identity->id ?>');
-    <?php endif; ?>
+<?php endif; ?>
+    ga('send', 'pageview');
 </script>
 </body>
 </html>

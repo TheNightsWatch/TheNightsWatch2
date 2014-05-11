@@ -231,6 +231,7 @@ $(document).ready(function () {
         if ($text.val().trim() == '') {
             return;
         }
+        ga('send', 'event', 'chat', 'message');
         socket.emit('message', { room: currentRoom, message: $text.val() });
         $text.val('');
     });
