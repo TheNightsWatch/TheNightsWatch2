@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property string $minecraftId
  * @property Honor[] $honors
  * @property int $rank
+ * @property int $order
  * @property bool $admin
  * @property bool $deniedJoin If true, the user is not allowed to become a recruit
  * @property bool $deserted If true, the user has deserted the Watch

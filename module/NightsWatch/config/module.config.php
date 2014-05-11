@@ -13,6 +13,7 @@ return [
             'Announcement' => 'NightsWatch\Controller\AnnouncementController',
             'User' => 'NightsWatch\Controller\UserController',
             'Event' => 'NightsWatch\Controller\EventController',
+            'Black' => 'NightsWatch\Controller\BlackController',
         ],
     ],
     'router' => [
@@ -122,6 +123,16 @@ return [
                         'action' => 'date',
                     ]
                 ]
+            ],
+            'takeTheBlack' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/taketheblack/[:action]',
+                    'defaults' => [
+                        'controller' => 'black',
+                        'action' => 'index',
+                    ],
+                ],
             ],
         ],
     ],
