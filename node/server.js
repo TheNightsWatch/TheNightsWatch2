@@ -40,7 +40,7 @@ var chatViewers = {};
 function populateTheMessageLog() {
     for (var i in rooms) {
         var room = rooms[i];
-        mysqlConnection.query('SELECT `chatroom`,`timestamp`,`message`,`user`.`username` AS `user` FROM `chatMessage` LEFT JOIN `user` ON(`user`.`id`=`chatMessage`.`user_id`) WHERE chatroom = ? ORDER BY chatMessage.timestamp DESC, chatMessage.id DESC LIMIT 20', [room], function (err, rows) {
+        mysqlConnection.query('SELECT `chatroom`,`timestamp`,`message`,`user`.`username` AS `user` FROM `chatMessage` LEFT JOIN `user` ON(`user`.`id`=`chatMessage`.`user_id`) WHERE chatroom = ? ORDER BY chatMessage.timestamp DESC, chatMessage.id DESC LIMIT 35', [room], function (err, rows) {
             if (err) {
                 console.error(err);
             }
@@ -64,7 +64,7 @@ function addToMessageLog(message, room) {
     if (messageLog[room] == undefined) {
         messageLog[room] = [];
     }
-    if (messageLog[room].length >= 20) {
+    if (messageLog[room].length >= 35) {
         messageLog[room].shift();
     }
     messageLog[room].push(message);
