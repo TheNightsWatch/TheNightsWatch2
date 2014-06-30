@@ -14,6 +14,7 @@ return [
             'User' => 'NightsWatch\Controller\UserController',
             'Event' => 'NightsWatch\Controller\EventController',
             'Black' => 'NightsWatch\Controller\BlackController',
+            'Mod' => 'NightsWatch\Controller\ModController',
         ],
     ],
     'router' => [

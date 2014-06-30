@@ -1,14 +1,6 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Navarr
- * Date: 7/29/13
- * Time: 6:48 PM
- * To change this template use File | Settings | File Templates.
- */
 
 namespace NightsWatch\Controller;
-
 
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\View\Model\ViewModel;
