@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property int $order
  * @property bool $admin
  * @property bool $deniedJoin If true, the user is not allowed to become a recruit
- * @property bool $deserted If true, the user has deserted the Watch
+ * @property bool $deserter If true, the user has deserted the Watch
  * @property \DateTime $joined
  * @property int $emailNotifications
  * @property bool $banned
