@@ -12,6 +12,7 @@ class ModController extends ActionController
     {
         $user = $this->params()->fromQuery('user');
         $this->filterOutStyleCodes($user);
+        $this->filterOutDotPng($user);
 
         /** @var User $user */
         $user = $this->getEntityManager()
@@ -23,7 +24,7 @@ class ModController extends ActionController
             return;
         }
 
-        if ($user->rank == User::RANK_RECRUIT || $user->deserted) {
+        if ($user->rank == User::RANK_RECRUIT || $user->deserter) {
             $this->getResponse()->setStatusCode(501);
             return;
         }
@@ -40,5 +41,12 @@ class ModController extends ActionController
     private function filterOutStyleCodes(&$text)
     {
         $text = preg_replace("/§[a-f0-9]/iu", '', $text);
+    }
+
+    private function filterOutDotPng(&$text)
+    {
+        if (strtolower(substr($text, -4)) == '.png') {
+            $text = substr($text, 0, -4);
+        }
     }
 }
