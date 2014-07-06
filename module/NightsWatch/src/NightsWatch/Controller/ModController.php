@@ -21,12 +21,12 @@ class ModController extends ActionController
 
         if (!$user || $user->rank == User::RANK_CIVILIAN) {
             $this->getResponse()->setStatusCode(404);
-            return;
+            return $this->getResponse();
         }
 
-        if ($user->rank == User::RANK_RECRUIT || $user->deserter) {
+        if ($user->deserter) {
             $this->getResponse()->setStatusCode(501);
-            return;
+            return $this->getResponse();
         }
 
         $response = new Response();
@@ -52,9 +52,6 @@ class ModController extends ActionController
                 break;
         }
         switch ($user->order) {
-            default:
-                $backingType = 'recruit';
-                break;
             case User::ORDER_RANGER:
                 $backingType = 'ranger';
                  break;
@@ -62,16 +59,24 @@ class ModController extends ActionController
                 $backingType = 'steward';
                 break;
         }
+        if ($user->rank == User::RANK_RECRUIT) {
+            $backingType = 'recruit';
+        }
         if ($user->rank == User::RANK_COMMANDER) {
             $backingType = 'commander';
         }
         $backing = imagecreatefromstring(file_get_contents("data/capes/backing-{$backingType}.png"));
         $raven = imagecreatefromstring(file_get_contents("data/capes/raven-logo.png"));
         $images = [$base, $backing, $raven];
+        if ($user->rank == User::RANK_RECRUIT) {
+            $recruit = imagecreatefromstring(file_get_contents("data/capes/recruit.png"));
+            $images[] = $recruit;
+        }
         if (!is_null($iconType)) {
             $icon = imagecreatefromstring(file_get_contents("data/capes/icon-{$iconType}.png"));
             $images[] = $icon;
         }
+
 
         foreach($images as $image) {
             imagesavealpha($image, true);
