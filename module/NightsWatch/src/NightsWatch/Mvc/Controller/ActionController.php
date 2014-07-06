@@ -64,6 +64,14 @@ class ActionController extends AbstractActionController
     }
 
     /**
+     * @return \Zend\Http\Response
+     */
+    public function getResponse()
+    {
+        return parent::getResponse();
+    }
+
+    /**
      * @return AuthenticationService
      */
     public function getAuthenticationService()
