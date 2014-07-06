@@ -37,6 +37,7 @@ class ModController extends ActionController
         switch ($user->rank) {
             default:
                 $iconType = null;
+                break;
             case User::RANK_COMMANDER:
                 $iconType = 'commander';
                 break;
@@ -53,6 +54,7 @@ class ModController extends ActionController
         switch ($user->order) {
             default:
                 $backingType = 'recruit';
+                break;
             case User::ORDER_RANGER:
                 $backingType = 'ranger';
                  break;
