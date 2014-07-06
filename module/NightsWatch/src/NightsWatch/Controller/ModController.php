@@ -31,7 +31,65 @@ class ModController extends ActionController
 
         $response = new Response();
         $response->getHeaders()->addHeaders(['Content-Type' => 'image/png']);
-        $response->setContent(file_get_contents('data/capes/base.png'));
+
+        $images = [];
+        $base = imagecreatefromstring(file_get_contents('data/capes/base.png'));
+        switch ($user->rank) {
+            default:
+                $iconType = null;
+            case User::RANK_COMMANDER:
+                $iconType = 'commander';
+                break;
+            case User::RANK_GENERAL:
+                $iconType = 'general';
+                break;
+            case User::RANK_LIEUTENANT:
+                $iconType = 'lieutenant';
+                break;
+            case User::RANK_CORPORAL:
+                $iconType = 'corporal';
+                break;
+        }
+        switch ($user->order) {
+            default:
+                $backingType = 'recruit';
+            case User::ORDER_RANGER:
+                $backingType = 'ranger';
+                 break;
+            case User::ORDER_STEWARD:
+                $backingType = 'steward';
+                break;
+        }
+        if ($user->rank == User::RANK_COMMANDER) {
+            $backingType = 'commander';
+        }
+        $backing = imagecreatefromstring(file_get_contents("data/capes/backing-{$backingType}.png"));
+        $raven = imagecreatefromstring(file_get_contents("data/capes/raven-logo.png"));
+        $images = [$base, $backing, $raven];
+        if (!is_null($iconType)) {
+            $icon = imagecreatefromstring(file_get_contents("data/capes/icon-{$iconType}.png"));
+            $images[] = $icon;
+        }
+
+        foreach($images as $image) {
+            imagesavealpha($image, true);
+        }
+
+        $w = imagesx($base);
+        $h = imagesy($base);
+
+        array_shift($images); // remove $base from $images
+
+        foreach($images as $image) {
+            imagecopyresampled($base, $image, 0, 0, 0, 0, $w, $h, $w, $h);
+        }
+
+        ob_start();
+        imagepng($base);
+        $imageContents = ob_get_contents();
+        ob_end_clean();
+
+        $response->setContent($imageContents);
         return $response;
     }
 
