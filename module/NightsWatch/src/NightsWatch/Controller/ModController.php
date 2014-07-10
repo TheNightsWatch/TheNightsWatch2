@@ -19,7 +19,7 @@ class ModController extends ActionController
             ->getRepository('NightsWatch\Entity\User')
             ->findOneBy(['username' => $user]);
 
-        if (!$user) {
+        if (!$user || $user->rank < User::RANK_RECRUIT) {
             $this->getResponse()->setStatusCode(404);
             return $this->getResponse();
         }
