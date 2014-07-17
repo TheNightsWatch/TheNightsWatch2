@@ -1,12 +1,21 @@
 <div id="mapContainer">
+    <div class="container">
+        <h2>Map not loading?</h2>
+        <div class="well">
+            <p>View below for instructions on how to view the map.  For simplicity, all instructions are a single picture showing where the appropriate dialog is and what to click.</p>
+            <h3>Chrome</h2>
+            <p style="text-align:center;"><img src="http://i.imgur.com/OaKqDiy.png" /></p>
+            <h3>Firefox</h2>
+            <p style="text-align:center;"><img src="http://i.imgur.com/HAkmjCg.png" /></p>
+            <h3>Internet Explorer</h2>
+            <p style="text-align:center;"><img src="http://i.imgur.com/boIvUoO.png" /></p>
+        </div>
+    </div>
     <iframe src="http://minezmap.com/?plugins=TNW" id="mapFrame" sandbox="allow-scripts allow-same-origin allow-forms">
-        <h1>Map not loading?</h1>
-        <p>View below for instructions on how to view the map.  For simplicity, all instructions are a single picture showing where the appropriate dialog is and what to click.</p>
-        <h2>Chrome</h2>
-        <p style="text-align:center;"><img src="http://i.imgur.com/OaKqDiy.png" /></p>
-        <h2>Firefox</h2>
-        <p style="text-align:center;"><img src="http://i.imgur.com/HAkmjCg.png" /></p>
-        <h2>Internet Explorer</h2>
-        <p style="text-align:center;"><img src="http://i.imgur.com/boIvUoO.png" /></p>
+        
     </iframe>
 </div>
+<style>
+#mapFrame { position: absolute; top: 0; left: 0; z-index: 2; }
+.container { position: relative; z-index: 1; }
+</style>
