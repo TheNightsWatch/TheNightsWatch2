@@ -58,6 +58,13 @@ return [
                     ],
                 ],
             ],
+            'mod' => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/mod',
+                    'defaults' = > [
+                        'controller' => 'site',
+                        'action' => 'mod'
             'login' => [
                 'type' => 'literal',
                 'options' => [
@@ -228,6 +235,10 @@ return [
             [
                 'label' => 'Mumble',
                 'route' => 'mumble',
+            ],
+            [
+            'label' => 'Mod',
+            'route' => 'mod',
             ]
         ],
         'right-noauth' => [
