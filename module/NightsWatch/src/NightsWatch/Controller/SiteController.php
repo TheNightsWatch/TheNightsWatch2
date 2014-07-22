@@ -1,4 +1,4 @@
-<?php
+f<?php
 
 namespace NightsWatch\Controller;
 
@@ -41,6 +41,17 @@ class SiteController extends ActionController
 
         return new ViewModel(['settings' => $mumble, 'user' => $this->getIdentityEntity()]);
     }
+    public function modAction()
+        {
+            if ($this->disallowGuest()) {
+                return false;
+            }
+            $this->updateLayoutWithIdentity();
+
+            $mod = $this->getServiceLocator()->get('config')['NightsWatch']['mod'];
+
+            return new ViewModel(['settings' => $mod, 'user' => $this->getIdentityEntity()]);
+        }
 
     public function mcstatusAction()
     {
