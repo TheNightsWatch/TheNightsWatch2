@@ -237,8 +237,8 @@ return [
                 'route' => 'mumble',
             ],
             [
-            'label' => 'Mod',
-            'route' => 'mod',
+                'label' => 'Mod',
+                'route' => 'mod',
             ]
         ],
         'right-noauth' => [
