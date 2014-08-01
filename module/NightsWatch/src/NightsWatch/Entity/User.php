@@ -98,7 +98,7 @@ class User
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     * @ORM\Column(type="datetime")
      */
     protected $joined = null;
 
@@ -138,6 +138,12 @@ class User
      * @ORM\Column(type="boolean")
      */
     protected $deserter = false;
+
+    /**
+     * @var Ip[]
+     * @ORM\OneToMany(targetEntity="Ip", mappedBy="user")
+     */
+    protected $ips;
 
     public static function getRankNames()
     {
@@ -236,6 +242,7 @@ class User
     {
         $this->joined = new \DateTime();
         $this->honors = new ArrayCollection();
+        $this->ips = new ArrayCollection();
     }
 
     public function __get($property)

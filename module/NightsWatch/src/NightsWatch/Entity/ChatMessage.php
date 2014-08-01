@@ -45,9 +45,14 @@ class ChatMessage
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     * @ORM\Column(type="datetime")
      */
     protected $timestamp;
+
+    public function __construct()
+    {
+        $this->timestamp = new \DateTime();
+    }
 
     public function __get($property)
     {

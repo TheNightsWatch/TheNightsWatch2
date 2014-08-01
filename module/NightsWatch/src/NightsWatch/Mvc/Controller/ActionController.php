@@ -2,9 +2,12 @@
 
 namespace NightsWatch\Mvc\Controller;
 
+use NightsWatch\Entity\Ip;
 use Zend\Authentication\AuthenticationService;
+use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Authentication\Storage\Session as SessionStorage;
+use Zend\Mvc\InjectApplicationEventInterface;
 use Zend\View\Model\ViewModel;
 
 class ActionController extends AbstractActionController
@@ -16,6 +19,35 @@ class ActionController extends AbstractActionController
 
     /** @var \NightsWatch\Entity\User */
     protected $identityEntity = -1;
+
+    public function setEventManager(EventManagerInterface $events)
+    {
+        parent::setEventManager($events);
+
+        $controller = $this;
+
+        $events->attach(
+            'dispatch',
+            function ($event) use ($controller) {
+                /** @var \Zend\Http\Request $request */
+                $request = $event->getRequest();
+                $address = $request->getServer()->get('REMOTE_ADDR');
+                $user = $controller->getIdentityEntity();
+                if (!is_null($user)) {
+                    $ip = new Ip();
+                    $ip->ip = $address;
+                    $ip->user = $user;
+                    $controller->getEntityManager()->persist($ip);
+                    try {
+                        $controller->getEntityManager()->flush();
+                    } catch (\Exception $e) {
+                        // The record already exists.  For now, do nothing.
+                    }
+                }
+            },
+            100
+        );
+    }
 
     public function updateLayoutWithIdentity()
     {

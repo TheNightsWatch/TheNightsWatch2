@@ -38,7 +38,7 @@ class ChatToken
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     * @ORM\Column(type="datetime")
      */
     protected $expires;
 

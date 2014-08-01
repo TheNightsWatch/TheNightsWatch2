@@ -42,7 +42,7 @@ class Event
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     * @ORM\Column(type="datetime")
      */
     protected $start;
 

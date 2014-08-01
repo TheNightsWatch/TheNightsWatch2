@@ -33,7 +33,7 @@ class Honor
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP")
+     * @ORM\Column(type="datetime")
      */
     protected $timestamp;
 
@@ -42,6 +42,11 @@ class Honor
      * @ORM\Column(type="text")
      */
     protected $reason;
+
+    public function __construct()
+    {
+        $this->timestamp = new \DateTime();
+    }
 
     public function __get($property)
     {

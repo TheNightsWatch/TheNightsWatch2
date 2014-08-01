@@ -158,6 +158,7 @@ class JoinController extends ActionController
                         $this->getEntityManager()->persist($user);
                         $this->getEntityManager()->flush();
                         $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
+                        $this->updateLayoutWithIdentity();
                         return new ViewModel(['done' => true]);
                     }
                 } catch (\RuntimeException $e) {
