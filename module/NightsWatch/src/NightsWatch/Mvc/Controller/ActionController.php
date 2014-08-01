@@ -34,9 +34,17 @@ class ActionController extends AbstractActionController
                 $address = $request->getServer()->get('REMOTE_ADDR');
                 $user = $controller->getIdentityEntity();
                 if (!is_null($user)) {
-                    $ip = new Ip();
-                    $ip->ip = $address;
-                    $ip->user = $user;
+                    $ip = $this->getEntityManager()
+                        ->getRepository('NightsWatch\Entity\Ip')
+                        ->findOneBy(['user' => $user, 'ip' => $address]);
+
+                    if (!$ip) {
+                        $ip = new Ip();
+                        $ip->ip = $address;
+                        $ip->user = $user;
+                    }
+
+                    $ip->lastSeen = new \DateTime();
                     $controller->getEntityManager()->persist($ip);
                     try {
                         $controller->getEntityManager()->flush();
