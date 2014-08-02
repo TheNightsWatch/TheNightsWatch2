@@ -36,7 +36,7 @@ $(document).ready(function () {
             });
 
         // Navigation Handling
-        $chatNav.on('click', 'li', function (e) {
+        $chatNav.on('click', 'li[data-room]', function (e) {
             e.preventDefault();
 
             var $chatContainer = $('#chat-message-container');

@@ -25,10 +25,10 @@ String.prototype.markdown2html = function () {
 };
 
 
-var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'interview'];
+var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'announcements', 'anime'];
 
-// Map of users that can talk in #interview (minus Corporal+)
-var interviewPrivileged = {};
+// Map of users that can talk in #announcements (minus Corporal+)
+var announcementsPrivileged = {};
 
 var messageLog = {};
 
@@ -133,12 +133,13 @@ function updatePrivileges(socket) {
             }
 
             var channelTests = [
-                ['interview', 0],
+                ['announcements', 0],
                 ['public', 0],
+                ['anime', 0],
                 ['recruit', 1],
                 ['private', 2],
                 ['corporal', 500],
-                ['council', 1000],
+                ['council', 1000]
             ];
             var activateChannels = [];
             var deactivateChannels = [];
@@ -235,9 +236,10 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].userId = row.userId;
                 // Subscribe to Channels
                 var defaultChannel = 'public';
-                var channels = ['public','interview'];
+                var channels = ['public','announcements', 'anime'];
                 userJoin(socket, 'public');
-                userJoin(socket, 'interview');
+                userJoin(socket, 'anime');
+                userJoin(socket, 'announcements');
                 if (row.rank >= 1) { // recruit+
                     channels.push('recruit');
                     userJoin(socket, 'recruit');
@@ -284,15 +286,15 @@ io.sockets.on('connection', function (socket) {
         if (!info.username || !data.room || !data.message) {
             return;
         }
-        // Special stuff for #interview
+        // Special stuff for #announcements
         if ((info.username == 'Navarr') && data.message.substr(0, 11) == '/interview ' && tokens[1]) {
-            interviewPrivileged[tokens[1].toLowerCase()] = true;
-            socket.emit('messages',[{ room: 'interview', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can now speak in #interview'}]);
+            announcementsPrivileged[tokens[1].toLowerCase()] = true;
+            socket.emit('messages',[{ room: 'announcements', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can now speak in #announcements'}]);
             return;
         }
         if ((info.username == 'Navarr') && data.message.substr(0, 7) == '/eject ' && tokens[1]) {
-            delete interviewPrivileged[tokens[1].toLowerCase()];
-            socket.emit('messages', [{ room: 'interview', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can no longer speak in #interview'}]);
+            delete announcementsPrivileged[tokens[1].toLowerCase()];
+            socket.emit('messages', [{ room: 'announcements', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can no longer speak in #announcements'}]);
             return;
         }
 
@@ -302,7 +304,7 @@ io.sockets.on('connection', function (socket) {
             (room == 'private' && info.rank < 2) ||
             (room == 'corporal' && info.rank < 500) ||
             (room == 'council' && info.rank < 1000) ||
-            (room == 'interview' && info.rank < 500 && !interviewPrivileged.hasOwnProperty(info.username.toLowerCase()))
+            (room == 'announcements' && info.rank < 500 && !announcementsPrivileged.hasOwnProperty(info.username.toLowerCase()))
             ) {
             socket.emit('messages', [{ room: data.room, user: 'System', time: (new Date).getTime(), message: 'You do not have permission to speak in this room.' }]);
             return;
