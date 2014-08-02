@@ -72,11 +72,13 @@ $corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) 
             <ol class="chat-viewers council"></ol>
             <ol class="chat-viewers interview"></ol>
         </div>
-        <?php if (!is_null($identity) && $identity->rank < User::RANK_PRIVATE): ?>
+        <?php if (!is_null($identity) && $identity->rank < User::RANK_RECRUIT): ?>
             <a id="joinTheWatchButton" class="btn btn-primary span12" href="/join/recruit">Join the Watch!</a>
             <div style="text-align:center;">
                 <small>(You haven't yet!)</small>
             </div>
+        <?php elseif (!is_null($identity) && $identity->rank == User::RANK_RECRUIT): ?>
+            <a id="joinTheWatchButton" class="btn btn-inverse span12" href="/join/recruit">Get Promoted</a>
         <?php endif; ?>
     </div>
 </div>

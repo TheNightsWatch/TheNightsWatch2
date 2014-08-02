@@ -113,12 +113,14 @@ class JoinController extends ActionController
             return false;
         }
         $this->updateLayoutWithIdentity();
+        $user = $this->getIdentityEntity();
+
         $errors = [];
-        $hasJoined = false;
+        $hasJoined = $user->rank >= User::RANK_RECRUIT;
 
         if ($this->getRequest()->isPost()) {
             $user = $this->getIdentityEntity();
-            if (!$user->deniedJoin) {
+            if (!$user->deniedJoin && $user->rank < User::RANK_RECRUIT) {
                 $user->rank = User::RANK_RECRUIT;
                 $this->getEntityManager()->persist($user);
                 $this->getEntityManager()->flush();
