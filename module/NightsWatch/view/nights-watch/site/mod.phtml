@@ -1,0 +1,46 @@
+<?php
+
+use \NightsWatch\Entity\User;
+
+?>
+<h2>About</h2>
+<div class="well">
+    <p>The official Nights Watch mod gives our recruits and up capes that allows other members to identify them as Nights Watch members in game</p>
+</div>
+
+<?php if ($user->rank >= User::RANK_RECRUIT): ?>
+<h2>Dependencies and installation</h2>
+<div class="well">
+    <p>our mod uses version <a href="http://files.minecraftforge.net/">1060 of Minecraft Forge</a>, this means that you'll have to
+    install Minecraft Forge before you can install the mod</p>
+    <p>to install the mod you have to start of with installing Minecraft Forge:</p>
+    <br>
+    <li>first go to <a href= "http://files.minecraftforge.net/">the Minecraft Forge file server</a> and download the installer for the
+    recommended version (please make sure to get it for minecraft 1.7.2 and not 1.7.10).
+    </li>
+    <li>now you have to download our mod. you can find a download link by checking under the "Download" header.
+    </li>
+    <p>at this point it is recommended that you have both minecraft and the minecraft launcher <strong>closed</strong>.
+    <li>when you downloaded the installer open it (make sure you open it with java platform SE binary), tick the "install client" box,
+    point the installer to your .minecraft folder and hit OK.
+    </li>
+    <li>when the installer is done installing Minecraft Forge close it and open the official minecraft launcher.
+    </li>
+    <li>there should be a new profile named "Forge", select it and run minecraft.
+    </li>
+    <li>after minecraft is fully opened (this is when you reach the main menu) close it and navigate to your .minecraft folder. inside
+    your .minecraft folder navigate to the folder called "mods".
+    </li>
+    <li>now take the .jar that you downloaded of this site and drag and drop it into the mods folder.
+    </li>
+    <p> now you should have the mod installed</p>
+</div>
+    <h2>Download</h2>
+    <div class="well">
+        <p><a href = "">version: 1.0.0 for version 1.7.2 of minecraft</a>requires <a href = "http://files.minecraftforge.net/"> Minecraft
+        Forge</p>
+        </p>alwasy remember to never share the mod file with others,<strong> if anyone EVER asks for a download link direct them to this
+        page! do not give them a direct link</string>. you are absolutely not allowed to rehost the mod on a different site or redistribute
+        it with anyone outside of the mod.</p>
+    </div>
+<?php endif; ?>
