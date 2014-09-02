@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property \DateTime $joined
  * @property int $emailNotifications
  * @property bool $banned
+ * @property \DateTime $recruitmentDate
  */
 class User
 {
@@ -101,6 +102,12 @@ class User
      * @ORM\Column(type="datetime")
      */
     protected $joined = null;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $recruitmentDate = null;
 
     /**
      * @var bool
