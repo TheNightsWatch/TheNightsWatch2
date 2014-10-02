@@ -10,6 +10,9 @@ if (!isset($useEventLink)) {
 if (!isset($showRsvp)) {
     $showRsvp = false;
 }
+if (!isset($showRegion)) {
+    $showRegion = false;
+}
 $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
 $iso8601 = $event->start->format(DateTime::ISO8601);
 
@@ -70,6 +73,13 @@ foreach ($event->rsvps as $rsvp) {
             </em>
         <?php endif; ?>
     </footer>
+    <?php if ($showRegion && $event->region): ?>
+        <hr />
+        <aside>
+            <h3>Region</h3>
+            <div class="well well-small"><?= $event->getRegionName(); ?></div>
+        </aside>
+    <?php endif; ?>
     <?php if (!is_null($user) && $showRsvp && $event->start->getTimestamp() > time()): ?>
         <hr/>
         <aside>

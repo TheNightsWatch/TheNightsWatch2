@@ -183,6 +183,7 @@ class EventController extends ActionController
                     'date' => $session->date,
                     'time' => $session->time,
                     'offset' => $session->offset,
+                    'region' => $session->region,
                 ]
             );
         }
@@ -196,6 +197,7 @@ class EventController extends ActionController
                 $session->date = $form->get('date')->getValue();
                 $session->time = $form->get('time')->getValue();
                 $session->offset = $form->get('offset')->getValue();
+                $session->region = $form->get('region')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
                 return false;
             }
@@ -222,6 +224,7 @@ class EventController extends ActionController
         $event->description = $session->description;
         $event->user = $this->getIdentityEntity();
         $event->start = new \DateTime($session->date . ' ' . $session->time);
+        $event->region = $session->region;
         $offset = $session->offset + date('Z');
         $add = $offset > 0 ? true : false;
         $offset = abs($offset);
@@ -259,13 +262,15 @@ class EventController extends ActionController
 
             $niceDate = $event->start->format('M j, Y');
             $niceTime = $event->start->format('H:i T');
+            $region = $event->getRegionName();
             // Create a signature
             $title = trim($event->user->getTitleOrRank());
             $event->description = "A new event has been posted to the calendar.  All information concerning this event "
                 . "is classified and only available to members of rank " . User::getRankName($event->lowestViewableRank)
                 . " and up.\n\n"
                 . $event->description
-                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})"
+                . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})  "
+                . $event->region ? "\nRegion: {$region}" : ''
                 . "\n\n"
                 . "{$event->user->username}  \n*{$title}*";
 

@@ -2,6 +2,7 @@
 
 namespace NightsWatch\Form;
 
+use NightsWatch\Entity\Event;
 use Zend\Form\Form;
 
 class EventForm extends Form
@@ -81,6 +82,27 @@ class EventForm extends Form
                         'help' => [
                             'style' => 'block',
                             'content' => 'This is your offset from GMT in seconds',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name' => 'region',
+                'type' => 'select',
+                'attributes' => [
+                    'id' => 'region',
+                    'required' => true,
+                ],
+                'options' => [
+                    'label' => 'Region Instance',
+                    'value_options' => Event::getRegionNames(),
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => 'The region the event will take place on.  (For differing database instances)'
                         ],
                     ],
                 ],
