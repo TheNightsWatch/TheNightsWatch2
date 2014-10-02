@@ -207,7 +207,7 @@ class EventController extends ActionController
     {
         $this->updateLayoutWithIdentity();
 
-        if ($this->disallowRankLessThan(User::RANK_LIEUTENANT)) {
+        if ($this->disallowRankLessThan(User::RANK_CORPORAL)) {
             return false;
         }
 
