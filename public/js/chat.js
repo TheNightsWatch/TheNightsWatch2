@@ -1,4 +1,109 @@
 $(document).ready(function () {
+    window.showNotificationsFlag = false;
+
+    var titleTag = $('title');
+    titleTag.data('original', titleTag.text());
+
+    window.titlebar = {
+        "counter": 0,
+        "newFlag": false,
+        "flashingFlag": false,
+        "flashingMsgFlag": false,
+        "flashingMsg": "",
+        "showingFlashMsg": false,
+
+        "lastUpdate":
+        {
+            "counter": 0,
+            "newFlag": false,
+            "title": ""
+        },
+        "update": function(counter,newFlag) { window.titlebar.updateTitlebar(counter,newFlag); },
+        "updateTitlebar": function(counter,newFlag)
+        {
+            if(counter != undefined && counter != null) { window.titlebar.counter = counter; }
+            if(newFlag != undefined && newFlag != null) { window.titlebar.newFlag = newFlag; }
+            if(document.title == window.titlebar.lastUpdate.title && window.titlebar.counter == window.titlebar.lastUpdate.counter && window.titlebar.newFlag == window.titlebar.lastUpdate.newFlag) { return false; }
+            var newTitle = "";
+            if(window.titlebar.newFlag)
+                newTitle = "(*) ";
+            if(window.titlebar.counter > 0)
+                newTitle = newTitle + "(" + window.titlebar.counter + ") ";
+            newTitle = newTitle + window.titlebar.getOriginal();
+
+            document.title = newTitle;
+            window.titlebar.showingFlashMsg = false;
+            window.titlebar.lastUpdate = {"counter":window.titlebar.counter,"newFlag":window.titlebar.newFlag,"title":newTitle};
+            console.log("New Title: " + newTitle);
+        },
+        "flashMessage": function(message)
+        {
+            if(message == undefined || message == null || message == false)
+            {
+                window.titlebar.flashingMsgFlag = false;
+                window.titlebar.showingFlashMsg = false;
+                clearInterval(window.titlebar.flashMsgInterval);
+                window.titlebar.updateTitlebar();
+            } else {
+                window.titlebar.flashMessage(false); // Cleanup
+                window.titlebar.flashingMsgFlag = true;
+                window.titlebar.flashMsg = message;
+                window.titlebar.flashMsgInterval = setInterval(function()
+                {
+                    console.log("Running Interval");
+                    if(window.titlebar.showingFlashMsg)
+                    {
+                        console.log("Showing It, so moving to not showing it.");
+                        window.titlebar.update();
+                        window.titlebar.showingFlashMsg = false;
+                    }
+                    else
+                    {
+                        console.log("Not Showing It, so moving to showing it.");
+                        document.title = window.titlebar.flashMsg;
+                        window.titlebar.showingFlashMsg = true;
+                    }
+                },1000);
+            }
+        },
+        "flash": function(truefalse)
+        {
+            if(truefalse == undefined) { truefalse = !(window.titlebar.flashingFlag); }
+            if(truefalse)
+            {
+                window.titlebar.flashingFlag = true;
+                window.titlebar.flashInterval = setInterval(function()
+                {
+                    window.titlebar.updateTitlebar(null,!(window.titlebar.newFlag));
+                },1000);
+            }
+            else
+            {
+                window.titlebar.flashingFlag = false;
+                clearInterval(window.titlebar.flashInterval);
+                window.titlebar.updateTitlebar(null,false);
+            }
+        },
+        "getOriginal": function()
+        {
+            return $('title').data('original');
+        }
+    };
+
+    $([window, document]).on('focus', function() {
+        window.titlebar.flashMessage(false);
+        window.showNotificationsFlag = false;
+    });
+
+    $([window, document]).on('blur', function() {
+        window.showNotificationsFlag = true;
+    });
+
+    window.showNotification = function() {
+        if (!window.showNotificationsFlag) return;
+        window.titlebar.flashMessage("New Chat Message!");
+    };
+
     var $chatMessage = $('#chat-message');
     var $chatNav = $('#chat-nav');
 
@@ -94,7 +199,7 @@ $(document).ready(function () {
         var $obj = $(selector);
         $obj.prop({scrollTop: $obj.prop('scrollHeight')});
     };
-    var socket = io.connect('/', { secure: true }).on('connect', afterChatHasLoaded);
+    var socket = io.connect('/', { secure: false }).on('connect', afterChatHasLoaded);
     var addUserToRoom = function (room, username) {
         var $li = $('#viewer-template').clone();
         $li.attr('id', 'viewer-' + room + '-' + username);
@@ -167,6 +272,8 @@ $(document).ready(function () {
             }
 
             $('.chat-messages' + tableClass).find('ol').append($li);
+
+            window.showNotification();
         }
         if (shouldScroll) {
             scrollToBottom('#chat-message-container');
