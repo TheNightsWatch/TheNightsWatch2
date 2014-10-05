@@ -35,7 +35,7 @@ class Ip
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="User", inversedBy="ips")
-     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+     * @ORM\JoinColumn(name="userId", referencedColumnName="id", nullable=false)
      */
     protected $user;
 

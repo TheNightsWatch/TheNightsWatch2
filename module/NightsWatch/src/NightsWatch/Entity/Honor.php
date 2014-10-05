@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Table(name="honor")
  * @property int $id
  * @property User $user
+ * @property \DateTime $timestamp
+ * @property string $reason
  */
 class Honor
 {

@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @property string $email
  * @property string $minecraftId
  * @property Honor[] $honors
+ * @property Accolade[] $accolades
  * @property int $rank
  * @property int $order
  * @property bool $admin
@@ -90,6 +91,12 @@ class User
      * @ORM\OneToMany(targetEntity="Honor", mappedBy="user")
      */
     protected $honors;
+
+    /**
+     * @var Accolade[]
+     * @ORM\OneToMany(targetEntity="Accolade", mappedBy="user")
+     */
+    protected $accolades;
 
     /**
      * @var int
