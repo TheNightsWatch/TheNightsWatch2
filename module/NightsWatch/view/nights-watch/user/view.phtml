@@ -1,4 +1,101 @@
 <?php
-/** @var \NightsWatch\Entity\User $user */
+/** @var User $user */
+/** @var User $identity */
+/** @var Zend\View\View $this */
 
-echo $user->getTitleWithName();
+use NightsWatch\Entity\User;
+
+$this->headScript()->appendFile('/js/three.min.js');
+$this->headScript()->appendFile('/js/2dskin.js');
+$this->headScript()->appendFile('/js/skinRenderer.js');
+
+$generateUserLink = function (User $user) {
+    return '<a href="' . $this->url('user', ['username' => $user->username]) . '">' . $user->getTitleWithName()
+    . '</a>';
+};
+
+// Process Accolades
+$accolades = [];
+foreach ($user->accolades as $accolade) {
+    // Don't show voided accolades to anyone but the council
+    if (!is_null($accolade->voidedOn) && $identity->rank < User::RANK_LIEUTENANT) {
+        continue;
+    }
+
+    $string = 'Awarded for "<strong>' . htmlentities($accolade->reason) . '</strong>" on ' .
+        $accolade->timestamp->format('F j, Y');
+
+    // Only show an accolade's issuer to Corporal or Above
+    if (!is_null($identity) && $identity->rank >= User::RANK_CORPORAL) {
+        $string .= ' by ' . $generateUserLink($accolade->givenBy);
+    }
+    $string .= '.';
+    if (!is_null($accolade->voidedOn)) {
+        $string = "<s>{$string}</s>  Voided on " . $accolade->voidedOn->format('F j, Y');
+    }
+    $accolades[] = $string;
+}
+
+// Process Reprimands
+$reprimands = [];
+foreach ($user->reprimands as $reprimand) {
+    if ($user->id != $identity->id && $identity->rank < User::RANK_LIEUTENANT) {
+        break;
+    }
+
+    $string = 'Given for "<strong>' . htmlentities($reprimand->reason) . '</strong>" on ' .
+        $reprimand->timestamp->format('F j, Y') . ' by ' . $generateUserLink($reprimand->givenBy) . '.';
+
+    if (!is_null($reprimand->voidedOn)) {
+        $string = "<s>{$string}</s>  Voided on " . $reprimand->voidedOn->format('F y, Y');
+    }
+    $reprimands[] = $string;
+}
+?>
+<canvas id="canvas" width="64" height="64" style="display:none;"></canvas>
+
+<div class="row">
+    <div class="span3 text-center">
+        <div id="model"></div>
+    </div>
+    <div class="span9">
+        <h1><?= $user->getTitleWithName(); ?></h1>
+        <?php if (!is_null($user->recruitmentDate)): ?>
+            <p>Recruitment Date: <?= $user->recruitmentDate->format('F j, Y'); ?></p>
+        <?php endif; ?>
+        <?php if (!is_null($identity) && $identity->rank >= User::RANK_CORPORAL): ?>
+            <p class="alert alert-warning">Some of the information on this page may be classified. Do not disclose any
+                information on this page to others. Always link them.</p>
+        <?php endif; ?>
+        <?php if (count($accolades)): ?>
+            <h2>Accolades</h2>
+            <ul>
+                <?php foreach ($accolades as $accolade): ?>
+                    <li><?= $accolade ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        <?php if (count($reprimands)): ?>
+            <h2>Reprimands</h2>
+            <ul>
+                <?php foreach ($reprimands as $reprimand): ?>
+                    <li><?= $reprimand ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+    #model {
+        width: 250px;
+        height: 300px;
+        display: inline-block;
+    }
+
+    h2 {
+        margin-top: 20px;
+    }
+</style>
+
+<script>loadSkinFor('<?= $user->username ?>');</script>

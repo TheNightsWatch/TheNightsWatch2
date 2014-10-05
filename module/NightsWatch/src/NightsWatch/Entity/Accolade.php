@@ -55,8 +55,30 @@ class Accolade
     protected $reason;
 
     /**
+     * @var string
+     * @ORM\Column(type="text")
+     */
+    protected $report;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text")
+     */
+    protected $additionalInformation;
+
+    /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $voidedOn;
+
+    public function __get($property)
+    {
+        return $this->{$property};
+    }
+
+    public function __set($property, $value)
+    {
+        $this->{$property} = $value;
+    }
 }

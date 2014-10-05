@@ -42,6 +42,6 @@ class UserController extends ActionController
             return;
         }
 
-        return new ViewModel(['user' => $user]);
+        return new ViewModel(['user' => $user, 'identity' => $this->getIdentityEntity()]);
     }
 }
