@@ -246,6 +246,10 @@ return [
                     [
                         'label' => 'Mod',
                         'route' => 'mod',
+                    ],
+                    [
+                        'label' => 'Subreddit',
+                        'uri' => 'https://reddit.com/r/TheNightsWatch',
                     ]
                 ]
             ],
