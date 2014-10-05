@@ -4,6 +4,7 @@ namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
 use NightsWatch\Authentication\Adapter as AuthAdapter;
+use NightsWatch\Entity\User;
 use Zend\Authentication\Result as AuthResult;
 use NightsWatch\Mvc\Controller\ActionController;
 use NightsWatch\Form\LoginForm;
@@ -40,6 +41,18 @@ class SiteController extends ActionController
         $mumble = $this->getServiceLocator()->get('config')['NightsWatch']['mumble'];
 
         return new ViewModel(['settings' => $mumble, 'user' => $this->getIdentityEntity()]);
+    }
+
+    public function modAction()
+    {
+        if ($this->disallowRankLessThan(User::RANK_RECRUIT)) {
+            return false;
+        }
+        $this->updateLayoutWithIdentity();
+
+        $mod = $this->getServiceLocator()->get('config')['NightsWatch']['mod'];
+
+        return new ViewModel(['mod' => $mod, 'user' => $this->getIdentityEntity()]);
     }
 
     public function mcstatusAction()

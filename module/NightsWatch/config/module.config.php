@@ -58,6 +58,16 @@ return [
                     ],
                 ],
             ],
+            'mod' => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/mod',
+                    'defaults' => [
+                        'controller' => 'site',
+                        'action' => 'mod',
+                    ],
+                ],
+            ],
             'login' => [
                 'type' => 'literal',
                 'options' => [
@@ -212,23 +222,33 @@ return [
                 'controller' => 'event',
             ],
             [
-                'label' => 'Members',
-                'route' => 'homePlural',
-                'controller' => 'user',
-            ],
-            [
                 'label' => 'Map',
                 'route' => 'home',
                 'controller' => 'map',
             ],
             [
-                'label' => 'Rules',
-                'route' => 'rules',
+                'label' => 'Information',
+                'route' => 'mod',
+                'pages' => [
+                    [
+                        'label' => 'Rules',
+                        'route' => 'rules',
+                    ],
+                    [
+                        'label' => 'Members',
+                        'route' => 'homePlural',
+                        'controller' => 'user',
+                    ],
+                    [
+                        'label' => 'Mumble',
+                        'route' => 'mumble',
+                    ],
+                    [
+                        'label' => 'Mod',
+                        'route' => 'mod',
+                    ]
+                ]
             ],
-            [
-                'label' => 'Mumble',
-                'route' => 'mumble',
-            ]
         ],
         'right-noauth' => [
             [
