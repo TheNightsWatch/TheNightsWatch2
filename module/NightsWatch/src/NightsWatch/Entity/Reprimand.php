@@ -5,12 +5,12 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A User's Accolade
+ * A User's Reprimand
  *
  * @package NightsWatch\Entity
  *
  * @ORM\Entity
- * @ORM\Table(name="accolade")
+ * @ORM\Table(name="reprimand")
  * @property int       $id
  * @property User      $user
  * @property User      $givenBy
@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string    $reason
  * @property \DateTime $voidedOn
  */
-class Accolade
+class Reprimand
 {
     /**
      * @var int
@@ -30,7 +30,7 @@ class Accolade
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="accolades")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="reprimands")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;

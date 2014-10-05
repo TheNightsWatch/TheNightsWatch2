@@ -99,6 +99,12 @@ class User
     protected $accolades;
 
     /**
+     * @var Reprimand[]
+     * @ORM\OneToMany(targetEntity="Reprimand", mappedBy="user")
+     */
+    protected $reprimands;
+
+    /**
      * @var int
      * @ORM\Column(type="boolean")
      */
