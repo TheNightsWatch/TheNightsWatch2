@@ -199,7 +199,7 @@ $(document).ready(function () {
         var $obj = $(selector);
         $obj.prop({scrollTop: $obj.prop('scrollHeight')});
     };
-    var socket = io.connect('/', { secure: false }).on('connect', afterChatHasLoaded);
+    var socket = io.connect('/', { secure: true }).on('connect', afterChatHasLoaded);
     var addUserToRoom = function (room, username) {
         var $li = $('#viewer-template').clone();
         $li.attr('id', 'viewer-' + room + '-' + username);
