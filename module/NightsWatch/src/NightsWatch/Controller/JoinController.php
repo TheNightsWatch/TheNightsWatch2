@@ -122,7 +122,9 @@ class JoinController extends ActionController
             $user = $this->getIdentityEntity();
             if (!$user->deniedJoin && $user->rank < User::RANK_RECRUIT) {
                 $user->rank = User::RANK_RECRUIT;
-                $user->recruitmentDate = new \DateTime();
+                if ($user->recruitmentDate == null) {
+                    $user->recruitmentDate = new \DateTime();
+                }
                 $this->getEntityManager()->persist($user);
                 $this->getEntityManager()->flush();
                 $hasJoined = true;
