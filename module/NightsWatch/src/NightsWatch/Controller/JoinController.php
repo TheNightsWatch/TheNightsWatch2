@@ -62,10 +62,22 @@ class JoinController extends ActionController
 
         $form = new VerifyForm();
         $errors = [];
+
         if (!isset($this->session->username) || !isset($this->session->password) || !isset($this->session->email)) {
             $this->redirect()->toRoute('home', ['controller' => 'join', 'action' => 'index']);
-        } elseif ($this->getRequest()->isPost()) {
+            return;
+        } else {
+            $user = $this->getEntityManager()
+                ->getRepository('NightsWatch\Entity\User')
+                ->findOneBy(['username' => $this->session->username]);
+
+            if (!!$user) {
+                $errors[] = "{$this->session->username} already has a Night's Watch account.";
+            }
+        }
+        if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
+
             if ($form->isValid()) {
                 try {
                     $minecraft = new MinecraftAPI(
@@ -93,9 +105,11 @@ class JoinController extends ActionController
                     $errors[] = "Invalid username or Password";
                 } catch (MigrationException $e) {
                     $errors[] = "Your Minecraft account has been migrated to a Mojang account.  "
-                        ."Please enter your Mojang email and try again";
+                        . "Please enter your Mojang email and try again";
                 } catch (BasicException $e) {
                     $errors[] = "This is not a premium Minecraft Account";
+                } catch (\Exception $e) {
+                    $errors[] = "There was an error creating your account.";
                 }
             }
         }
@@ -172,7 +186,7 @@ class JoinController extends ActionController
                     $errors[] = "Invalid username or Password";
                 } catch (MigrationException $e) {
                     $errors[] = "Your Minecraft account has been migrated to a Mojang account.  "
-                        ."Please enter your Mojang email and try again";
+                        . "Please enter your Mojang email and try again";
                 } catch (BasicException $e) {
                     $errors[] = "This is not a premium Minecraft Account";
                 }
