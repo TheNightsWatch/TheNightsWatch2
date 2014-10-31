@@ -270,7 +270,7 @@ class EventController extends ActionController
                 . " and up.\n\n"
                 . $event->description
                 . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})  "
-                . $event->region ? "\nRegion: {$region}" : ''
+                . ($event->region > 0 ? "\nRegion: {$region}" : '')
                 . "\n\n"
                 . "{$event->user->username}  \n*{$title}*";
 
