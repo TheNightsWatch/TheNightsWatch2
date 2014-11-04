@@ -95,7 +95,7 @@ function loadSkinFor(username) {
     };
 
 // I use minotar because it allows CORS requests.
-    img.src = 'https://minecraftskins.herokuapp.com/skin/' + username;
+    img.src = 'https://minecraftskins.herokuapp.com/skin/' + username + '.png';
 
     function RenderSkin() {
         // Head Parts
