@@ -298,7 +298,7 @@ class User
 
     public static function getAvatarForUser($username, $size = 16)
     {
-        return "//minotar.net/helm/{$username}/{$size}.png";
+        return "/minotar/{$username}/{$size}";
     }
 
     public function getAvatar($size = 16)
