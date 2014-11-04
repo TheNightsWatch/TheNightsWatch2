@@ -207,7 +207,7 @@ $(document).ready(function () {
         html = html.replace(/{link}/g, '/user/' + username);
         html = html.replace(/{user}/g, username);
         $li.html(html);
-        $li.find('img').attr('src', '//minotar.net/helm/' + username + '/16.png');
+        $li.find('img').attr('src', '/minotar.net/' + username + '/16');
         $('.chat-viewers.' + room).append($li);
     };
 
