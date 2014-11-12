@@ -5,7 +5,11 @@
     <meta charset="utf-8">
     <?php echo $this->headTitle($this->translate('The Night\'s Watch'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
-    <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+    <?php
+    echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendName('theme-color', '#000000');
+    ?>
 
     <!-- Le styles -->
     <?php
@@ -15,6 +19,12 @@
                 'rel' => 'shortcut icon',
                 'type' => 'image/vnd.microsoft.icon',
                 'href' => $this->basePath() . '/img/favicon.ico'
+            ]
+        )
+        ->headLink(
+            [
+                'rel' => 'icon',
+                'href' => $this->basePath() . '/img/logo.png'
             ]
         )
         ->appendStylesheet($this->basePath() . '/css/before-bootstrap.css')
