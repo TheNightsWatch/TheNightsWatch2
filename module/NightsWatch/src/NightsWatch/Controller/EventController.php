@@ -12,6 +12,7 @@ namespace NightsWatch\Controller;
 use Doctrine\Common\Collections\Criteria;
 use NightsWatch\Entity\Event;
 use NightsWatch\Entity\EventRsvp;
+use NightsWatch\Entity\EventView;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\EventForm;
 use NightsWatch\Form\RsvpForm;
@@ -115,12 +116,16 @@ class EventController extends ActionController
             return;
         }
 
+        $view = EventView::triggerView($this->getEntityManager(), $event, $this->getIdentityEntity());
+        $this->getEntityManager()->persist($view);
+        $this->getEntityManager()->flush();
+
         return new ViewModel(['event' => $event, 'user' => $this->getIdentityEntity()]);
     }
 
     public function rsvpAction()
     {
-        if($this->disallowGuest()) {
+        if ($this->disallowGuest()) {
             return;
         }
 
@@ -258,7 +263,11 @@ class EventController extends ActionController
             $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
             $mail->setEncoding('UTF-8');
 
-            $url = $this->url()->fromRoute('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id], ['force_canonical' => true]);
+            $url = $this->url()->fromRoute(
+                'id',
+                ['controller' => 'event', 'action' => 'view', 'id' => $event->id],
+                ['force_canonical' => true]
+            );
 
             $niceDate = $event->start->format('M j, Y');
             $niceTime = $event->start->format('H:i T');
@@ -280,7 +289,8 @@ class EventController extends ActionController
             $start = clone $event->start;
             $start->setTimezone(new \DateTimeZone("UTC"));
             $dtstart = $start->format("Ymd\\THis\\Z");
-            $eventRaw = <<<CALENDAR
+            $eventRaw
+                = <<<CALENDAR
 BEGIN:VCALENDAR
 PRODID:-//NightsWatch//Nights Watch Event Creator//EN
 VERSION:2.0
