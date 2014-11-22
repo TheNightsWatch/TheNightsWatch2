@@ -277,7 +277,7 @@ class EventController extends ActionController
             $event->description = "A new event has been posted to the calendar.  All information concerning this event "
                 . "is classified and only available to members of rank " . User::getRankName($event->lowestViewableRank)
                 . " and up.\n\n"
-                . $event->description
+                . "You can read the details of this event at https://minez-nightswatch.com/event/" . $event->id
                 . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})  "
                 . ($event->region > 0 ? "\nRegion: {$region}" : '')
                 . "\n\n"
