@@ -61,7 +61,7 @@ foreach ($user->reprimands as $reprimand) {
     <div class="span9">
         <h1><?= $user->getTitleWithName(); ?></h1>
         <p>Registration Date: <?= $user->joined->format('F j, Y'); ?></p>
-        <?php if (!is_null($user->recruitmentDate)): ?>
+        <?php if ($user->rank >= User::RANK_RECRUIT && !is_null($user->recruitmentDate)): ?>
             <p>Recruitment Date: <?= $user->recruitmentDate->format('F j, Y'); ?></p>
         <?php endif; ?>
         <?php if (!is_null($identity) && $identity->rank >= User::RANK_CORPORAL): ?>
