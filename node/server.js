@@ -115,7 +115,7 @@ function mysqlStoreMessage(data) {
 
 function updatePrivileges(socket) {
     var info = socketVariables[socket.id];
-    mysqlConnection.query('SELECT rank, username FROM user WHERE id=?', [ info.userId ], function (err, rows) {
+    mysqlConnection.query('SELECT rank, username, banned FROM user WHERE id=?', [ info.userId ], function (err, rows) {
         if (err) {
             console.error(err);
         }
@@ -130,6 +130,9 @@ function updatePrivileges(socket) {
             var channelMap = {};
             for (var i in info.channels) {
                 channelMap[info.channels[i]] = true;
+            }
+            if (row.banned) {
+                row.rank = -1;
             }
 
             var channelTests = [
