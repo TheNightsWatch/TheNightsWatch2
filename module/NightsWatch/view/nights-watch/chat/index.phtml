@@ -57,6 +57,9 @@ $corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) 
             <div class="chat-messages anime">
                 <ol></ol>
             </div>
+            <div class="chat-messages games">
+                <ol></ol>
+            </div>
         </div>
         <form id="chat-message" class="row-fluid" <?= !is_null($identity) ? 'data-hasidentity="true"' : null ?>>
             <div class="span10">
@@ -76,6 +79,7 @@ $corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) 
             <ol class="chat-viewers council"></ol>
             <ol class="chat-viewers announcements"></ol>
             <ol class="chat-viewers anime"></ol>
+            <ol class="chat-viewers games"></ol>
         </div>
         <?php if (!is_null($identity) && $identity->rank < User::RANK_RECRUIT): ?>
             <a id="joinTheWatchButton" class="btn btn-primary span12" href="/join/recruit">Join the Watch!</a>
