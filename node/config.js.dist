@@ -4,6 +4,7 @@ config.port = 3001;
 
 config.mysql = {
     server: "localhost",
+    //socketPath: "/var/run/mysqld/mysqld.sock",
     database: "database",
     username: "username",
     password: "password"

@@ -44,6 +44,7 @@ class ModController extends ActionController
                 default:
                     $iconType = null;
                     break;
+                case User::RANK_ADMIN:
                 case User::RANK_COMMANDER:
                     $iconType = 'commander';
                     break;
@@ -63,6 +64,9 @@ class ModController extends ActionController
                     break;
                 case User::ORDER_STEWARD:
                     $backingType = 'steward';
+                    break;
+                case User::ORDER_BUILDER:
+                    $backingType = 'builder';
                     break;
             }
             if ($user->rank == User::RANK_RECRUIT) {

@@ -1,13 +1,20 @@
 var mysql = require('mysql'),
     sanitize = require('validator').sanitize,
     config = require('./config.js'),
-    io = require('socket.io').listen(config.port),
-    mysqlConnection = mysql.createConnection({
-        host: config.mysql.server,
-        user: config.mysql.username,
-        database: config.mysql.database,
-        password: config.mysql.password
-    });
+    io = require('socket.io').listen(config.port);
+
+var connection = {
+    user: config.mysql.username,
+    database: config.mysql.database,
+    password: config.mysql.password
+};
+if (config.mysql.hasOwnProperty('socketPath')) {
+    connection.socketPath = config.mysql.socketPath;
+} else {
+    connection.host = config.mysql.server;
+}
+
+mysqlConnection = mysql.createConnection(connection);
 
 io.set('log level', 1);
 
@@ -18,7 +25,9 @@ String.prototype.markdown2html = function () {
     // Italics
     text = text.replace(/(\*)(?=\S)([^\r]*?\S)\1/g, "<em>$2</em>");
     // Auto-detect links and convert them to markdown
-    text = text.replace(/(\]\()?((https?|ftp|dict):[^'">\s]+)/gi, function($0, $1, $2) { return $1?$0:"[" + $2 + "](" + $2 + ")"});
+    text = text.replace(/(\]\()?((https?|ftp|dict):[^'">\s]+)/gi, function ($0, $1, $2) {
+        return $1 ? $0 : "[" + $2 + "](" + $2 + ")"
+    });
     // Inline Links
     text = text.replace(/(\[((?:\[[^\]]*\]|[^\[\]])*)\]\([ \t]*()<?(.*?(?:\(.*?\).*?)?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g, '<a href="$4" target="_blank">$2</a>');
     return text;
@@ -48,7 +57,7 @@ function populateTheMessageLog() {
             for (var j in rows) {
                 var row = rows[j];
                 var message = sanitize(row.message).escape().markdown2html();
-                tempLog.unshift({ message: message, user: row.user, time: row.timestamp.getTime(), room: row.chatroom });
+                tempLog.unshift({message: message, user: row.user, time: row.timestamp.getTime(), room: row.chatroom});
             }
             for (var j in tempLog) {
                 addToMessageLog(tempLog[j], tempLog[j].room);
@@ -115,7 +124,7 @@ function mysqlStoreMessage(data) {
 
 function updatePrivileges(socket) {
     var info = socketVariables[socket.id];
-    mysqlConnection.query('SELECT rank, username, banned FROM user WHERE id=?', [ info.userId ], function (err, rows) {
+    mysqlConnection.query('SELECT rank, username, banned FROM user WHERE id=?', [info.userId], function (err, rows) {
         if (err) {
             console.error(err);
         }
@@ -239,7 +248,7 @@ io.sockets.on('connection', function (socket) {
                 socketVariables[socket.id].userId = row.userId;
                 // Subscribe to Channels
                 var defaultChannel = 'public';
-                var channels = ['public','announcements', 'anime'];
+                var channels = ['public', 'announcements', 'anime'];
                 userJoin(socket, 'public');
                 userJoin(socket, 'anime');
                 userJoin(socket, 'announcements');
@@ -292,12 +301,22 @@ io.sockets.on('connection', function (socket) {
         // Special stuff for #announcements
         if ((info.username == 'Navarr') && data.message.substr(0, 11) == '/interview ' && tokens[1]) {
             announcementsPrivileged[tokens[1].toLowerCase()] = true;
-            socket.emit('messages',[{ room: 'announcements', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can now speak in #announcements'}]);
+            socket.emit('messages', [{
+                room: 'announcements',
+                user: 'System',
+                time: (new Date).getTime(),
+                message: tokens[1] + ' can now speak in #announcements'
+            }]);
             return;
         }
         if ((info.username == 'Navarr') && data.message.substr(0, 7) == '/eject ' && tokens[1]) {
             delete announcementsPrivileged[tokens[1].toLowerCase()];
-            socket.emit('messages', [{ room: 'announcements', user: 'System', time: (new Date).getTime(), message: tokens[1] + ' can no longer speak in #announcements'}]);
+            socket.emit('messages', [{
+                room: 'announcements',
+                user: 'System',
+                time: (new Date).getTime(),
+                message: tokens[1] + ' can no longer speak in #announcements'
+            }]);
             return;
         }
 
@@ -308,18 +327,28 @@ io.sockets.on('connection', function (socket) {
             (room == 'corporal' && info.rank < 500) ||
             (room == 'council' && info.rank < 1000) ||
             (room == 'announcements' && info.rank < 500 && !announcementsPrivileged.hasOwnProperty(info.username.toLowerCase()))
-            ) {
-            socket.emit('messages', [{ room: data.room, user: 'System', time: (new Date).getTime(), message: 'You do not have permission to speak in this room.' }]);
+        ) {
+            socket.emit('messages', [{
+                room: data.room,
+                user: 'System',
+                time: (new Date).getTime(),
+                message: 'You do not have permission to speak in this room.'
+            }]);
             return;
         }
         var htmlMessage = sanitize(data.message).escape().markdown2html();
 
         data.timestamp = Math.floor((new Date).getTime() / 1000) * 1000;
-        var message = { room: data.room, user: socketVariables[socket.id].username, time: data.timestamp, message: htmlMessage };
+        var message = {
+            room: data.room,
+            user: socketVariables[socket.id].username,
+            time: data.timestamp,
+            message: htmlMessage
+        };
         data.userId = info.userId;
         mysqlStoreMessage(data);
         updatePrivileges(socket);
         addToMessageLog(message, data.room);
-        io.sockets.in(data.room).emit('messages', [ message ]);
+        io.sockets.in(data.room).emit('messages', [message]);
     });
 });
