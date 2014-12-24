@@ -148,6 +148,7 @@ function updatePrivileges(socket) {
                 ['announcements', 0],
                 ['public', 0],
                 ['anime', 0],
+                ['games', 0],
                 ['recruit', 1],
                 ['private', 2],
                 ['corporal', 500],
@@ -238,46 +239,54 @@ io.sockets.on('connection', function (socket) {
             if (err) {
                 console.error(err);
             }
+            var row = {};
+            if (!rows.length) {
+                console.error('Bad Token ', data);
+                row.rank = 0;
+            } else {
+                row = rows[0];
+            }
+
+            if (!socketVariables[socket.id]) {
+                socketVariables[socket.id] = {};
+            }
+            socketVariables[socket.id].rank = row.rank;
             if (rows.length) {
-                var row = rows[0];
-                if (!socketVariables[socket.id]) {
-                    socketVariables[socket.id] = {};
-                }
                 socketVariables[socket.id].username = row.username;
-                socketVariables[socket.id].rank = row.rank;
                 socketVariables[socket.id].userId = row.userId;
-                // Subscribe to Channels
-                var defaultChannel = 'public';
-                var channels = ['public', 'announcements', 'anime'];
+            }
+            // Subscribe to Channels
+            var defaultChannel = 'public';
+            if (row.rank >= 0) { // not banned
+                var channels = ['public', 'announcements', 'anime', 'games'];
                 userJoin(socket, 'public');
                 userJoin(socket, 'anime');
+                userJoin(socket, 'games');
                 userJoin(socket, 'announcements');
-                if (row.rank >= 1) { // recruit+
-                    channels.push('recruit');
-                    userJoin(socket, 'recruit');
-                    defaultChannel = 'recruit';
-                }
-                if (row.rank >= 2) { // private+
-                    channels.push('private');
-                    userJoin(socket, 'private');
-                    defaultChannel = 'private';
-                }
-                if (row.rank >= 500) { // corporal+
-                    channels.push('corporal');
-                    userJoin(socket, 'corporal');
-                }
-                if (row.rank >= 1000) { // lieutenant+
-                    channels.push('council');
-                    userJoin(socket, 'council');
-                }
-                socketVariables[socket.id].channels = channels;
-                emitMessageLogTo(socket, channels);
-                socket.emit('verified');
-                socket.emit('defaultChannel', defaultChannel);
-                emitRoomViewersTo(socket, channels);
-            } else {
-                console.error('Bad Token ', data);
             }
+            if (row.rank >= 1) { // recruit+
+                channels.push('recruit');
+                userJoin(socket, 'recruit');
+                defaultChannel = 'recruit';
+            }
+            if (row.rank >= 2) { // private+
+                channels.push('private');
+                userJoin(socket, 'private');
+                defaultChannel = 'private';
+            }
+            if (row.rank >= 500) { // corporal+
+                channels.push('corporal');
+                userJoin(socket, 'corporal');
+            }
+            if (row.rank >= 1000) { // lieutenant+
+                channels.push('council');
+                userJoin(socket, 'council');
+            }
+            socketVariables[socket.id].channels = channels;
+            emitMessageLogTo(socket, channels);
+            socket.emit('verified');
+            socket.emit('defaultChannel', defaultChannel);
+            emitRoomViewersTo(socket, channels);
         });
     });
     socket.on('disconnect', function (data) {
