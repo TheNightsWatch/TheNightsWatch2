@@ -298,7 +298,7 @@ class User
 
     public static function getAvatarForUser($username, $size = 16)
     {
-        return "/minotar/{$username}/{$size}";
+        return "https://crafatar.com/avatars/{$username}?size={$size}";
     }
 
     public function getAvatar($size = 16)

@@ -7,7 +7,7 @@ use NightsWatch\Entity\User;
 
 $this->headScript()->appendFile('/js/three.min.js');
 $this->headScript()->appendFile('/js/2dskin.js');
-$this->headScript()->appendFile('/js/skinRenderer.js');
+$this->headScript()->appendFile('/js/skinRenderer.js?bust=20150205v1');
 
 $generateUserLink = function (User $user) {
     return '<a href="' . $this->url('user', ['username' => $user->username]) . '">' . $user->getTitleWithName()
