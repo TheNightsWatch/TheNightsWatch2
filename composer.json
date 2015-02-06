@@ -12,7 +12,8 @@
         "zucchi/bootstrap": "dev-master",
         "zf-commons/zfc-rbac": "dev-master",
         "michelf/php-markdown": "1.3.x-dev",
-        "nesbot/carbon": "1.2.0"
+        "nesbot/carbon": "~1.2.0",
+        "navarr/minecraft-profile": "~1.1.0"
     },
     "autoload": {
         "psr-0": {

@@ -3,6 +3,8 @@
 namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
+use Navarr\Minecraft\Profile;
+use Navarr\MinecraftAPI\MinecraftAPI;
 use NightsWatch\Authentication\Adapter as AuthAdapter;
 use NightsWatch\Entity\User;
 use Zend\Authentication\Result as AuthResult;
@@ -71,6 +73,21 @@ class SiteController extends ActionController
         return $this->response;
     }
 
+    private function updateUsername()
+    {
+        $user = $this->getIdentityEntity(true);
+        try {
+            $minecraftProfile = Profile::fromUuid($user->minecraftId);
+
+            $user->username = $minecraftProfile->name;
+
+            $this->getEntityManager()->persist($user);
+            $this->getEntityManager()->flush();
+        } catch (\Exception $e) {
+            // Just do nothing.
+        }
+    }
+
     public function loginAction()
     {
         if ($this->disallowMember()) {
@@ -96,6 +113,7 @@ class SiteController extends ActionController
 
                 switch ($result->getCode()) {
                     case AuthResult::SUCCESS:
+                        $this->updateUsername();
                         $this->redirect()->toRoute('home', ['controller' => 'chat']);
                         return false;
                     case AuthResult::FAILURE_IDENTITY_NOT_FOUND:

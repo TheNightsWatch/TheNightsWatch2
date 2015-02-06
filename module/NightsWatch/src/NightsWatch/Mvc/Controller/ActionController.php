@@ -77,7 +77,7 @@ class ActionController extends AbstractActionController
     /**
      * @return \NightsWatch\Entity\User|null
      */
-    public function getIdentityEntity()
+    public function getIdentityEntity($refresh = false)
     {
         if ($this->identityEntity === -1) {
             if ($this->getAuthenticationService()->hasIdentity()) {
