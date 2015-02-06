@@ -207,7 +207,7 @@ $(document).ready(function () {
         html = html.replace(/{link}/g, '/user/' + username);
         html = html.replace(/{user}/g, username);
         $li.html(html);
-        $li.find('img').attr('src', 'https://crafatar.com/avatars/' + username + '?size=16');
+        $li.find('img').attr('src', 'https://crafatar.com/avatars/' + username + '?helm&size=16');
         $('.chat-viewers.' + room).append($li);
     };
 

@@ -296,13 +296,13 @@ class User
         }
     }
 
-    public static function getAvatarForUser($username, $size = 16)
+    public static function getAvatarForUser($uuid, $size = 16)
     {
-        return "https://crafatar.com/avatars/{$username}?size={$size}";
+        return "https://crafatar.com/avatars/{$uuid}?helm&size={$size}";
     }
 
     public function getAvatar($size = 16)
     {
-        return static::getAvatarForUser($this->username, $size);
+        return static::getAvatarForUser($this->minecraftId, $size);
     }
 }
