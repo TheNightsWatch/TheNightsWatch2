@@ -6,13 +6,17 @@ use Doctrine\Common\Collections\Criteria;
 use Navarr\Minecraft\Profile;
 use Navarr\MinecraftAPI\MinecraftAPI;
 use NightsWatch\Authentication\Adapter as AuthAdapter;
+use NightsWatch\Authentication\ForceAdapter;
+use NightsWatch\Authentication\MinecraftIdAdapter;
 use NightsWatch\Entity\User;
+use NightsWatch\ShotbowProvider;
 use Zend\Authentication\Result as AuthResult;
 use NightsWatch\Mvc\Controller\ActionController;
 use NightsWatch\Form\LoginForm;
 use Zend\Authentication\Storage\Session;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container as SessionContainer;
 
 class SiteController extends ActionController
 {
@@ -82,9 +86,89 @@ class SiteController extends ActionController
             $user->username = $minecraftProfile->name;
 
             $this->getEntityManager()->persist($user);
-            $this->getEntityManager()->flush();
+            $this->getEntityManager()->flush($user);
         } catch (\Exception $e) {
             // Just do nothing.
+        }
+    }
+
+    public function shotbowloginAction()
+    {
+        if ($this->disallowMember()) {
+            return false;
+        }
+
+        $shotbow = $this->getServiceLocator()->get('config')['NightsWatch']['shotbow'];
+
+        $provider = new ShotbowProvider(
+            [
+                'clientId'     => $shotbow['clientId'],
+                'clientSecret' => $shotbow['clientSecret'],
+                'redirectUri'  => 'https://minez-nightswatch.com/site/shotbowlogin',
+                'scopes'       => ['basic', 'email', 'ban', 'rank'],
+            ]
+        );
+
+        $session = new SessionContainer('NightsWatch\Login\Shotbow');
+
+        if (!isset($_GET['code'])) {
+            $authUrl        = $provider->getAuthorizationUrl();
+            $session->state = $provider->state;
+            return $this->redirect()->toUrl($authUrl);
+        } elseif (!empty($_GET['error'])) {
+            throw new \Exception($_GET['message']);
+        } elseif (empty($_GET['state']) || $_GET['state'] !== $session->state) {
+            $session->state = null;
+            throw new \Exception('Invalid State');
+        } else {
+            $token = $provider->getAccessToken(
+                'authorization_code',
+                ['code' => $_GET['code'], 'grant_type' => 'authorization_code']
+            );
+            try {
+                $userDetails = $provider->getUserDetails($token);
+            } catch (\Exception $e) {
+                throw new \Exception('Failed to get User Details');
+            }
+        }
+
+        // At this point we have to have $userDetails - we've thrown Exceptions everywhere else.
+
+        $name        = $userDetails->username;
+        $minecraftId = $userDetails->minecraftId;
+        $email       = $userDetails->email;
+
+        if (empty($name) || empty($minecraftId) || empty($email)) {
+            throw new \Exception('Bad Data from Shotbow');
+        }
+
+        // Attempt Login
+        $authAdapter = new MinecraftIdAdapter($minecraftId, $name, $this->getEntityManager());
+        $result      = $this->getAuthenticationService()->authenticate($authAdapter);
+
+        $errors = [];
+
+        switch ($result->getCode()) {
+            case AuthResult::SUCCESS:
+                $this->redirect()->toRoute('home', ['controller' => 'chat']);
+                return false;
+            case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
+                $user = new User();
+                $user->username = $name;
+                $user->password = null;
+                $user->email = $email;
+                $user->minecraftId = $minecraftId;
+                $this->getEntityManager()->persist($user);
+                $this->getEntityManager()->flush($user);
+                $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
+                $this->redirect()->toRoute('home', ['controller' => 'chat']);
+                return false;
+            case -5:
+                $errors[] = "Your account has been banned";
+                break;
+            default:
+                $errors[] = "Invalid Password...?";
+                break;
         }
     }
 
@@ -95,7 +179,7 @@ class SiteController extends ActionController
         }
         $this->updateLayoutWithIdentity();
         $errors = [];
-        $form = new LoginForm();
+        $form   = new LoginForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -130,7 +214,7 @@ class SiteController extends ActionController
         }
         return new ViewModel(
             [
-                'form' => $form,
+                'form'   => $form,
                 'errors' => $errors,
             ]
         );
