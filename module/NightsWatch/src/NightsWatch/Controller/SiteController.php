@@ -155,7 +155,7 @@ class SiteController extends ActionController
             case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
                 $user = new User();
                 $user->username = $name;
-                $user->password = null;
+                $user->password = 'not-a-real-password';
                 $user->email = $email;
                 $user->minecraftId = $minecraftId;
                 $this->getEntityManager()->persist($user);
