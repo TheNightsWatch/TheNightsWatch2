@@ -256,13 +256,10 @@ return [
         ],
         'right-noauth' => [
             [
-                'label' => 'Log In',
-                'route' => 'login',
-            ],
-            [
-                'label' => 'Register',
+                'label' => 'Login or Register',
                 'route' => 'home',
-                'controller' => 'join',
+                'controller' => 'site',
+                'action' => 'shotbowlogin',
             ]
         ],
         'right-auth' => [
