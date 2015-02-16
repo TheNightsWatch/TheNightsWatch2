@@ -1,25 +1,25 @@
 {
-    "name": "thenightswatch/TheNightsWatch2",
-    "description": "Website for The Night's Watch",
-    "minimum-stability": "dev",
-    "homepage": "http://minez-nightswatch.com/",
-    "require": {
-        "php": ">=5.4",
-        "ext-intl": "*",
-        "zendframework/zendframework": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master",
-        "navarr/minecraft-api": "dev-master",
-        "zucchi/bootstrap": "dev-master",
-        "zf-commons/zfc-rbac": "dev-master",
-        "michelf/php-markdown": "1.3.x-dev",
-        "nesbot/carbon": "~1.2.0",
-        "navarr/minecraft-profile": "~1",
-        "league/oauth2-client": "1.0.x-dev"
-    },
-    "autoload": {
-        "psr-0": {
-            "NightsWatch": "module/NightsWatch/src",
-            "Authentication": "module/Authentication/src"
-        }
+  "name": "thenightswatch/TheNightsWatch2",
+  "description": "Website for The Night's Watch",
+  "minimum-stability": "dev",
+  "homepage": "http://minez-nightswatch.com/",
+  "require": {
+    "php": ">=5.4",
+    "ext-intl": "*",
+    "zendframework/zendframework": "2.3.3",
+    "doctrine/doctrine-orm-module": "~0.6",
+    "navarr/minecraft-api": "~2.0",
+    "zucchi/bootstrap": "dev-master",
+    "zf-commons/zfc-rbac": "~2.4",
+    "michelf/php-markdown": "~1.4",
+    "nesbot/carbon": "~1.2",
+    "navarr/minecraft-profile": "~1.0",
+    "league/oauth2-client": "1.0.x-dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "NightsWatch": "module/NightsWatch/src",
+      "Authentication": "module/Authentication/src"
     }
+  }
 }
