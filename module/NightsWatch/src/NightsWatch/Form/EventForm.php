@@ -3,6 +3,7 @@
 namespace NightsWatch\Form;
 
 use NightsWatch\Entity\Event;
+use Zend\Form\Element\Time;
 use Zend\Form\Form;
 
 class EventForm extends Form
@@ -49,13 +50,17 @@ class EventForm extends Form
         $this->add(
             [
                 'name' => 'time',
-                'type' => 'time',
+                'type' => Time::class,
                 'attributes' => [
                     'id' => 'time',
                     'required' => true,
+                    'min' => '00:00:00',
+                    'max' => '23:59:59',
+                    'step' => 60,
                 ],
                 'options' => [
                     'label' => 'Time (local)',
+                    'format' => 'H:i:s',
                     'bootstrap' => [
                         'help' => [
                             'style' => 'block',
