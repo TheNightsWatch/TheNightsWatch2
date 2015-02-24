@@ -54,13 +54,13 @@ class EventForm extends Form
                 'attributes' => [
                     'id' => 'time',
                     'required' => true,
-                    'min' => '00:00:00',
-                    'max' => '23:59:59',
-                    'step' => 1,
+                    'min' => '00:00',
+                    'max' => '23:59',
+                    'step' => 60,
                 ],
                 'options' => [
                     'label' => 'Time (local)',
-                    'format' => 'H:i:s',
+                    'format' => 'H:i',
                     'bootstrap' => [
                         'help' => [
                             'style' => 'block',
