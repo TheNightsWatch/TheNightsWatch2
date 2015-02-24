@@ -54,8 +54,9 @@ class EventForm extends Form
                 'attributes' => [
                     'id' => 'time',
                     'required' => true,
-                    'min' => '00:00',
-                    'max' => '23:59',
+                    'min' => '00:00:00',
+                    'max' => '23:59:59',
+                    'step' => 1,
                 ],
                 'options' => [
                     'label' => 'Time (local)',
