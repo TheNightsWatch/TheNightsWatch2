@@ -23,6 +23,12 @@
         )
         ->headLink(
             [
+                'rel' => 'manifest',
+                'href' => $this->basePath() . '/manifest.json'
+            ]
+        )
+        ->headLink(
+            [
                 'rel' => 'icon',
                 'href' => $this->basePath() . '/img/logo.png'
             ]

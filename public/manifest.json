@@ -1,0 +1,14 @@
+{
+  "name": "The Night's Watch Chat",
+  "short_name": "TNW Chat",
+  "start_url": "/chat?utm_source=web_app_manifest",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "img/logo.png",
+      "sizes": "496x496",
+      "type": "image/png",
+      "density": "1.0"
+    }
+  ]
+}
