@@ -34,7 +34,7 @@ String.prototype.markdown2html = function () {
 };
 
 
-var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'announcements', 'anime'];
+var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'announcements', 'anime', 'games'];
 
 // Map of users that can talk in #announcements (minus Corporal+)
 var announcementsPrivileged = {};

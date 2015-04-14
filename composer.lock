@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5fdc8f81c33ec1158cba2e34bc43bd42",
+    "hash": "125d9d267c52bd9cdd813934e77bbf02",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -80,12 +80,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "15334410a781da60f861df536b460f24c8f01eeb"
+                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/15334410a781da60f861df536b460f24c8f01eeb",
-                "reference": "15334410a781da60f861df536b460f24c8f01eeb",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
+                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-02-01 04:40:53"
+            "time": "2015-02-16 12:24:01"
         },
         {
             "name": "doctrine/collections",
@@ -285,16 +285,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "dev-master",
+            "version": "2.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "6fb7312d208c9d6f45015953f367e5c33b2bdd5a"
+                "reference": "77efbbde1ce73744add84f5e79bf32516e38ad4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/6fb7312d208c9d6f45015953f367e5c33b2bdd5a",
-                "reference": "6fb7312d208c9d6f45015953f367e5c33b2bdd5a",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/77efbbde1ce73744add84f5e79bf32516e38ad4e",
+                "reference": "77efbbde1ce73744add84f5e79bf32516e38ad4e",
                 "shasum": ""
             },
             "require": {
@@ -309,13 +309,12 @@
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
             },
             "bin": [
-                "bin/doctrine-dbal",
-                "bin/doctrine-dbal.php"
+                "bin/doctrine-dbal"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -353,38 +352,38 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-02-10 13:02:17"
+            "time": "2015-02-10 13:22:09"
         },
         {
             "name": "doctrine/doctrine-module",
-            "version": "dev-master",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineModule.git",
-                "reference": "4ca1d6a06808ae172430b725679db7746015b7a4"
+                "reference": "a1be11c78d62b880f4e21ff9a107d6e37bed3133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineModule/zipball/4ca1d6a06808ae172430b725679db7746015b7a4",
-                "reference": "4ca1d6a06808ae172430b725679db7746015b7a4",
+                "url": "https://api.github.com/repos/doctrine/DoctrineModule/zipball/a1be11c78d62b880f4e21ff9a107d6e37bed3133",
+                "reference": "a1be11c78d62b880f4e21ff9a107d6e37bed3133",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": ">=2.4,<2.6-dev",
-                "php": ">=5.4",
-                "symfony/console": "~2.3",
-                "zendframework/zend-authentication": "~2.3",
-                "zendframework/zend-cache": "~2.3",
-                "zendframework/zend-mvc": "~2.3",
-                "zendframework/zend-paginator": "~2.3",
-                "zendframework/zend-servicemanager": "~2.3",
-                "zendframework/zend-stdlib": "~2.3",
-                "zendframework/zend-validator": "~2.3"
+                "php": ">=5.3.3",
+                "symfony/console": "~2.2",
+                "zendframework/zend-authentication": "~2.2",
+                "zendframework/zend-cache": "~2.2",
+                "zendframework/zend-mvc": "~2.2",
+                "zendframework/zend-paginator": "~2.2",
+                "zendframework/zend-servicemanager": "~2.2",
+                "zendframework/zend-stdlib": "~2.2",
+                "zendframework/zend-validator": "~2.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7",
-                "squizlabs/php_codesniffer": "1.5.*",
-                "zendframework/zendframework": "~2.3"
+                "squizlabs/php_codesniffer": "1.4.*",
+                "zendframework/zendframework": "~2.2"
             },
             "suggest": {
                 "doctrine/data-fixtures": "Data Fixtures if you want to generate test data or bootstrap data for your deployments"
@@ -395,12 +394,13 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.9.x-dev"
+                    "dev-master": "0.8.x-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "DoctrineModule\\": "src/"
+                    "DoctrineModule\\": "src/",
+                    "DoctrineModuleTest\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -414,18 +414,19 @@
                     "homepage": "http://www.spiffyjr.me/"
                 },
                 {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.com/",
+                    "role": "Developer"
+                },
+                {
                     "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@hotmail.com"
                 },
                 {
                     "name": "Michaël Gallego",
                     "email": "mic.gallego@gmail.com",
-                    "homepage": "http://www.michaelgallego.fr"
-                },
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com",
-                    "homepage": "http://marco-pivetta.com/"
+                    "homepage": "http://michaelgallego.fr"
                 }
             ],
             "description": "Zend Framework 2 Module that provides Doctrine basic functionality required for ORM and ODM modules",
@@ -435,39 +436,38 @@
                 "module",
                 "zf2"
             ],
-            "time": "2015-01-28 23:04:30"
+            "time": "2014-01-24 17:30:36"
         },
         {
             "name": "doctrine/doctrine-orm-module",
-            "version": "dev-master",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineORMModule.git",
-                "reference": "3ad3fe79d384969afbc1a6373beece4abca322dc"
+                "reference": "31a0a0aefd424ca2eaecc0303c4bb0d959b1f2c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineORMModule/zipball/3ad3fe79d384969afbc1a6373beece4abca322dc",
-                "reference": "3ad3fe79d384969afbc1a6373beece4abca322dc",
+                "url": "https://api.github.com/repos/doctrine/DoctrineORMModule/zipball/31a0a0aefd424ca2eaecc0303c4bb0d959b1f2c0",
+                "reference": "31a0a0aefd424ca2eaecc0303c4bb0d959b1f2c0",
                 "shasum": ""
             },
             "require": {
-                "doctrine/dbal": ">=2.4,<2.7-dev",
-                "doctrine/doctrine-module": "0.9.*",
-                "doctrine/orm": ">=2.4,<2.7-dev",
-                "php": ">=5.4",
-                "symfony/console": "~2.5",
-                "zendframework/zend-mvc": "~2.3",
-                "zendframework/zend-servicemanager": "~2.3",
-                "zendframework/zend-stdlib": "~2.3"
+                "doctrine/dbal": ">=2.4,<2.6-dev",
+                "doctrine/doctrine-module": "0.8.*",
+                "doctrine/orm": ">=2.4,<2.6-dev",
+                "php": ">=5.3.3",
+                "zendframework/zend-mvc": ">=2.2",
+                "zendframework/zend-servicemanager": ">=2.2",
+                "zendframework/zend-stdlib": ">=2.2"
             },
             "require-dev": {
                 "doctrine/data-fixtures": "1.0.*",
                 "doctrine/migrations": "1.*",
-                "phpunit/phpunit": "~3.7",
-                "squizlabs/php_codesniffer": "1.5.*",
+                "phpunit/phpunit": ">=3.7",
+                "squizlabs/php_codesniffer": "1.4.*",
                 "zendframework/zend-developer-tools": "*",
-                "zendframework/zendframework": "~2.3"
+                "zendframework/zendframework": "2.*"
             },
             "suggest": {
                 "doctrine/migrations": "doctrine migrations if you want to keep your schema definitions versioned",
@@ -477,7 +477,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.9.x-dev"
+                    "dev-master": "0.8.x-dev"
                 }
             },
             "autoload": {
@@ -496,6 +496,12 @@
                     "homepage": "http://www.spiffyjr.me/"
                 },
                 {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.com/",
+                    "role": "Developer"
+                },
+                {
                     "name": "Evan Coury",
                     "email": "me@evancoury.com",
                     "homepage": "http://blog.evan.pro/"
@@ -503,11 +509,6 @@
                 {
                     "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@hotmail.com"
-                },
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com",
-                    "homepage": "http://marco-pivetta.com/"
                 }
             ],
             "description": "Zend Framework 2 Module that provides Doctrine ORM functionality",
@@ -518,7 +519,7 @@
                 "orm",
                 "zf2"
             ],
-            "time": "2015-01-30 09:33:18"
+            "time": "2014-01-24 18:13:09"
         },
         {
             "name": "doctrine/inflector",
@@ -588,6 +589,60 @@
             "time": "2015-01-01 18:34:57"
         },
         {
+            "name": "doctrine/instantiator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/instantiator.git",
+                "reference": "3d9669e597439e8d205baf315efb757038fb4dea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/3d9669e597439e8d205baf315efb757038fb4dea",
+                "reference": "3d9669e597439e8d205baf315efb757038fb4dea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3,<8.0-DEV"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.8",
+                "ext-pdo": "*",
+                "ext-phar": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.com/"
+                }
+            ],
+            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
+            "homepage": "https://github.com/doctrine/instantiator",
+            "keywords": [
+                "constructor",
+                "instantiate"
+            ],
+            "time": "2015-01-16 19:29:51"
+        },
+        {
             "name": "doctrine/lexer",
             "version": "dev-master",
             "source": {
@@ -643,26 +698,30 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "2.4.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "18c873216bf496e08270c90bba964704da556b54"
+                "reference": "38c819ae04c3b4aa10addff8d026fb64634f92fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/18c873216bf496e08270c90bba964704da556b54",
-                "reference": "18c873216bf496e08270c90bba964704da556b54",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/38c819ae04c3b4aa10addff8d026fb64634f92fa",
+                "reference": "38c819ae04c3b4aa10addff8d026fb64634f92fa",
                 "shasum": ""
             },
             "require": {
-                "doctrine/collections": "~1.1",
-                "doctrine/dbal": "~2.4",
+                "doctrine/cache": "~1.4",
+                "doctrine/collections": "~1.2",
+                "doctrine/common": ">=2.5-dev,<2.6-dev",
+                "doctrine/dbal": ">=2.5-dev,<2.6-dev",
+                "doctrine/instantiator": "~1.0.1",
                 "ext-pdo": "*",
-                "php": ">=5.3.2",
-                "symfony/console": "~2.0"
+                "php": ">=5.4",
+                "symfony/console": "~2.5"
             },
             "require-dev": {
+                "phpunit/phpunit": "~4.0",
                 "satooshi/php-coveralls": "dev-master",
                 "symfony/yaml": "~2.1"
             },
@@ -676,7 +735,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -712,7 +771,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2015-02-16 00:29:00"
+            "time": "2015-02-16 21:35:28"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1217,20 +1276,20 @@
         },
         {
             "name": "zendframework/zendframework",
-            "version": "2.3.3",
+            "version": "2.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "88c9b6f566fc1097f64ead155625db9bdfee531e"
+                "reference": "351279d669cf16eb5c640f86e944fe8f84c8b181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/88c9b6f566fc1097f64ead155625db9bdfee531e",
-                "reference": "88c9b6f566fc1097f64ead155625db9bdfee531e",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/351279d669cf16eb5c640f86e944fe8f84c8b181",
+                "reference": "351279d669cf16eb5c640f86e944fe8f84c8b181",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.23",
+                "php": ">=5.3.3",
                 "zendframework/zendxml": "~1.0-dev"
             },
             "replace": {
@@ -1288,19 +1347,17 @@
             },
             "require-dev": {
                 "doctrine/annotations": ">=1.0",
-                "fabpot/php-cs-fixer": "dev-master#fcbb09b5204",
+                "fabpot/php-cs-fixer": "*@dev",
                 "ircmaxell/random-lib": "dev-master",
                 "ircmaxell/security-lib": "dev-master",
-                "mikey179/vfsstream": "1.2.*",
-                "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "dev-master",
-                "sebastianbergmann/phpcov": "1.1.0"
+                "ocramius/proxy-manager": "0.4.*",
+                "phpunit/phpunit": "3.7.*"
             },
             "suggest": {
                 "doctrine/annotations": "Doctrine Annotations >=1.0 for annotation features",
                 "ext-intl": "ext/intl for i18n features (included in default builds of PHP)",
                 "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if OpenSSL/Mcrypt extensions are unavailable",
-                "ocramius/proxy-manager": "ProxyManager 0.5.* to handle lazy initialization of services",
+                "ocramius/proxy-manager": "ProxyManager to handle lazy initialization of services",
                 "zendframework/zendpdf": "ZendPdf for creating PDF representations of barcodes",
                 "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha for rendering ReCaptchas in Zend\\Captcha and/or Zend\\Form"
             },
@@ -1312,8 +1369,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev",
-                    "dev-develop": "2.4-dev"
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
                 }
             },
             "autoload": {
@@ -1331,7 +1388,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2014-09-16 22:58:11"
+            "time": "2015-01-14 16:28:50"
         },
         {
             "name": "zendframework/zendxml",
@@ -1379,143 +1436,17 @@
             "time": "2014-11-22 20:27:31"
         },
         {
-            "name": "zf-commons/zfc-rbac",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ZF-Commons/zfc-rbac.git",
-                "reference": "efe8b2e4da0839ced9c45d215f2d89f62ee9c9c9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ZF-Commons/zfc-rbac/zipball/efe8b2e4da0839ced9c45d215f2d89f62ee9c9c9",
-                "reference": "efe8b2e4da0839ced9c45d215f2d89f62ee9c9c9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "zendframework/zend-mvc": "~2.2",
-                "zendframework/zend-servicemanager": "~2.2",
-                "zfr/rbac": "~1.2"
-            },
-            "require-dev": {
-                "doctrine/common": "~2.4",
-                "doctrine/doctrine-module": "~0.8",
-                "doctrine/doctrine-orm-module": "~0.8",
-                "phpunit/phpunit": "~3.7",
-                "satooshi/php-coveralls": "~0.6",
-                "squizlabs/php_codesniffer": "1.4.*",
-                "zendframework/zend-developer-tools": "dev-master",
-                "zendframework/zendframework": "~2.2"
-            },
-            "suggest": {
-                "doctrine/doctrine-module": "if you want to use Doctrine role provider",
-                "zendframework/zend-developer-tools": "if you want to show information about the roles"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev",
-                    "dev-develop": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "ZfcRbac\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kyle Spraggs",
-                    "email": "theman@spiffyjr.me",
-                    "homepage": "http://www.spiffyjr.me/"
-                },
-                {
-                    "name": "Jean-Marie Leroux",
-                    "email": "jmleroux.pro@gmail.com"
-                },
-                {
-                    "name": "Michaël Gallego",
-                    "email": "mic.gallego@gmail.com",
-                    "homepage": "http://www.michaelgallego.fr"
-                }
-            ],
-            "description": "Zend Framework 2 Module that provides a layer of features of Zend\\Permissions\\Rbac",
-            "homepage": "http://www.github.com/ZF-Commons/zfc-rbac",
-            "keywords": [
-                "module",
-                "permissions",
-                "rbac",
-                "zf2"
-            ],
-            "time": "2015-02-13 17:51:22"
-        },
-        {
-            "name": "zfr/rbac",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf-fr/rbac.git",
-                "reference": "493711bfc2a637fd7c6f23b71b7b55a621c35d9d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf-fr/rbac/zipball/493711bfc2a637fd7c6f23b71b7b55a621c35d9d",
-                "reference": "493711bfc2a637fd7c6f23b71b7b55a621c35d9d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7",
-                "satooshi/php-coveralls": "~0.6",
-                "squizlabs/php_codesniffer": "1.4.*",
-                "zendframework/zend-servicemanager": "~2.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Rbac\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michaël Gallego",
-                    "email": "mic.gallego@gmail.com",
-                    "homepage": "http://michaelgallego.fr"
-                }
-            ],
-            "description": "Zend Framework 3 prototype for Zend\\Permissions\\Rbac.",
-            "homepage": "https://github.com/zf-fr/rbac",
-            "keywords": [
-                "rbac",
-                "security",
-                "zf2",
-                "zf3"
-            ],
-            "time": "2014-02-06 14:18:34"
-        },
-        {
             "name": "zucchi/bootstrap",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zucchi/ZucchiBootstrap.git",
-                "reference": "42b24b380bed41c5ed1d7bb1bcd69e7d59672568"
+                "reference": "507fb3cd3ae1bdc8392488421b1365ca69bba48f"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/zucchi/ZucchiBootstrap/zipball/42b24b380bed41c5ed1d7bb1bcd69e7d59672568",
-                "reference": "42b24b380bed41c5ed1d7bb1bcd69e7d59672568",
+                "reference": "507fb3cd3ae1bdc8392488421b1365ca69bba48f",
                 "shasum": ""
             },
             "require": {
@@ -1550,25 +1481,19 @@
                 "twitter",
                 "zf2"
             ],
-            "time": "2014-02-02 13:34:53"
+            "time": "2013-07-18 12:58:46"
         },
         {
             "name": "zucchi/zucchi",
-            "version": "dev-master",
+            "version": "dev-last-working-commit",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zucchi/Zucchi.git",
-                "reference": "d60246ea9e92faf9f9ddbfbcac6d4389db3089fe"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zucchi/Zucchi/zipball/d60246ea9e92faf9f9ddbfbcac6d4389db3089fe",
-                "reference": "d60246ea9e92faf9f9ddbfbcac6d4389db3089fe",
-                "shasum": ""
+                "url": "https://github.com/TheNightsWatch/Zucchi.git",
+                "reference": "71c6d88fb02b1a52b771c7ff40d5b1adeda84d79"
             },
             "require": {
                 "php": ">=5.4.1",
-                "zendframework/zendframework": "2.3.*"
+                "zendframework/zendframework": "2.2.*"
             },
             "type": "library",
             "autoload": {
@@ -1579,7 +1504,6 @@
                     "./Module.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1587,8 +1511,7 @@
                 {
                     "name": "Matt Cockayne",
                     "email": "matt@zucchi.co.uk",
-                    "homepage": "http://devincharge.com/",
-                    "role": "Developer"
+                    "homepage": "http://devincharge.com/"
                 }
             ],
             "description": "Zucchi Component Library for Zend Framework 2",
@@ -1597,13 +1520,21 @@
                 "library",
                 "zf2"
             ],
-            "time": "2014-07-08 17:37:12"
+            "time": "2013-08-06 10:01:48"
         }
     ],
     "packages-dev": [],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-last-working-commit",
+            "package": "zucchi/zucchi"
+        }
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "zucchi/zucchi": 20,
         "zucchi/bootstrap": 20,
         "league/oauth2-client": 20
     },

@@ -6,16 +6,22 @@
   "require": {
     "php": ">=5.4",
     "ext-intl": "*",
-    "zendframework/zendframework": "2.3.3",
+    "zendframework/zendframework": "~2.1.0",
     "doctrine/doctrine-orm-module": "~0.6",
     "navarr/minecraft-api": "~2.0",
-    "zucchi/bootstrap": "dev-master",
-    "zf-commons/zfc-rbac": "~2.4",
+    "zucchi/zucchi": "dev-last-working-commit as dev-master",
+    "zucchi/bootstrap": "dev-master#507fb3cd3ae1bdc8392488421b1365ca69bba48f",
     "michelf/php-markdown": "~1.4",
     "nesbot/carbon": "~1.2",
     "navarr/minecraft-profile": "~1.0",
     "league/oauth2-client": "1.0.x-dev"
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/TheNightsWatch/Zucchi.git"
+    }
+  ],
   "autoload": {
     "psr-0": {
       "NightsWatch": "module/NightsWatch/src",
