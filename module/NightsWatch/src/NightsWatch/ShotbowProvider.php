@@ -21,7 +21,7 @@ class ShotbowProvider extends AbstractProvider
      */
     public function urlAuthorize()
     {
-        return 'http://shotbow.net/forum/oauth2';
+        return 'https://shotbow.net/forum/oauth2';
     }
 
     /**
@@ -31,7 +31,7 @@ class ShotbowProvider extends AbstractProvider
      */
     public function urlAccessToken()
     {
-        return 'http://shotbow.net/forum/oauth2/access_token';
+        return 'https://shotbow.net/forum/oauth2/access_token';
     }
 
     /**
@@ -48,7 +48,7 @@ class ShotbowProvider extends AbstractProvider
      */
     public function urlUserDetails(AccessToken $token)
     {
-        return 'http://shotbow.net/forum/oauth2/me?access_token=' . $token;
+        return 'https://shotbow.net/forum/oauth2/me?access_token=' . $token;
     }
 
     /**
