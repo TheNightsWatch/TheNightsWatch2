@@ -143,6 +143,9 @@ class SiteController extends ActionController
         }
 
         // Attempt Login
+        $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
+        $authNamespace->getManager()->rememberMe(60 * 60 * 24 * 30);
+        
         $authAdapter = new MinecraftIdAdapter($minecraftId, $name, $this->getEntityManager());
         $result      = $this->getAuthenticationService()->authenticate($authAdapter);
 
