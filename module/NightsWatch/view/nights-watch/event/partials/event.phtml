@@ -13,15 +13,18 @@ if (!isset($showRsvp)) {
 if (!isset($showRegion)) {
     $showRegion = false;
 }
+if (!isset($showType)) {
+    $showType = false;
+}
 $eventUrl = $this->url('id', ['controller' => 'event', 'action' => 'view', 'id' => $event->id]);
-$iso8601 = $event->start->format(DateTime::ISO8601);
+$iso8601  = $event->start->format(DateTime::ISO8601);
 
 // Generate the RSVP groups
 
 $rsvpGroups = [
     RSVP::RSVP_ATTENDING => [],
-    RSVP::RSVP_MAYBE => [],
-    RSVP::RSVP_ABSENT => [],
+    RSVP::RSVP_MAYBE     => [],
+    RSVP::RSVP_ABSENT    => [],
 ];
 
 $usersAttendance = RSVP::RSVP_ABSENT;
@@ -67,38 +70,64 @@ foreach ($event->rsvps as $rsvp) {
         <?php if (!$showRsvp && $event->start->getTimestamp() > time()): ?>
             <br/>
             <em>
-                <?= count($rsvpGroups[RSVP::RSVP_ATTENDING]); ?> attending
+                <?php
+                $attendingString = count($rsvpGroups[RSVP::RSVP_ATTENDING]) + 1;
+                $maybe           = count($rsvpGroups[RSVP::RSVP_MAYBE]);
+                if ($maybe > 0) {
+                    $attendingString .= " to " . ($attendingString + $maybe);
+                }
+                ?>
+                <?= $attendingString; ?> attending
                 &middot;
                 <a href="<?= $eventUrl ?>">RSVP</a>
             </em>
         <?php endif; ?>
     </footer>
     <?php if ($showRegion && $event->region): ?>
-        <hr />
+        <hr/>
         <aside>
             <h3>Region</h3>
+
             <div class="well well-small"><?= $event->getRegionName(); ?></div>
+        </aside>
+    <?php endif; ?>
+    <?php if ($showType && $event->type): ?>
+        <hr/>
+        <aside>
+            <h3>Event Type</h3>
+
+            <div class="well well-small"><?= $event->getTypeName(); ?></div>
         </aside>
     <?php endif; ?>
     <?php if (!is_null($user) && $showRsvp && $event->start->getTimestamp() > time()): ?>
         <hr/>
         <aside>
             <h3>Attendance</h3>
-            <?php foreach ($rsvpGroups as $rsvpType => $rsvpGroup): ?>
-                <h4><?= RSVP::getRsvpNameFromType($rsvpType); ?> <span
-                        class="badge badge-info"><?= count($rsvpGroup); ?></span></h4>
-                <div class="well well-small">
-                    <?php foreach ($rsvpGroup as $user): ?>
-                        <?= $this->partial('partials/listHead', ['user' => $user]); ?>
-                    <?php endforeach; ?>
-                </div>
-            <?php endforeach; ?>
             <?php
             $form = new \NightsWatch\Form\RsvpForm($event);
             $form->setAttribute('action', $this->url('home', ['controller' => 'event', 'action' => 'rsvp']));
             $form->get('attendance')->setValue($usersAttendance);
             echo $this->bootstrapForm($form);
             ?>
+            <?php if (!is_null($event->leader)): ?>
+                <h4>Lead By</h4>
+                <div class="well well-small">
+                    <table class="user-table">
+                        <?= $this->partial('nights-watch/user/partials/listDescription', ['user' => $event->leader]); ?>
+                    </table>
+                </div>
+            <?php endif; ?>
+            <?php if ($showRsvp && (is_null($event->leader) || $user->id != $event->leader->id)): ?>
+                <?php foreach ($rsvpGroups as $rsvpType => $rsvpGroup): ?>
+                    <h4><?= RSVP::getRsvpNameFromType($rsvpType); ?> <span
+                            class="badge badge-info"><?= count($rsvpGroup); ?></span></h4>
+                    <div class="well well-small">
+                        <?php foreach ($rsvpGroup as $user): ?>
+                            <?= $this->partial('partials/listHead', ['user' => $user]); ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </aside>
     <?php endif; ?>
 </article>

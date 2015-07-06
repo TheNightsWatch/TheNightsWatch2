@@ -3,24 +3,27 @@
 namespace NightsWatch\Form;
 
 use NightsWatch\Entity\Event;
+use NightsWatch\Validator\UsernameExists;
 use Zend\Form\Element\Time;
 use Zend\Form\Form;
 
 class EventForm extends Form
 {
+    protected $entityManager;
+
     public function __construct($name = null)
     {
         parent::__construct('event');
 
         $this->add(
             [
-                'name' => 'name',
-                'type' => 'text',
+                'name'       => 'name',
+                'type'       => 'text',
                 'attributes' => [
-                    'id' => 'name',
+                    'id'       => 'name',
                     'required' => true,
                 ],
-                'options' => [
+                'options'    => [
                     'label' => 'Name',
                 ],
             ]
@@ -28,18 +31,70 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'date',
-                'type' => 'text',
+                'name'       => 'leader',
+                'type'       => 'text',
                 'attributes' => [
-                    'id' => 'date',
-                    'required' => true,
-                    'class' => 'datepicker',
+                    'id'       => 'leader',
+                    'required' => false,
                 ],
-                'options' => [
-                    'label' => 'Date',
+                'options'    => [
+                    'label'     => 'Leader',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
+                            'content' => "If left blank, you will be defaulted to the Leader of the Event.",
+                        ],
+                    ],
+                ],
+                'validators' => [
+                    [
+                        'name'    => UsernameExists::class,
+                        'options' => [
+                            'entityManager' => $this->getEntityManager(),
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => 'date',
+                'type'       => 'text',
+                'attributes' => [
+                    'id'       => 'date',
+                    'required' => true,
+                    'class'    => 'datepicker',
+                ],
+                'options'    => [
+                    'label'     => 'Date',
+                    'bootstrap' => [
+                        'help' => [
+                            'style'   => 'block',
+                            'content' => 'Local Time.  Events that take place in the past will not be emailed.',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => 'time',
+                'type'       => Time::class,
+                'attributes' => [
+                    'id'       => 'time',
+                    'required' => true,
+                    'min'      => '00:00',
+                    'max'      => '23:59',
+                    'step'     => 60,
+                ],
+                'options'    => [
+                    'label'     => 'Time (local)',
+                    'format'    => 'H:i',
+                    'bootstrap' => [
+                        'help' => [
+                            'style'   => 'block',
                             'content' => 'Local Time',
                         ],
                     ],
@@ -49,43 +104,19 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'time',
-                'type' => Time::class,
+                'name'       => 'offset',
+                'type'       => 'text',
                 'attributes' => [
-                    'id' => 'time',
-                    'required' => true,
-                    'min' => '00:00',
-                    'max' => '23:59',
-                    'step' => 60,
-                ],
-                'options' => [
-                    'label' => 'Time (local)',
-                    'format' => 'H:i',
-                    'bootstrap' => [
-                        'help' => [
-                            'style' => 'block',
-                            'content' => 'Local Time',
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        $this->add(
-            [
-                'name' => 'offset',
-                'type' => 'text',
-                'attributes' => [
-                    'id' => 'offset',
+                    'id'       => 'offset',
                     'required' => true,
                     'readonly' => true,
-                    'class' => 'jsoffset disabled',
+                    'class'    => 'jsoffset disabled',
                 ],
-                'options' => [
-                    'label' => 'GMT Offset',
+                'options'    => [
+                    'label'     => 'GMT Offset',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'This is your offset from GMT in seconds',
                         ],
                     ],
@@ -95,18 +126,18 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'region',
-                'type' => 'select',
+                'name'       => 'region',
+                'type'       => 'select',
                 'attributes' => [
-                    'id' => 'region',
+                    'id'       => 'region',
                     'required' => true,
                 ],
-                'options' => [
-                    'label' => 'Region Instance',
+                'options'    => [
+                    'label'         => 'Region Instance',
                     'value_options' => Event::getRegionNames(),
-                    'bootstrap' => [
+                    'bootstrap'     => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'The region the event will take place on.  (For differing database instances)'
                         ],
                     ],
@@ -116,17 +147,17 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'description',
-                'type' => 'textarea',
+                'name'       => 'description',
+                'type'       => 'textarea',
                 'attributes' => [
-                    'id' => 'description',
+                    'id'       => 'description',
                     'required' => true,
                 ],
-                'options' => [
-                    'label' => 'Description',
+                'options'    => [
+                    'label'     => 'Description',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'You can use <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">markdown</a> to format your text.</a>',
                         ],
                     ],
@@ -136,19 +167,35 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'lowrank',
-                'type' => 'select',
+                'name'       => 'eventtype',
+                'type'       => 'select',
                 'attributes' => [
-                    'id' => 'lowrank',
+                    'id'       => 'eventtype',
                     'required' => true,
-                    'value' => \NightsWatch\Entity\User::RANK_PRIVATE,
+                    'value'    => \NightsWatch\Entity\Event::EVENT_RANGING,
                 ],
-                'options' => [
-                    'label' => 'Rank',
+                'options'    => [
+                    'label'         => 'Event Type',
+                    'value_options' => Event::getTypeNames(),
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => 'lowrank',
+                'type'       => 'select',
+                'attributes' => [
+                    'id'       => 'lowrank',
+                    'required' => true,
+                    'value'    => \NightsWatch\Entity\User::RANK_PRIVATE,
+                ],
+                'options'    => [
+                    'label'         => 'Rank',
                     'value_options' => \NightsWatch\Entity\User::getRankNames(),
-                    'bootstrap' => [
+                    'bootstrap'     => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'The lowest rank that\'s allowed to attend this event',
                         ],
                     ],
@@ -158,8 +205,8 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'preview',
-                'type' => 'hidden',
+                'name'       => 'preview',
+                'type'       => 'hidden',
                 'attributes' => [
                     'value' => 0,
                 ],
@@ -168,14 +215,24 @@ class EventForm extends Form
 
         $this->add(
             [
-                'name' => 'submit',
-                'type' => 'submit',
+                'name'       => 'submit',
+                'type'       => 'submit',
                 'attributes' => [
                     'value' => 'Preview',
-                    'id' => 'submit-event',
+                    'id'    => 'submit-event',
                     'class' => 'btn btn-primary',
                 ],
             ]
         );
+    }
+
+    public function setEntityManager(\Doctrine\ORM\EntityManager $em)
+    {
+        $this->entityManager = $em;
+    }
+
+    public function getEntityManager()
+    {
+        return $this->entityManager;
     }
 }
