@@ -173,7 +173,7 @@ h2 .badge {
 .event {
     position: relative;
 }
-.event header time {
+.event header .sidetime {
     display: block;
     position: absolute;
     left: -85px;
@@ -183,7 +183,7 @@ h2 .badge {
     font-size: 14pt;
     text-align: center;
 }
-.event header time .date {
+.event header .sidetime .date {
     font-size: 10pt;
 }
 

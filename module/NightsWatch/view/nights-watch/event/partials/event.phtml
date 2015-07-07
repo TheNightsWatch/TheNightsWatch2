@@ -41,7 +41,7 @@ foreach ($event->rsvps as $rsvp) {
 ?>
 <article class="event span9 offset1">
     <header>
-        <time class="time" datetime="<?= $iso8601; ?>" title="<?= $iso8601 ?>">
+        <time class="time sidetime" datetime="<?= $iso8601; ?>" title="<?= $iso8601 ?>">
             <span class="dateformat" data-format="H:i" data-unix="<?= $event->start->getTimestamp(); ?>">
                 <?= $event->start->format('H:i T'); ?>
             </span>
@@ -54,6 +54,16 @@ foreach ($event->rsvps as $rsvp) {
             <?= htmlspecialchars($event->name); ?>
             <?= $useEventLink ? '</a>' : null ?>
         </h2>
+        <time class="time visible-phone hidden-tablet" datetime="<?= $iso8601 ?>" title="<?= $iso8601 ?>">
+            <span class="dateformat" data-format="F j, Y" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('F j, Y'); ?>
+            </span>
+            at
+            <span class="date dateformat" data-format="H:i" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('H:i T'); ?>
+            </span>
+            <br /><br />
+        </time>
     </header>
     <?php if ($event->lowestViewableRank > User::RANK_CIVILIAN): ?>
         <p class="alert alert-error fade in">
