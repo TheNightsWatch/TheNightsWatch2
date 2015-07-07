@@ -226,6 +226,12 @@ class EventController extends ActionController
             return;
         }
 
+        $now = new \DateTimeImmutable();
+        if ($event->start->getTimestamp() < $now->getTimestamp()) {
+            $this->getResponse()->setStatusCode(403);
+            return;
+        }
+
         $form    = new EventForm();
         $session = new SessionContainer('NightsWatch\Event\Create');
         if (!empty($session->name) && !empty($session->id)) {
