@@ -220,7 +220,7 @@ class EventController extends ActionController
         }
 
         $isCouncil = $rank >= User::RANK_LIEUTENANT;
-        $isLeader  = isset($event->leader) ? $event->leader->id == $this->getIdentityEntity()->id : false;
+        $isLeader  = is_null($event->leader) ? false : $event->leader->id == $this->getIdentityEntity()->id;
         if (!$isCouncil && !$isLeader) {
             $this->getResponse()->setStatusCode(403);
             return;
