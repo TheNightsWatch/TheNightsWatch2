@@ -17,6 +17,20 @@ class EventForm extends Form
 
         $this->add(
             [
+                'name'       => 'id',
+                'type'       => 'hidden',
+                'attributes' => [
+                    'id'       => 'id',
+                    'required' => false,
+                ],
+                'options'    => [
+                    'label' => 'ID',
+                ],
+            ]
+        );
+
+        $this->add(
+            [
                 'name'       => 'name',
                 'type'       => 'text',
                 'attributes' => [
@@ -54,6 +68,17 @@ class EventForm extends Form
                         ],
                     ],
                 ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => 'absolutetime',
+                'type'       => 'hidden',
+                'attributes' => [
+                    'id'       => 'absolutetime',
+                    'required' => false,
+                ]
             ]
         );
 

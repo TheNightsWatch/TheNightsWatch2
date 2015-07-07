@@ -1,0 +1,26 @@
+<?php
+/** @var Zend\View\Model\ViewModel $this */
+/** @var NightsWatch\Entity\User $identity */
+/** @var NightsWatch\Form\EventForm $form */
+$this->headScript()->appendFile('/js/event.js?v=20150706');
+?>
+    <p class="alert alert-block fade in">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        When creating an event, it is important that your computer clock's timezone is correctly set. The Event system
+        calculates the time of the event based off of the time you input and your offset to Univeral Coordinate Time.
+        If your computer's timezone is wrong, the event time will be wrong.
+    </p>
+<?php
+if (!$form->get('preview')->getValue()) {
+    echo $this->bootstrapForm($form, 'horizontal');
+} else {
+    $tempEvent = new \NightsWatch\Entity\Event();
+    $tempEvent->start = new DateTime();
+    $tempEvent->user = $identity;
+    $tempEvent->name = $form->get('name')->getValue();
+    $tempEvent->description = $form->get('description')->getValue();
+    $form->get('name')->setAttribute('type', 'hidden');
+    $form->get('description')->setAttribute('type', 'hidden');
+    echo $this->partial('nights-watch/announcement/partials/event', ['event' => $tempEvent, 'useEventLink' => false]);
+    echo $this->bootstrapForm($form, 'horizontal');
+}

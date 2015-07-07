@@ -1,5 +1,5 @@
 $(function () {
-    $('.datepicker').datepicker({format: 'd MM yyyy', autoclose: true});
+    $('.datepicker').datepicker({format: 'yyyy-mm-dd', autoclose: true});
 
     $('.dateformat').each(function () {
         var $this = $(this);
