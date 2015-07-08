@@ -439,6 +439,9 @@ CALENDAR;
         $nextMonthMonth = $nextMonthDate->format('n');
         $nextMonthDate  = \DateTime::createFromFormat('Y n j', "{$nextMonthYear} {$nextMonthMonth} 1");
 
+        // Add a week to the end of the Calendar
+        $nextMonthDate->add(new \DateInterval('P7D'));
+
         // Back up to a Sunday
         while ($date->format('w') > 0) {
             $date->sub($oneDay);

@@ -4,6 +4,10 @@ $today = date("Y-m-d");
 /** @var string $month */
 /** @var array $days */
 ?>
+<?php if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_CORPORAL):
+    $url = $this->url('home', ['controller' => 'event', 'action' => 'create']); ?>
+    <a href="<?= $url ?>" class="btn btn-primary post-event-button pull-right">Post New Event</a>
+<?php endif; ?>
 <div id="calendar-container">
     <div class="well well-small" id="calendar-well">
         <table>
@@ -12,10 +16,6 @@ $today = date("Y-m-d");
                 <th colspan="7">
                     <h2>
                         <?= DateTime::createFromFormat('Y-n', "{$year}-{$month}")->format('F Y'); ?>
-                        <?php if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_CORPORAL):
-                            $url = $this->url('home', ['controller' => 'event', 'action' => 'create']); ?>
-                            <a href="<?= $url ?>" class="pull-right btn btn-primary post-event-button">Post Event</a>
-                        <?php endif; ?>
                     </h2>
                 </th>
             </tr>
@@ -50,6 +50,16 @@ $today = date("Y-m-d");
             <?php endfor; ?>
             </tbody>
         </table>
+        <br />
+        <?php
+        $nextMonth = DateTime::createFromFormat('Y-n', "{$year}-{$month}")->add(new DateInterval('P1M'));
+        $nyear = $nextMonth->format('Y');
+        $nmonth = $nextMonth->format('m');
+        $url = $this->url('calendar', ['controller' => 'event', 'action' => 'index']) . "?year={$nyear}&month={$nmonth}";
+        ?>
+        <a href="<?= $url ?>" class="btn btn-primary post-event-button pull-right">
+            <?= $nextMonth->format('F Y'); ?>
+        </a>
     </div>
 </div>
 <style>
