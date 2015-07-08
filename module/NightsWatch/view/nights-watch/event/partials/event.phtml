@@ -92,6 +92,12 @@ foreach ($event->rsvps as $rsvp) {
                 <a href="<?= $eventUrl ?>">RSVP</a>
             </em>
         <?php endif; ?>
+        <?php if ($event->canEdit($user)): ?>
+            &middot;
+            <a href="<?= $this->url('id', ['controller' => 'event', 'action' => 'edit', 'id' => $event->id]); ?>">
+                edit
+            </a>
+        <?php endif; ?>
     </footer>
     <?php if ($showRegion && $event->region): ?>
         <hr/>

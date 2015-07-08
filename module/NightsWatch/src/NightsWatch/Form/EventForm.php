@@ -11,7 +11,7 @@ class EventForm extends Form
 {
     protected $entityManager;
 
-    public function __construct($name = null)
+    public function __construct($name = null, $includeEmailCheckbox = false)
     {
         parent::__construct('event');
 
@@ -237,6 +237,28 @@ class EventForm extends Form
                 ],
             ]
         );
+
+        if ($includeEmailCheckbox) {
+            $this->add(
+                [
+                    'name'       => 'sendemail',
+                    'type'       => 'checkbox',
+                    'attributes' => [
+                        'checked_value' => 1,
+                        'unchecked_value' => 0,
+                    ],
+                    'options'    => [
+                        'label'     => 'Major Changes',
+                        'bootstrap' => [
+                            'help' => [
+                                'style'   => 'block',
+                                'content' => 'Sends email.  Check if you have changed time, region, or other important information.  Do not check if you have fixed typos.',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
 
         $this->add(
             [

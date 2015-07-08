@@ -149,6 +149,24 @@ class Event
         return static::getTypeNameByType($this->type);
     }
 
+    public function canEdit(User $user)
+    {
+        return static::canEditEvent($this, $user);
+    }
+
+    public static function canEditEvent(self $event, User $user)
+    {
+        $now = new \DateTimeImmutable();
+        if ($event->start->getTimestamp() < $now->getTimestamp()) {
+            // Too Old
+            return false;
+        }
+
+        $isCouncil = $user->rank >= User::RANK_LIEUTENANT;
+        $isLeader  = is_null($event->leader) ? false : $event->leader->id == $user->id;
+        return $isCouncil || $isLeader;
+    }
+
     public static function getTypeNames()
     {
         if (!isset(static::$typeMap)) {

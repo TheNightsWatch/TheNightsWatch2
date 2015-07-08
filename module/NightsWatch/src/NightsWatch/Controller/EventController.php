@@ -206,8 +206,11 @@ class EventController extends ActionController
     {
         $this->updateLayoutWithIdentity();
 
-        $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
-        $id   = $this->params()->fromRoute('id');
+        if ($this->disallowRankLessThan(User::RANK_CIVILIAN)) {
+            return false;
+        }
+
+        $id = $this->params()->fromRoute('id');
 
         /** @var \NightsWatch\Entity\Event $event */
         $event = $this->getEntityManager()
@@ -219,20 +222,12 @@ class EventController extends ActionController
             return;
         }
 
-        $isCouncil = $rank >= User::RANK_LIEUTENANT;
-        $isLeader  = is_null($event->leader) ? false : $event->leader->id == $this->getIdentityEntity()->id;
-        if (!$isCouncil && !$isLeader) {
+        if (!$event->canEdit($this->getIdentityEntity())) {
             $this->getResponse()->setStatusCode(403);
             return;
         }
 
-        $now = new \DateTimeImmutable();
-        if ($event->start->getTimestamp() < $now->getTimestamp()) {
-            $this->getResponse()->setStatusCode(403);
-            return;
-        }
-
-        $form    = new EventForm();
+        $form    = new EventForm(null, true);
         $session = new SessionContainer('NightsWatch\Event\Create');
         if (!empty($session->name) && !empty($session->id)) {
             static::fillEventFormFromSession($form, $session);
@@ -254,6 +249,7 @@ class EventController extends ActionController
                 $session->region      = $form->get('region')->getValue();
                 $session->leader      = $form->get('leader')->getValue();
                 $session->type        = $form->get('eventtype')->getValue();
+                $session->sendemail   = $form->get('sendemail')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
                 return false;
             }
@@ -298,7 +294,9 @@ class EventController extends ActionController
         }
         $event->name        = $session->name;
         $event->description = $session->description;
-        $event->user        = $this->getIdentityEntity();
+        if ($newEvent) {
+            $event->user = $this->getIdentityEntity();
+        }
         $event->start       = new \DateTime($session->date . ' ' . $session->time);
         $event->region      = $session->region;
         $event->leader      = $leader;
@@ -317,11 +315,13 @@ class EventController extends ActionController
         if ($this->getRequest()->isPost()) {
             $this->getEntityManager()->persist($event);
             $this->getEntityManager()->flush();
+            $event->user = $this->getIdentityEntity();
 
             $session->name = '';
 
             // Send out the Emails
-            $sendEmails = $newEvent; // first version: only email on new event
+            $sendSpecified = (isset($session->sendemail) && !!$session->sendemail);
+            $sendEmails = $newEvent || $sendSpecified;
             if ($sendEmails) {
                 $criteria = Criteria::create()
                     ->where(Criteria::expr()->gte('rank', $event->lowestViewableRank));
@@ -334,8 +334,13 @@ class EventController extends ActionController
                 $mail->setFrom(new Address('noreply@minez-nightswatch.com', $event->user->username));
                 $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
                 $headers = $mail->getHeaders();
-                $headers->addHeaderLine('Message-Id', 'event-' . $event->id . '@threads.minez-nightswatch.com');
-                $headers->addHeaderLine('Threading-Id', 'event-' . $event->id . '@threads.minez-nightswatch.com');
+                if ($newEvent) {
+                    $headers->addHeaderLine('Message-Id', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
+                } else {
+                    $headers->addHeaderLine('References', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
+                    $headers->addHeaderLine('In-Reply-To', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
+                }
+                $headers->addHeaderLine('Threading-Id', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
                 $mail->setEncoding('UTF-8');
 
                 $url = $this->url()->fromRoute(
@@ -349,8 +354,13 @@ class EventController extends ActionController
                 $region   = $event->getRegionName();
                 // Create a signature
                 $title = trim($event->user->getTitleOrRank());
+                if ($newEvent) {
+                    $lead = "A new event has been posted to the calendar.";
+                } else {
+                    $lead = "An event on the calendar has been updated with new, important information.";
+                }
                 $event->description
-                       = "A new event has been posted to the calendar.  All information concerning this event "
+                       = "{$lead}  All information concerning this event "
                     . "is classified and only available to members of rank " . User::getRankName(
                         $event->lowestViewableRank
                     )
