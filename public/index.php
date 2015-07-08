@@ -12,7 +12,7 @@ if (file_exists(__DIR__ . "/../maintenance")) {
     die();
 }
 
-if (true || $_SERVER['APPLICATION_ENV'] == 'development') {
+if ($_SERVER['APPLICATION_ENV'] == 'development') {
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
 }
