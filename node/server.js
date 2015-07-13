@@ -34,7 +34,22 @@ String.prototype.markdown2html = function () {
 };
 
 
-var rooms = ['public', 'recruit', 'private', 'corporal', 'council', 'announcements', 'anime', 'games'];
+var channelTests = [
+    ['announcements', 0],
+    ['public', 0],
+    ['anime', 0],
+    ['games', 0],
+    ['recruit', 1],
+    ['private', 2],
+    ['corporal', 500],
+    ['council', 1000]
+];
+
+var rooms = [];
+
+for (var i in channelTests) {
+    rooms.push(channelTests[i][0]);
+}
 
 // Map of users that can talk in #announcements (minus Corporal+)
 var announcementsPrivileged = {};
@@ -144,16 +159,6 @@ function updatePrivileges(socket) {
                 row.rank = -1;
             }
 
-            var channelTests = [
-                ['announcements', 0],
-                ['public', 0],
-                ['anime', 0],
-                ['games', 0],
-                ['recruit', 1],
-                ['private', 2],
-                ['corporal', 500],
-                ['council', 1000]
-            ];
             var activateChannels = [];
             var deactivateChannels = [];
             var channels = [];
@@ -225,10 +230,20 @@ function userLeave(socket, room) {
 
 populateTheMessageLog();
 io.sockets.on('connection', function (socket) {
+    var i;
     socketVariables[socket.id] = {};
-    emitMessageLogTo(socket, ['public']);
-    emitRoomViewersTo(socket, ['public']);
-    socket.join('public');
+    var publicChannels = [];
+    for (i in channelTests) {
+        var channelInfo = channelTests[i];
+        if (channelInfo[1] === 0) {
+            publicChannels.push(channelInfo[0]);
+        }
+    }
+    emitMessageLogTo(socket, publicChannels);
+    emitRoomViewersTo(socket, publicChannels);
+    for (i in publicChannels) {
+        socket.join(publicChannels[i]);
+    }
     socket.on('token', function (data) {
         mysqlConnection.query("SELECT user.username AS username, user.rank AS rank, user.id AS userId FROM chatToken LEFT JOIN user ON(chatToken.user_id=user.id) WHERE chatToken.token LIKE ? AND chatToken.expires > CURRENT_TIMESTAMP", [data], function (err, rows) {
             mysqlConnection.query("DELETE FROM `chatToken` WHERE `token` = ? OR `expires` < CURRENT_TIMESTAMP", [data], function (err, result) {
