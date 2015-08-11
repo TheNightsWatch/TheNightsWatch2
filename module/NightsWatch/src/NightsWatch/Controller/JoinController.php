@@ -29,12 +29,12 @@ class JoinController extends ActionController
 
     public function indexAction()
     {
-        return $this->redirect()->toRoute('home', ['controller' => 'site', 'shotbowlogin']);
+        return $this->redirect()->toRoute('shotbowlogin');
     }
 
     public function verifyAction()
     {
-        return $this->redirect()->toRoute('home', ['controller' => 'site', 'shotbowlogin']);
+        return $this->redirect()->toRoute('shotbowlogin');
     }
 
     public function recruitAction()
