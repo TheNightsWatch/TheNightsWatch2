@@ -29,96 +29,12 @@ class JoinController extends ActionController
 
     public function indexAction()
     {
-        if ($this->disallowMember()) {
-            return false;
-        }
-        $this->updateLayoutWithIdentity();
-
-        $form = new RegisterForm();
-
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
-            if ($form->isValid()) {
-                $bcrypt = new Bcrypt();
-                $this->session->email = $form->get('email')->getValue();
-                $this->session->username = $form->get('username')->getValue();
-                $this->session->password = $bcrypt->create($form->get('password')->getValue());
-                $this->redirect()->toRoute('home', ['controller' => 'join', 'action' => 'verify']);
-            }
-        }
-        return new ViewModel(
-            [
-                'form' => $form,
-            ]
-        );
+        return $this->redirect()->toRoute('home', ['controller' => 'site', 'shotbowlogin']);
     }
 
     public function verifyAction()
     {
-        if ($this->disallowMember()) {
-            return false;
-        }
-        $this->updateLayoutWithIdentity();
-
-        $form = new VerifyForm();
-        $errors = [];
-
-        if (!isset($this->session->username) || !isset($this->session->password) || !isset($this->session->email)) {
-            $this->redirect()->toRoute('home', ['controller' => 'join', 'action' => 'index']);
-            return;
-        } else {
-            $user = $this->getEntityManager()
-                ->getRepository('NightsWatch\Entity\User')
-                ->findOneBy(['username' => $this->session->username]);
-
-            if (!!$user) {
-                $errors[] = "{$this->session->username} already has a Night's Watch account.";
-            }
-        }
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
-
-            if ($form->isValid()) {
-                try {
-                    $minecraft = new MinecraftAPI(
-                        $form->get('username')->getValue(),
-                        $form->get('password')->getValue()
-                    );
-
-                    if (strtolower($minecraft->username) != strtolower($this->session->username)) {
-                        $errors[] = "Account Valid, but does not match provided username.";
-                    } else {
-                        $user = new User();
-                        $user->username = $minecraft->username;
-                        $user->password = $this->session->password;
-                        $user->email = $this->session->email;
-                        $user->minecraftId = $minecraft->minecraftID;
-                        $this->getEntityManager()->persist($user);
-                        $this->getEntityManager()->flush();
-                        $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
-                        $this->redirect()->toRoute('home', ['controller' => 'chat']);
-                        return false;
-                    }
-                } catch (\RuntimeException $e) {
-                    $errors[] = "Problem querying the API";
-                } catch (BadLoginException $e) {
-                    $errors[] = "Invalid username or Password";
-                } catch (MigrationException $e) {
-                    $errors[] = "Your Minecraft account has been migrated to a Mojang account.  "
-                        . "Please enter your Mojang email and try again";
-                } catch (BasicException $e) {
-                    $errors[] = "This is not a premium Minecraft Account";
-                } catch (\Exception $e) {
-                    $errors[] = "There was an error creating your account.";
-                }
-            }
-        }
-        return new ViewModel(
-            [
-                'errors' => $errors,
-                'form' => $form,
-            ]
-        );
+        return $this->redirect()->toRoute('home', ['controller' => 'site', 'shotbowlogin']);
     }
 
     public function recruitAction()
