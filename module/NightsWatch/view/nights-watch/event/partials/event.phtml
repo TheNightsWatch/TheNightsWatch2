@@ -120,10 +120,12 @@ foreach ($event->rsvps as $rsvp) {
         <aside>
             <h3>Attendance</h3>
             <?php
-            $form = new \NightsWatch\Form\RsvpForm($event);
-            $form->setAttribute('action', $this->url('home', ['controller' => 'event', 'action' => 'rsvp']));
-            $form->get('attendance')->setValue($usersAttendance);
-            echo $this->bootstrapForm($form);
+            if (is_null($event->leader) || $user->id != $event->leader->id) {
+                $form = new \NightsWatch\Form\RsvpForm($event);
+                $form->setAttribute('action', $this->url('home', ['controller' => 'event', 'action' => 'rsvp']));
+                $form->get('attendance')->setValue($usersAttendance);
+                echo $this->bootstrapForm($form);
+            }
             ?>
             <?php if (!is_null($event->leader)): ?>
                 <h4>Lead By</h4>
@@ -133,7 +135,7 @@ foreach ($event->rsvps as $rsvp) {
                     </table>
                 </div>
             <?php endif; ?>
-            <?php if ($showRsvp && (is_null($event->leader) || $user->id != $event->leader->id)): ?>
+            <?php if ($showRsvp): ?>
                 <?php foreach ($rsvpGroups as $rsvpType => $rsvpGroup): ?>
                     <h4><?= RSVP::getRsvpNameFromType($rsvpType); ?> <span
                             class="badge badge-info"><?= count($rsvpGroup); ?></span></h4>
