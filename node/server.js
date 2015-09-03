@@ -39,6 +39,7 @@ var channelTests = [
     ['public', 0],
     ['anime', 0],
     ['games', 0],
+    ['worldnews', 0],
     ['recruit', 1],
     ['private', 2],
     ['corporal', 500],
@@ -273,10 +274,11 @@ io.sockets.on('connection', function (socket) {
             // Subscribe to Channels
             var defaultChannel = 'public';
             if (row.rank >= 0) { // not banned
-                var channels = ['public', 'announcements', 'anime', 'games'];
+                var channels = ['public', 'announcements', 'anime', 'games', 'worldnews'];
                 userJoin(socket, 'public');
                 userJoin(socket, 'anime');
                 userJoin(socket, 'games');
+                userJoin(socket, 'worldnews');
                 userJoin(socket, 'announcements');
             }
             if (row.rank >= 1) { // recruit+
