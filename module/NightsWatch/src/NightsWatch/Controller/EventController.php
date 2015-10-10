@@ -186,6 +186,7 @@ class EventController extends ActionController
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $session              = new SessionContainer('NightsWatch\Event\Create');
+                $session->id          = false;
                 $session->name        = $form->get('name')->getValue();
                 $session->description = $form->get('description')->getValue();
                 $session->rank        = $form->get('lowrank')->getValue();
@@ -283,7 +284,7 @@ class EventController extends ActionController
         }
 
         $newEvent = false;
-        if (isset($session->id)) {
+        if (isset($session->id) && $session->id != false) {
             $event = $eventRepo->find($session->id);
             if (is_null($event)) {
                 throw new Exception('No such event found');
