@@ -31,7 +31,10 @@ class ActionController extends AbstractActionController
             function ($event) use ($controller) {
                 /** @var \Zend\Http\Request $request */
                 $request = $event->getRequest();
-                $address = $request->getServer()->get('REMOTE_ADDR');
+                $addresses = $request->getServer()->get('HTTP_X_FORWARDED_FOR');
+                $addresses = explode(',', $addresses);
+                $address = end($addresses);
+                $address = trim($address);
                 $user = $controller->getIdentityEntity();
                 if (!is_null($user)) {
                     $ip = $this->getEntityManager()
