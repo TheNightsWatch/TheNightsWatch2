@@ -25,13 +25,13 @@ class BlackController extends ActionController
 
         $ident = $this->getIdentityEntity();
 
-        $type = "template"; // Recruit
+        $type = 'template'; // Recruit
         if ($ident->rank == User::RANK_COMMANDER) {
-            $type = "commander";
+            $type = 'commander';
         } elseif ($ident->order == User::ORDER_RANGER) {
-            $type = "ranger";
+            $type = 'ranger';
         } elseif ($ident->order == User::ORDER_STEWARD) {
-            $type = "steward";
+            $type = 'steward';
         }
         $name = $ident->username;
 
@@ -46,6 +46,7 @@ class BlackController extends ActionController
             ->addHeaderLine('Content-Disposition', 'attachment; filename=take_the_black.png')
             ->addHeaderLine('Content-Type', 'image/png');
         $response->setContent($takeTheBlack->get());
+
         return $response;
     }
 }

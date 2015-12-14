@@ -5,12 +5,12 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A User's Reprimand
+ * A User's Reprimand.
  *
- * @package NightsWatch\Entity
  *
  * @ORM\Entity
  * @ORM\Table(name="reprimand")
+ *
  * @property int       $id
  * @property User      $user
  * @property User      $givenBy

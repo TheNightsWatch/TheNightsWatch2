@@ -5,10 +5,11 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class ChatMessage
- * @package NightsWatch\Entity
+ * Class ChatMessage.
+ *
  * @ORM\Entity
  * @ORM\Table(name="chatMessage")
+ *
  * @property int $id
  * @property User $user
  * @property string $chatroom

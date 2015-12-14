@@ -5,12 +5,12 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A User's Accolade
+ * A User's Accolade.
  *
- * @package NightsWatch\Entity
  *
  * @ORM\Entity
  * @ORM\Table(name="accolade")
+ *
  * @property int       $id
  * @property User      $user
  * @property User      $givenBy

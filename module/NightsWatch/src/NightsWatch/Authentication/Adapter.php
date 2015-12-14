@@ -21,7 +21,6 @@ class Adapter implements AdapterInterface
         $this->entityManager = $entityManager;
     }
 
-
     public function authenticate()
     {
         /** @var \NightsWatch\Entity\User $user */

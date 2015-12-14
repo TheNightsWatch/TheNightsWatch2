@@ -1,8 +1,8 @@
 <?php
+
 namespace NightsWatch\Validator;
 
 use Zend\Validator\AbstractValidator;
-use Zend\Validator\Exception;
 
 class UsernameExists extends AbstractValidator
 {
@@ -32,6 +32,7 @@ class UsernameExists extends AbstractValidator
         $user = $this->userRepo->findOneBy(['username' => $value]);
         if (is_null($user)) {
             $this->error(self::INVALID);
+
             return false;
         }
 

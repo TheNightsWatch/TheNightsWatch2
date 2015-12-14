@@ -10,11 +10,11 @@ use NightsWatch\Mvc\Controller\ActionController;
 use Zend\Mail\Address;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Sendmail;
-use Zend\Mime\Mime;
-use Zend\View\Model\ViewModel;
 use Zend\Mime\Message as MimeBody;
+use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
 use Zend\Session\Container as SessionContainer;
+use Zend\View\Model\ViewModel;
 
 class AnnouncementController extends ActionController
 {
@@ -58,9 +58,9 @@ class AnnouncementController extends ActionController
         return new ViewModel(
             [
                 'announcements' => $announcements,
-                'pages' => $pages,
-                'page' => $page,
-                'identity' => $this->getIdentityEntity()
+                'pages'         => $pages,
+                'page'          => $page,
+                'identity'      => $this->getIdentityEntity(),
             ]
         );
     }
@@ -69,6 +69,7 @@ class AnnouncementController extends ActionController
     {
         if (!$this->params('id')) {
             $this->redirect()->toRoute('home', ['controller' => 'announcement', 'action' => 'index']);
+
             return false;
         }
         $this->updateLayoutWithIdentity();
@@ -82,6 +83,7 @@ class AnnouncementController extends ActionController
 
         if (!$announcement || $announcement->lowestReadableRank > $rank) {
             $this->redirect()->toRoute('home', ['controller' => 'announcement', 'action' => 'index']);
+
             return false;
         }
 
@@ -101,7 +103,7 @@ class AnnouncementController extends ActionController
         if (!empty($session->title)) {
             $form->setData(
                 [
-                    'title' => $session->title,
+                    'title'   => $session->title,
                     'content' => $session->content,
                     'lowrank' => $session->rank,
                 ]
@@ -115,9 +117,11 @@ class AnnouncementController extends ActionController
                 $session->content = $form->get('content')->getValue();
                 $session->rank = $form->get('lowrank')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'announcement', 'action' => 'preview']);
+
                 return false;
             }
         }
+
         return new ViewModel(['form' => $form, 'identity' => $this->getIdentityEntity()]);
     }
 
@@ -132,6 +136,7 @@ class AnnouncementController extends ActionController
         $session = new SessionContainer('NightsWatch\Announcement\Create');
         if (empty($session->title)) {
             $this->redirect()->toRoute('home', ['controller' => 'announcement', 'action' => 'create']);
+
             return false;
         }
 
@@ -156,7 +161,7 @@ class AnnouncementController extends ActionController
             $users = $userRepo->matching($criteria);
 
             $mail = new Message();
-            $mail->setSubject('[NightsWatch] ' . $announcement->title);
+            $mail->setSubject('[NightsWatch] '.$announcement->title);
             $mail->setFrom(new Address('noreply@minez-nightswatch.com', $announcement->user->username));
             $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
             $mail->setEncoding('UTF-8');
@@ -164,7 +169,7 @@ class AnnouncementController extends ActionController
             // Create a signature for email
             $title = trim($announcement->user->getTitleOrRank());
             $announcement->content = $announcement->content .= "\n\n"
-                . $announcement->user->username . "  \n" . "*" . $title . "*";
+                .$announcement->user->username."  \n".'*'.$title.'*';
 
             $body = new MimeBody();
             $bodyHtml = new MimePart($announcement->getParsedContent());
@@ -182,8 +187,9 @@ class AnnouncementController extends ActionController
             $transport = new Sendmail();
             $transport->send($mail);
 
-            $session->title = "";
+            $session->title = '';
             $this->redirect()->toRoute('id', ['controller' => 'announcement', 'id' => $announcement->id]);
+
             return false;
         }
 

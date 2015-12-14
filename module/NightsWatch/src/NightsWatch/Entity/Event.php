@@ -6,11 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Michelf\MarkdownExtra;
 
 /**
- * Class Event
+ * Class Event.
  *
- * @package NightsWatch\Entity
  * @ORM\Entity
  * @ORM\Table(name="event")
+ *
  * @property int                            $id
  * @property string                         $name
  * @property string                         $description
@@ -26,12 +26,12 @@ use Michelf\MarkdownExtra;
 class Event
 {
     const REGION_NONE = 0;
-    const REGION_US   = 1;
-    const REGION_EU   = 2;
+    const REGION_US = 1;
+    const REGION_EU = 2;
 
     const EVENT_INFORMAL = 0;
-    const EVENT_RANGING  = 1;
-    const EVENT_FORMAL   = 2;
+    const EVENT_RANGING = 1;
+    const EVENT_FORMAL = 2;
 
     private static $regionMap;
 
@@ -70,7 +70,7 @@ class Event
     protected $lowestViewableRank;
 
     /**
-     * The user who created the event
+     * The user who created the event.
      *
      * @var \NightsWatch\Entity\User
      * @ORM\ManyToOne(targetEntity="User")
@@ -126,9 +126,10 @@ class Event
             static::$regionMap = [
                 static::REGION_NONE => 'Not Applicable',
                 static::REGION_US   => 'United States',
-                static::REGION_EU   => 'Europe'
+                static::REGION_EU   => 'Europe',
             ];
         }
+
         return static::$regionMap;
     }
 
@@ -138,6 +139,7 @@ class Event
         if (!isset($regions[$region])) {
             throw new \InvalidArgumentException('Invalid region');
         }
+
         return $regions[$region];
     }
 
@@ -163,7 +165,8 @@ class Event
         }
 
         $isCouncil = $user->rank >= User::RANK_LIEUTENANT;
-        $isLeader  = is_null($event->leader) ? false : $event->leader->id == $user->id;
+        $isLeader = is_null($event->leader) ? false : $event->leader->id == $user->id;
+
         return $isCouncil || $isLeader;
     }
 
@@ -173,9 +176,10 @@ class Event
             static::$typeMap = [
                 static::EVENT_INFORMAL => 'Informal Event',
                 static::EVENT_FORMAL   => 'Official Event',
-                static::EVENT_RANGING  => 'Official Ranging'
+                static::EVENT_RANGING  => 'Official Ranging',
             ];
         }
+
         return static::$typeMap;
     }
 
@@ -185,6 +189,7 @@ class Event
         if (!isset($types[$type])) {
             throw new \InvalidArgumentException('Invalid type');
         }
+
         return $types[$type];
     }
 

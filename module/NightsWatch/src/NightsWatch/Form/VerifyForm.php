@@ -16,19 +16,19 @@ class VerifyForm extends Form
 
         $this->add(
             [
-                'name' => 'username',
+                'name'       => 'username',
                 'attributes' => [
-                    'type' => 'text',
-                    'id' => 'mojang-login',
+                    'type'     => 'text',
+                    'id'       => 'mojang-login',
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Mojang Login',
+                    'label'     => 'Mojang Login',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'This is the username you log into Minecraft with.  If you have migrated your'
-                            . 'account, it will be an email address.',
+                            .'account, it will be an email address.',
                         ],
                     ],
                 ],
@@ -37,19 +37,19 @@ class VerifyForm extends Form
 
         $this->add(
             [
-                'name' => 'password',
+                'name'       => 'password',
                 'attributes' => [
-                    'type' => 'password',
-                    'id' => 'mojang-password',
+                    'type'     => 'password',
+                    'id'       => 'mojang-password',
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Mojang Password',
+                    'label'     => 'Mojang Password',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'This password will be used once to verify your account.'
-                            . 'It will not be saved.',
+                            .'It will not be saved.',
                         ],
                     ],
                 ],
@@ -58,11 +58,11 @@ class VerifyForm extends Form
 
         $this->add(
             [
-                'name' => 'submit',
+                'name'       => 'submit',
                 'attributes' => [
-                    'type' => 'submit',
+                    'type'  => 'submit',
                     'value' => 'Verify Account',
-                    'id' => 'verify-submit',
+                    'id'    => 'verify-submit',
                     'class' => 'btn btn-primary',
                 ],
             ]
@@ -76,19 +76,20 @@ class VerifyForm extends Form
 
             $inputFilter->add(
                 [
-                    'name' => 'username',
+                    'name'     => 'username',
                     'required' => true,
                 ]
             );
 
             $inputFilter->add(
                 [
-                    'name' => 'password',
+                    'name'     => 'password',
                     'required' => true,
                 ]
             );
             $this->inputFilter = $inputFilter;
         }
+
         return $this->inputFilter;
     }
 }

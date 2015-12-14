@@ -1,4 +1,5 @@
 <?php
+
 namespace NightsWatch;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -6,8 +7,6 @@ use League\OAuth2\Client\Token\AccessToken;
 
 class ShotbowProvider extends AbstractProvider
 {
-
-
     public function __construct($options = [])
     {
         $options['scopeSeparator'] = ' ';
@@ -48,7 +47,7 @@ class ShotbowProvider extends AbstractProvider
      */
     public function urlUserDetails(AccessToken $token)
     {
-        return 'https://shotbow.net/forum/oauth2/me?access_token=' . $token;
+        return 'https://shotbow.net/forum/oauth2/me?access_token='.$token;
     }
 
     /**

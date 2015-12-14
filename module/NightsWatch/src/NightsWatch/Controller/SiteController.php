@@ -2,27 +2,26 @@
 
 namespace NightsWatch\Controller;
 
-use Doctrine\Common\Collections\Criteria;
 use Navarr\Minecraft\Profile;
-use Navarr\MinecraftAPI\MinecraftAPI;
 use NightsWatch\Authentication\Adapter as AuthAdapter;
 use NightsWatch\Authentication\ForceAdapter;
 use NightsWatch\Authentication\MinecraftIdAdapter;
 use NightsWatch\Entity\User;
+use NightsWatch\Form\LoginForm;
+use NightsWatch\Mvc\Controller\ActionController;
 use NightsWatch\ShotbowProvider;
 use Zend\Authentication\Result as AuthResult;
-use NightsWatch\Mvc\Controller\ActionController;
-use NightsWatch\Form\LoginForm;
 use Zend\Authentication\Storage\Session;
 use Zend\Session\Container;
-use Zend\View\Model\ViewModel;
 use Zend\Session\Container as SessionContainer;
+use Zend\View\Model\ViewModel;
 
 class SiteController extends ActionController
 {
     public function indexAction()
     {
         $this->updateLayoutWithIdentity();
+
         return;
     }
 
@@ -34,6 +33,7 @@ class SiteController extends ActionController
 
         $this->getAuthenticationService()->clearIdentity();
         $this->redirect()->toRoute('home');
+
         return false;
     }
 
@@ -69,11 +69,12 @@ class SiteController extends ActionController
             [
                 'http' => [
                     'method' => 'GET',
-                    'header' => "Accept: */*\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36"
-                ]
+                    'header' => "Accept: */*\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36",
+                ],
             ]
         );
         echo file_get_contents('http://xpaw.ru/mcstatus/status.json', false, $context);
+
         return $this->response;
     }
 
@@ -112,8 +113,9 @@ class SiteController extends ActionController
         $session = new SessionContainer('NightsWatch\Login\Shotbow');
 
         if (!isset($_GET['code'])) {
-            $authUrl        = $provider->getAuthorizationUrl();
+            $authUrl = $provider->getAuthorizationUrl();
             $session->state = $provider->state;
+
             return $this->redirect()->toUrl($authUrl);
         } elseif (!empty($_GET['error'])) {
             throw new \Exception($_GET['message']);
@@ -134,9 +136,9 @@ class SiteController extends ActionController
 
         // At this point we have to have $userDetails - we've thrown Exceptions everywhere else.
 
-        $name        = $userDetails->username;
+        $name = $userDetails->username;
         $minecraftId = $userDetails->minecraftId;
-        $email       = $userDetails->email;
+        $email = $userDetails->email;
 
         if (empty($name) || empty($minecraftId) || empty($email)) {
             throw new \Exception('Bad Data from Shotbow');
@@ -145,15 +147,16 @@ class SiteController extends ActionController
         // Attempt Login
         $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
         $authNamespace->getManager()->rememberMe(60 * 60 * 24 * 30);
-        
+
         $authAdapter = new MinecraftIdAdapter($minecraftId, $name, $this->getEntityManager());
-        $result      = $this->getAuthenticationService()->authenticate($authAdapter);
+        $result = $this->getAuthenticationService()->authenticate($authAdapter);
 
         $errors = [];
 
         switch ($result->getCode()) {
             case AuthResult::SUCCESS:
                 $this->redirect()->toRoute('home', ['controller' => 'chat']);
+
                 return false;
             case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
                 $user = new User();
@@ -165,12 +168,13 @@ class SiteController extends ActionController
                 $this->getEntityManager()->flush($user);
                 $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
                 $this->redirect()->toRoute('home', ['controller' => 'chat']);
+
                 return false;
             case -5:
-                $errors[] = "Your account has been banned";
+                $errors[] = 'Your account has been banned';
                 break;
             default:
-                $errors[] = "Invalid Password...?";
+                $errors[] = 'Invalid Password...?';
                 break;
         }
     }
@@ -182,7 +186,7 @@ class SiteController extends ActionController
         }
         $this->updateLayoutWithIdentity();
         $errors = [];
-        $form   = new LoginForm();
+        $form = new LoginForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -202,19 +206,21 @@ class SiteController extends ActionController
                     case AuthResult::SUCCESS:
                         $this->updateUsername();
                         $this->redirect()->toRoute('home', ['controller' => 'chat']);
+
                         return false;
                     case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
-                        $errors[] = "Identity not Registered";
+                        $errors[] = 'Identity not Registered';
                         break;
                     case -5:
-                        $errors[] = "Your account has been banned";
+                        $errors[] = 'Your account has been banned';
                         break;
                     default:
-                        $errors[] = "Invalid Password";
+                        $errors[] = 'Invalid Password';
                         break;
                 }
             }
         }
+
         return new ViewModel(
             [
                 'form'   => $form,

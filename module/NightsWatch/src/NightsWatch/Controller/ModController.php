@@ -21,18 +21,20 @@ class ModController extends ActionController
 
         if (!$user || $user->rank < User::RANK_RECRUIT) {
             $this->getResponse()->setStatusCode(404);
+
             return $this->getResponse();
         }
 
         if ($user->deserter) {
             $this->getResponse()->setStatusCode(501);
+
             return $this->getResponse();
         }
 
         $response = new Response();
         $response->getHeaders()->addHeaders(['Content-Type' => 'image/png']);
 
-        $cacheName = sha1(strtolower($user->username) . "-{$user->rank}-{$user->deserter}-{$user->order}");
+        $cacheName = sha1(strtolower($user->username)."-{$user->rank}-{$user->deserter}-{$user->order}");
 
         $fileLoc = "data/cache/cape-{$cacheName}.png";
         if (file_exists($fileLoc)) {
@@ -76,17 +78,16 @@ class ModController extends ActionController
                 $backingType = 'commander';
             }
             $backing = imagecreatefromstring(file_get_contents("data/capes/backing-{$backingType}.png"));
-            $raven = imagecreatefromstring(file_get_contents("data/capes/raven-logo.png"));
+            $raven = imagecreatefromstring(file_get_contents('data/capes/raven-logo.png'));
             $images = [$base, $backing, $raven];
             if ($user->rank == User::RANK_RECRUIT) {
-                $recruit = imagecreatefromstring(file_get_contents("data/capes/recruit.png"));
+                $recruit = imagecreatefromstring(file_get_contents('data/capes/recruit.png'));
                 $images[] = $recruit;
             }
             if (!is_null($iconType)) {
                 $icon = imagecreatefromstring(file_get_contents("data/capes/icon-{$iconType}.png"));
                 $images[] = $icon;
             }
-
 
             foreach ($images as $image) {
                 imagesavealpha($image, true);
@@ -109,6 +110,7 @@ class ModController extends ActionController
         }
 
         $response->setContent($imageContents);
+
         return $response;
     }
 
@@ -117,7 +119,7 @@ class ModController extends ActionController
      */
     private function filterOutStyleCodes(&$text)
     {
-        $text = preg_replace("/§[a-f0-9]/iu", '', $text);
+        $text = preg_replace('/§[a-f0-9]/iu', '', $text);
     }
 
     private function filterOutDotPng(&$text)

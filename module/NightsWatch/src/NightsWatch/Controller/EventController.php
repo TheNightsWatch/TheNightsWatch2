@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by JetBrains PhpStorm.
  * User: Navarr
@@ -19,11 +20,11 @@ use NightsWatch\Form\RsvpForm;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\Mail\Address;
 use Zend\Mail\Transport\Sendmail;
-use Zend\Mime\Mime;
-use Zend\View\Model\ViewModel;
 use Zend\Mime\Message as MimeBody;
+use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
 use Zend\Session\Container as SessionContainer;
+use Zend\View\Model\ViewModel;
 
 class EventController extends ActionController
 {
@@ -32,12 +33,12 @@ class EventController extends ActionController
         $this->updateLayoutWithIdentity();
 
         $month = $this->params()->fromQuery('month', date('n'));
-        $year  = $this->params()->fromQuery('year', date('Y'));
+        $year = $this->params()->fromQuery('year', date('Y'));
 
         $days = static::createDaysArrayForCalendar($month, $year);
 
         $first = $days[0]['stamp'];
-        $last  = $days[count($days) - 1]['stamp'];
+        $last = $days[count($days) - 1]['stamp'];
 
         // Query for Events
         $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
@@ -62,6 +63,7 @@ class EventController extends ActionController
         }
 
         $identity = $this->getIdentityEntity();
+
         return new ViewModel(['days' => $days, 'month' => $month, 'year' => $year, 'identity' => $identity]);
     }
 
@@ -71,12 +73,12 @@ class EventController extends ActionController
 
         $user = $this->getIdentityEntity();
 
-        $year  = intval($this->params()->fromRoute('year'), 10);
+        $year = intval($this->params()->fromRoute('year'), 10);
         $month = intval($this->params()->fromRoute('month'), 10);
-        $day   = intval($this->params()->fromRoute('day'), 10);
+        $day = intval($this->params()->fromRoute('day'), 10);
 
         $start = new \DateTime("{$year}-{$month}-{$day}");
-        $end   = clone $start;
+        $end = clone $start;
         $end->add(new \DateInterval('P1D'));
 
         // Get any events from th Database.
@@ -99,7 +101,7 @@ class EventController extends ActionController
         $this->updateLayoutWithIdentity();
 
         $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
-        $id   = $this->params()->fromRoute('id');
+        $id = $this->params()->fromRoute('id');
 
         /** @var \NightsWatch\Entity\Event $event */
         $event = $this->getEntityManager()
@@ -108,11 +110,13 @@ class EventController extends ActionController
 
         if (is_null($event)) {
             $this->getResponse()->setStatusCode(404);
+
             return;
         }
 
         if ($rank < $event->lowestViewableRank) {
             $this->getResponse()->setStatusCode(403);
+
             return;
         }
 
@@ -140,6 +144,7 @@ class EventController extends ActionController
 
         if (!$event) {
             $this->getResponse()->setStatusCode(404);
+
             return;
         }
 
@@ -153,13 +158,13 @@ class EventController extends ActionController
                     ->findOneBy(['event' => $event, 'user' => $this->getIdentityEntity()]);
 
                 if ($rsvp == null) {
-                    $rsvp        = new EventRsvp();
-                    $rsvp->user  = $this->getIdentityEntity();
+                    $rsvp = new EventRsvp();
+                    $rsvp->user = $this->getIdentityEntity();
                     $rsvp->event = $event;
                 }
 
                 $rsvp->attendance = $form->get('attendance')->getValue();
-                $rsvp->timestamp  = new \DateTime();
+                $rsvp->timestamp = new \DateTime();
 
                 $this->getEntityManager()->persist($rsvp);
                 $this->getEntityManager()->flush();
@@ -177,7 +182,7 @@ class EventController extends ActionController
             return false;
         }
 
-        $form    = new EventForm();
+        $form = new EventForm();
         $session = new SessionContainer('NightsWatch\Event\Create');
         if (!empty($session->name)) {
             static::fillEventFormFromSession($form, $session);
@@ -185,21 +190,23 @@ class EventController extends ActionController
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $session              = new SessionContainer('NightsWatch\Event\Create');
-                $session->id          = false;
-                $session->name        = $form->get('name')->getValue();
+                $session = new SessionContainer('NightsWatch\Event\Create');
+                $session->id = false;
+                $session->name = $form->get('name')->getValue();
                 $session->description = $form->get('description')->getValue();
-                $session->rank        = $form->get('lowrank')->getValue();
-                $session->date        = $form->get('date')->getValue();
-                $session->time        = $form->get('time')->getValue();
-                $session->offset      = $form->get('offset')->getValue();
-                $session->region      = $form->get('region')->getValue();
-                $session->leader      = $form->get('leader')->getValue();
-                $session->type        = $form->get('eventtype')->getValue();
+                $session->rank = $form->get('lowrank')->getValue();
+                $session->date = $form->get('date')->getValue();
+                $session->time = $form->get('time')->getValue();
+                $session->offset = $form->get('offset')->getValue();
+                $session->region = $form->get('region')->getValue();
+                $session->leader = $form->get('leader')->getValue();
+                $session->type = $form->get('eventtype')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
+
                 return false;
             }
         }
+
         return new ViewModel(['form' => $form, 'identity' => $this->getIdentityEntity()]);
     }
 
@@ -220,15 +227,17 @@ class EventController extends ActionController
 
         if (is_null($event)) {
             $this->getResponse()->setStatusCode(404);
+
             return;
         }
 
         if (!$event->canEdit($this->getIdentityEntity())) {
             $this->getResponse()->setStatusCode(403);
+
             return;
         }
 
-        $form    = new EventForm(null, true);
+        $form = new EventForm(null, true);
         $session = new SessionContainer('NightsWatch\Event\Create');
         if (!empty($session->name) && !empty($session->id)) {
             static::fillEventFormFromSession($form, $session);
@@ -239,22 +248,24 @@ class EventController extends ActionController
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $session              = new SessionContainer('NightsWatch\Event\Create');
-                $session->id          = $form->get('id')->getValue();
-                $session->name        = $form->get('name')->getValue();
+                $session = new SessionContainer('NightsWatch\Event\Create');
+                $session->id = $form->get('id')->getValue();
+                $session->name = $form->get('name')->getValue();
                 $session->description = $form->get('description')->getValue();
-                $session->rank        = $form->get('lowrank')->getValue();
-                $session->date        = $form->get('date')->getValue();
-                $session->time        = $form->get('time')->getValue();
-                $session->offset      = $form->get('offset')->getValue();
-                $session->region      = $form->get('region')->getValue();
-                $session->leader      = $form->get('leader')->getValue();
-                $session->type        = $form->get('eventtype')->getValue();
-                $session->sendemail   = $form->get('sendemail')->getValue();
+                $session->rank = $form->get('lowrank')->getValue();
+                $session->date = $form->get('date')->getValue();
+                $session->time = $form->get('time')->getValue();
+                $session->offset = $form->get('offset')->getValue();
+                $session->region = $form->get('region')->getValue();
+                $session->leader = $form->get('leader')->getValue();
+                $session->type = $form->get('eventtype')->getValue();
+                $session->sendemail = $form->get('sendemail')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
+
                 return false;
             }
         }
+
         return new ViewModel(['form' => $form, 'identity' => $this->getIdentityEntity()]);
     }
 
@@ -269,10 +280,11 @@ class EventController extends ActionController
         $session = new SessionContainer('NightsWatch\Event\Create');
         if (empty($session->name)) {
             $this->redirect()->toRoute('home', ['contoller' => 'event', 'action' => 'create']);
+
             return false;
         }
 
-        $userRepo  = $this->getEntityManager()->getRepository('NightsWatch\Entity\User');
+        $userRepo = $this->getEntityManager()->getRepository('NightsWatch\Entity\User');
         $eventRepo = $this->getEntityManager()->getRepository('NightsWatch\Entity\Event');
 
         $leader = $session->leader;
@@ -291,21 +303,21 @@ class EventController extends ActionController
             }
         } else {
             $newEvent = true;
-            $event    = new Event();
+            $event = new Event();
         }
-        $event->name        = $session->name;
+        $event->name = $session->name;
         $event->description = $session->description;
         if ($newEvent) {
             $event->user = $this->getIdentityEntity();
         }
-        $event->start       = new \DateTime($session->date . ' ' . $session->time);
-        $event->region      = $session->region;
-        $event->leader      = $leader;
-        $event->type        = $session->type;
-        $offset             = $session->offset + date('Z');
-        $add                = $offset > 0 ? true : false;
-        $offset             = abs($offset);
-        $interval           = new \DateInterval('PT' . $offset . 'S');
+        $event->start = new \DateTime($session->date.' '.$session->time);
+        $event->region = $session->region;
+        $event->leader = $leader;
+        $event->type = $session->type;
+        $offset = $session->offset + date('Z');
+        $add = $offset > 0 ? true : false;
+        $offset = abs($offset);
+        $interval = new \DateInterval('PT'.$offset.'S');
         if ($add) {
             $event->start->add($interval);
         } else {
@@ -331,53 +343,53 @@ class EventController extends ActionController
                 $users = $userRepo->matching($criteria);
 
                 $mail = new \Zend\Mail\Message();
-                $mail->setSubject('[NightsWatch] Event: ' . $event->name);
+                $mail->setSubject('[NightsWatch] Event: '.$event->name);
                 $mail->setFrom(new Address('noreply@minez-nightswatch.com', $event->user->username));
                 $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
                 $headers = $mail->getHeaders();
                 if ($newEvent) {
-                    $headers->addHeaderLine('Message-Id', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
+                    $headers->addHeaderLine('Message-Id', '<event-'.$event->id.'@threads.minez-nightswatch.com>');
                 } else {
-                    $headers->addHeaderLine('References', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
-                    $headers->addHeaderLine('In-Reply-To', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
+                    $headers->addHeaderLine('References', '<event-'.$event->id.'@threads.minez-nightswatch.com>');
+                    $headers->addHeaderLine('In-Reply-To', '<event-'.$event->id.'@threads.minez-nightswatch.com>');
                 }
-                $headers->addHeaderLine('Threading-Id', '<event-' . $event->id . '@threads.minez-nightswatch.com>');
+                $headers->addHeaderLine('Threading-Id', '<event-'.$event->id.'@threads.minez-nightswatch.com>');
                 $mail->setEncoding('UTF-8');
 
                 $url = $this->url()->fromRoute(
                     'id',
-                    ['controller' => 'event', 'action' => 'view', 'id' => $event->id],
+                    ['controller'      => 'event', 'action' => 'view', 'id' => $event->id],
                     ['force_canonical' => true]
                 );
 
                 $niceDate = $event->start->format('M j, Y');
                 $niceTime = $event->start->format('H:i T');
-                $region   = $event->getRegionName();
+                $region = $event->getRegionName();
                 // Create a signature
                 $title = trim($event->user->getTitleOrRank());
                 if ($newEvent) {
-                    $lead = "A new event has been posted to the calendar.";
+                    $lead = 'A new event has been posted to the calendar.';
                 } else {
-                    $lead = "An event on the calendar has been updated with new, important information.";
+                    $lead = 'An event on the calendar has been updated with new, important information.';
                 }
                 $event->description
                        = "{$lead}  All information concerning this event "
-                    . "is classified and only available to members of rank " . User::getRankName(
+                    .'is classified and only available to members of rank '.User::getRankName(
                         $event->lowestViewableRank
                     )
-                    . " and up.\n\n"
-                    . "You can read the details of this event at https://minez-nightswatch.com/event/" . $event->id
-                    . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})  "
-                    . ($event->region > 0 ? "\nRegion: {$region}" : '')
-                    . "\n\n"
-                    . "{$event->user->username}  \n*{$title}*";
+                    ." and up.\n\n"
+                    .'You can read the details of this event at https://minez-nightswatch.com/event/'.$event->id
+                    ."\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})  "
+                    .($event->region > 0 ? "\nRegion: {$region}" : '')
+                    ."\n\n"
+                    ."{$event->user->username}  \n*{$title}*";
 
                 // Event Stuff
                 // Not Yet Working.  Not sure why.
 
                 $start = clone $event->start;
-                $start->setTimezone(new \DateTimeZone("UTC"));
-                $dtstart = $start->format("Ymd\\THis\\Z");
+                $start->setTimezone(new \DateTimeZone('UTC'));
+                $dtstart = $start->format('Ymd\\THis\\Z');
                 $eventRaw
                          = <<<CALENDAR
 BEGIN:VCALENDAR
@@ -394,16 +406,16 @@ END:VEVENT
 END:VCALENDAR
 CALENDAR;
 
-                $body                   = new MimeBody();
-                $bodyHtml               = new MimePart($event->getParsedDescription());
-                $bodyHtml->type         = Mime::TYPE_HTML;
-                $bodyText               = new MimePart($event->description);
-                $bodyText->type         = Mime::TYPE_TEXT;
-                $bodyEvent              = new MimePart($eventRaw);
-                $bodyEvent->type        = "text/calendar";
+                $body = new MimeBody();
+                $bodyHtml = new MimePart($event->getParsedDescription());
+                $bodyHtml->type = Mime::TYPE_HTML;
+                $bodyText = new MimePart($event->description);
+                $bodyText->type = Mime::TYPE_TEXT;
+                $bodyEvent = new MimePart($eventRaw);
+                $bodyEvent->type = 'text/calendar';
                 $bodyEvent->disposition = Mime::DISPOSITION_INLINE;
-                $bodyEvent->encoding    = Mime::ENCODING_8BIT;
-                $bodyEvent->filename    = 'calendar.ics';
+                $bodyEvent->encoding = Mime::ENCODING_8BIT;
+                $bodyEvent->filename = 'calendar.ics';
                 $body->setParts([$bodyHtml, $bodyText, $bodyEvent]);
                 $mail->setBody($body);
 
@@ -417,6 +429,7 @@ CALENDAR;
             }
 
             $this->redirect()->toRoute('id', ['controller' => 'event', 'id' => $event->id]);
+
             return false;
         }
 
@@ -425,20 +438,21 @@ CALENDAR;
 
     // We're going to create $days = [ [month: '', day: '', events: 0] ]
     // outer is month, first child is weeks, second child is days
+
     private static function createDaysArrayForCalendar($month, $year)
     {
         $days = [];
 
-        $date   = \DateTime::createFromFormat('Y n j', "{$year} {$month} 1");
+        $date = \DateTime::createFromFormat('Y n j', "{$year} {$month} 1");
         $oneDay = new \DateInterval('P1D');
 
         // Calculate the Next Month
         $nextMonthDate = clone $date;
-        $oneMonth      = new \DateInterval('P1M');
+        $oneMonth = new \DateInterval('P1M');
         $nextMonthDate->add($oneMonth);
-        $nextMonthYear  = $nextMonthDate->format('Y');
+        $nextMonthYear = $nextMonthDate->format('Y');
         $nextMonthMonth = $nextMonthDate->format('n');
-        $nextMonthDate  = \DateTime::createFromFormat('Y n j', "{$nextMonthYear} {$nextMonthMonth} 1");
+        $nextMonthDate = \DateTime::createFromFormat('Y n j', "{$nextMonthYear} {$nextMonthMonth} 1");
 
         // Add a week to the end of the Calendar
         $nextMonthDate->add(new \DateInterval('P7D'));
@@ -454,7 +468,7 @@ CALENDAR;
                 'year'   => $date->format('Y'),
                 'month'  => $date->format('m'),
                 'day'    => $date->format('d'),
-                'events' => 0
+                'events' => 0,
             ];
 
             $date->add($oneDay);
@@ -490,12 +504,12 @@ CALENDAR;
             'description'  => $event->description,
             'lowrank'      => $event->lowestViewableRank,
             'absolutetime' => $event->start->getTimestamp(),
-            'date'         => $event->start->format("Y-m-d"),
+            'date'         => $event->start->format('Y-m-d'),
             'time'         => $event->start->format('H:i'),
             'offset'       => 0,
             'region'       => $event->region,
             'eventtype'    => $event->type,
-            'leader'       => !is_null($event->leader) ? $event->leader->username : $event->user->username
+            'leader'       => !is_null($event->leader) ? $event->leader->username : $event->user->username,
         ];
         $form->setData($data);
     }

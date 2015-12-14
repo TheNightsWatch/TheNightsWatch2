@@ -2,14 +2,14 @@
 
 namespace NightsWatch\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-    NightsWatch\Entity\User;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A User's Honor
+ * A User's Honor.
  *
  * @ORM\Entity
  * @ORM\Table(name="honor")
+ *
  * @property int $id
  * @property User $user
  * @property \DateTime $timestamp
@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM,
  */
 class Honor
 {
-
     /**
      * @var int
      * @ORM\Id

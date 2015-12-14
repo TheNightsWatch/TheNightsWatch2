@@ -6,11 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Michelf\MarkdownExtra;
 
 /**
- * Class Announcement
- * @package NightsWatch\Entity
+ * Class Announcement.
  *
  * @ORM\Entity
  * @ORM\Table(name="announcement")
+ *
  * @property int $id
  * @property string $title
  * @property string $content
@@ -67,14 +67,15 @@ class Announcement
     {
         // Replace old announcements
         $oldAnnouncementDiv = [
-            '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:justify;line-height:14pt;' .
+            '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:justify;line-height:14pt;'.
             'font-size:12pt;">',
-            '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:left;line-height:14pt;' .
+            '<div style="color:#222;width:400px;font-family:Georgia, serif;text-align:left;line-height:14pt;'.
             'font-size:12pt;">',
         ];
-        $newOldAnnouncementDiv = '<div style="width:400px;font-family:Georgia, serif;text-align:justify;' .
+        $newOldAnnouncementDiv = '<div style="width:400px;font-family:Georgia, serif;text-align:justify;'.
             'line-height:14pt;font-size:12pt;">';
         $content = str_replace($oldAnnouncementDiv, $newOldAnnouncementDiv, $this->content);
+
         return MarkdownExtra::defaultTransform($content);
     }
 

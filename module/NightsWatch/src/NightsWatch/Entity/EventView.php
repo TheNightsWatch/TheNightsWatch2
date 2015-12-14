@@ -6,12 +6,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class EventView
+ * Class EventView.
  *
- * @package NightsWatch\Entity
  *
  * @ORM\Entity
  * @ORM\Table(name="event_view")
+ *
  * @property Event     $event
  * @property User      $user
  * @property \DateTime $firstViewed

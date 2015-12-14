@@ -1,4 +1,5 @@
 <?php
+
 namespace NightsWatch\Navigation\Service;
 
 use Zend\Navigation\Service\DefaultNavigationFactory;

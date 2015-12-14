@@ -5,11 +5,11 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An IP Address
+ * An IP Address.
  *
- * @package NightsWatch\Entity
  * @ORM\Entity
  * @ORM\Table(name="ip", uniqueConstraints={@ORM\UniqueConstraint(name="user_ip_unique", columns={"userId", "ip"})})
+ *
  * @property int $id
  * @property string $ip
  * @property User $user
@@ -67,7 +67,7 @@ class Ip
     }
 
     /**
-     * Convert the object into an array
+     * Convert the object into an array.
      *
      * @return array
      */

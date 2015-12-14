@@ -8,8 +8,6 @@ use Navarr\MinecraftAPI\Exception\MigrationException;
 use Navarr\MinecraftAPI\MinecraftAPI;
 use NightsWatch\Authentication\ForceAdapter;
 use NightsWatch\Entity\User;
-use NightsWatch\Form\RegisterForm;
-use NightsWatch\Form\VerifyForm;
 use NightsWatch\Form\ResetForm;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\Authentication\Storage\Session;
@@ -86,7 +84,7 @@ class JoinController extends ActionController
                         ->findOneBy(['username' => $minecraft->username]);
 
                     if (!$user) {
-                        $errors[] = "No Such User";
+                        $errors[] = 'No Such User';
                     } else {
                         $bcrypt = new Bcrypt();
                         $user->password = $bcrypt->create($form->get('password')->getValue());
@@ -94,25 +92,27 @@ class JoinController extends ActionController
                         $this->getEntityManager()->flush();
                         $this->getAuthenticationService()->authenticate(new ForceAdapter($user->id));
                         $this->updateLayoutWithIdentity();
+
                         return new ViewModel(['done' => true]);
                     }
                 } catch (\RuntimeException $e) {
-                    $errors[] = "Problem querying the API";
+                    $errors[] = 'Problem querying the API';
                 } catch (BadLoginException $e) {
-                    $errors[] = "Invalid username or Password";
+                    $errors[] = 'Invalid username or Password';
                 } catch (MigrationException $e) {
-                    $errors[] = "Your Minecraft account has been migrated to a Mojang account.  "
-                        . "Please enter your Mojang email and try again";
+                    $errors[] = 'Your Minecraft account has been migrated to a Mojang account.  '
+                        .'Please enter your Mojang email and try again';
                 } catch (BasicException $e) {
-                    $errors[] = "This is not a premium Minecraft Account";
+                    $errors[] = 'This is not a premium Minecraft Account';
                 }
             }
         }
+
         return new ViewModel(
             [
-                'done' => false,
+                'done'   => false,
                 'errors' => $errors,
-                'form' => $form,
+                'form'   => $form,
             ]
         );
     }

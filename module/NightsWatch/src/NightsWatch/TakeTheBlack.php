@@ -10,7 +10,7 @@ class TakeTheBlack
 
     private $keepHat = false;
 
-    private $file = "template.png";
+    private $file = 'template.png';
 
     public function __construct($username)
     {
@@ -25,6 +25,7 @@ class TakeTheBlack
     public function keepHat($boolean)
     {
         $this->keepHat = !!$boolean;
+
         return $this;
     }
 
@@ -40,20 +41,22 @@ class TakeTheBlack
         imagedestroy($template);
         $image = ob_get_contents();
         ob_end_clean();
+
         return $image;
     }
 
     public function template($file)
     {
-        if (file_exists($this->getFileLocation($file . ".png"))) {
+        if (file_exists($this->getFileLocation($file.'.png'))) {
             $this->file = "{$file}.png";
         }
+
         return $this;
     }
 
     private function getFileLocation($file)
     {
-        return dirname(__FILE__) . '/../../files/' . $file;
+        return dirname(__FILE__).'/../../files/'.$file;
     }
 
     private function getTemplateFile()
@@ -63,6 +66,7 @@ class TakeTheBlack
         if ($contents === false) {
             throw new RuntimeException("No such template {$this->file}");
         }
+
         return $contents;
     }
 
@@ -71,6 +75,7 @@ class TakeTheBlack
         $image = imagecreatefromstring($this->getTemplateFile());
         imagesavealpha($image, true);
         imagealphablending($image, false);
+
         return $image;
     }
 
@@ -81,6 +86,7 @@ class TakeTheBlack
         );
         imagesavealpha($image, true);
         imagealphablending($image, false);
+
         return $image;
     }
 }

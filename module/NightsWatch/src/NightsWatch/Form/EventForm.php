@@ -56,7 +56,7 @@ class EventForm extends Form
                     'bootstrap' => [
                         'help' => [
                             'style'   => 'block',
-                            'content' => "If left blank, you will be defaulted to the Leader of the Event.",
+                            'content' => 'If left blank, you will be defaulted to the Leader of the Event.',
                         ],
                     ],
                 ],
@@ -78,7 +78,7 @@ class EventForm extends Form
                 'attributes' => [
                     'id'       => 'absolutetime',
                     'required' => false,
-                ]
+                ],
             ]
         );
 
@@ -163,7 +163,7 @@ class EventForm extends Form
                     'bootstrap'     => [
                         'help' => [
                             'style'   => 'block',
-                            'content' => 'The region the event will take place on.  (For differing database instances)'
+                            'content' => 'The region the event will take place on.  (For differing database instances)',
                         ],
                     ],
                 ],
@@ -244,7 +244,7 @@ class EventForm extends Form
                     'name'       => 'sendemail',
                     'type'       => 'checkbox',
                     'attributes' => [
-                        'checked_value' => 1,
+                        'checked_value'   => 1,
                         'unchecked_value' => 0,
                     ],
                     'options'    => [

@@ -14,7 +14,7 @@ class MinecraftUsername extends AbstractValidator
 
     public function isValid($value)
     {
-        $url = "https://minecraft.net/haspaid.jsp?user=" . urlencode($value);
+        $url = 'https://minecraft.net/haspaid.jsp?user='.urlencode($value);
 
         $result = strtolower(trim(file_get_contents($url)));
 
@@ -22,6 +22,7 @@ class MinecraftUsername extends AbstractValidator
             return true;
         } else {
             $this->error(self::INVALID);
+
             return false;
         }
     }
