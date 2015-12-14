@@ -28,7 +28,7 @@ class UserController extends ActionController
         return new ViewModel(['usersByRank' => $ranks]);
     }
 
-    public function viewAction($username = "")
+    public function viewAction($username = '')
     {
         $this->updateLayoutWithIdentity();
 
@@ -39,6 +39,7 @@ class UserController extends ActionController
 
         if (!$user) {
             $this->getResponse()->setStatusCode(404);
+
             return;
         }
 

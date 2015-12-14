@@ -10,6 +10,7 @@ class MapController extends ActionController
     public function indexAction()
     {
         $this->updateLayoutWithIdentity();
+
         return new ViewModel();
     }
 }

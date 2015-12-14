@@ -142,8 +142,8 @@ return [
                     'defaults'    => [
                         'controller' => 'event',
                         'action'     => 'date',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'takeTheBlack' => [
                 'type'    => 'segment',
@@ -164,7 +164,7 @@ return [
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
         'template_path_stack'      => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
         'strategies'               => [
             'ViewJsonStrategy',
@@ -189,21 +189,21 @@ return [
         'translation_file_patterns' => [
             [
                 'type'     => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
+                'base_dir' => __DIR__.'/../language',
                 'pattern'  => '%s.mo',
             ],
         ],
     ],
     'doctrine'        => [
         'driver' => [
-            __NAMESPACE__ . '_driver' => [
+            __NAMESPACE__.'_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
-                'paths' => [__DIR__ . '/../src/' . __NAMESPACE__ . '/Entity'],
+                'paths' => [__DIR__.'/../src/'.__NAMESPACE__.'/Entity'],
             ],
             'orm_default'             => [
                 'drivers' => [
-                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                    __NAMESPACE__.'\Entity' => __NAMESPACE__.'_driver',
                 ],
             ],
         ],
@@ -260,8 +260,8 @@ return [
                     [
                         'label' => 'Subreddit',
                         'uri'   => 'https://reddit.com/r/TheNightsWatch',
-                    ]
-                ]
+                    ],
+                ],
             ],
         ],
         'right-noauth' => [
@@ -274,7 +274,7 @@ return [
             [
                 'label' => 'Log Out',
                 'route' => 'logout',
-            ]
-        ]
+            ],
+        ],
     ],
 ];

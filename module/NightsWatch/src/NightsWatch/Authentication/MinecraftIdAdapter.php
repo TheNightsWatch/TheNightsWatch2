@@ -5,7 +5,6 @@ namespace NightsWatch\Authentication;
 use Doctrine\ORM\EntityManager;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
-use Zend\Crypt\Password\Bcrypt;
 
 class MinecraftIdAdapter implements AdapterInterface
 {
@@ -20,7 +19,6 @@ class MinecraftIdAdapter implements AdapterInterface
         $this->username = $username;
         $this->entityManager = $entityManager;
     }
-
 
     public function authenticate()
     {
@@ -37,6 +35,7 @@ class MinecraftIdAdapter implements AdapterInterface
             );
         } elseif ($user->banned) {
             $this->updateName($user);
+
             return new Result(
                 -5,
                 [],
@@ -44,6 +43,7 @@ class MinecraftIdAdapter implements AdapterInterface
             );
         } else {
             $this->updateName($user);
+
             return new Result(
                 Result::SUCCESS,
                 $user->id,

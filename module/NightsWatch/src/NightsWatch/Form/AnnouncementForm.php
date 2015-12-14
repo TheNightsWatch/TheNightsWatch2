@@ -12,10 +12,10 @@ class AnnouncementForm extends Form
 
         $this->add(
             [
-                'name' => 'title',
-                'type' => 'text',
+                'name'       => 'title',
+                'type'       => 'text',
                 'attributes' => [
-                    'id' => 'title',
+                    'id'       => 'title',
                     'required' => true,
                 ],
                 'options' => [
@@ -26,17 +26,17 @@ class AnnouncementForm extends Form
 
         $this->add(
             [
-                'name' => 'content',
-                'type' => 'textarea',
+                'name'       => 'content',
+                'type'       => 'textarea',
                 'attributes' => [
-                    'id' => 'content',
+                    'id'       => 'content',
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Announcement',
+                    'label'     => 'Announcement',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'You can use <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">markdown</a> to format your text.</a>',
                         ],
                     ],
@@ -46,19 +46,19 @@ class AnnouncementForm extends Form
 
         $this->add(
             [
-                'name' => 'lowrank',
-                'type' => 'select',
+                'name'       => 'lowrank',
+                'type'       => 'select',
                 'attributes' => [
-                    'id' => 'lowrank',
+                    'id'       => 'lowrank',
                     'required' => true,
-                    'value' => \NightsWatch\Entity\User::RANK_PRIVATE,
+                    'value'    => \NightsWatch\Entity\User::RANK_PRIVATE,
                 ],
                 'options' => [
-                    'label' => 'Rank',
+                    'label'         => 'Rank',
                     'value_options' => \NightsWatch\Entity\User::getRankNames(),
-                    'bootstrap' => [
+                    'bootstrap'     => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'The lowest rank that\'s allowed to view this announcement',
                         ],
                     ],
@@ -68,8 +68,8 @@ class AnnouncementForm extends Form
 
         $this->add(
             [
-                'name' => 'preview',
-                'type' => 'hidden',
+                'name'       => 'preview',
+                'type'       => 'hidden',
                 'attributes' => [
                     'value' => 0,
                 ],
@@ -78,11 +78,11 @@ class AnnouncementForm extends Form
 
         $this->add(
             [
-                'name' => 'submit',
-                'type' => 'submit',
+                'name'       => 'submit',
+                'type'       => 'submit',
                 'attributes' => [
                     'value' => 'Preview',
-                    'id' => 'submit-announcement',
+                    'id'    => 'submit-announcement',
                     'class' => 'btn btn-primary',
                 ],
             ]

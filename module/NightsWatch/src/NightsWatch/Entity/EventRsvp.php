@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Navarr
  * Date: 9/5/13
- * Time: 8:56 PM
+ * Time: 8:56 PM.
  */
 
 namespace NightsWatch\Entity;
@@ -11,25 +12,25 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class EventRsvp
+ * Class EventRsvp.
  *
- * @package NightsWatch\Entity
  *
  * @ORM\Entity
  * @ORM\Table(name="rsvp")
+ *
  * @property Event     $event
  * @property User      $user
  * @property int       $attendance
- * @property boolean   $attended
+ * @property bool   $attended
  * @property \DateTime $timestamp
  * @property string    $notes
  */
 class EventRsvp
 {
-    const RSVP_ABSENT    = 0;
+    const RSVP_ABSENT = 0;
     const RSVP_ATTENDING = 1;
-    const RSVP_MAYBE     = 2;
-    const RSVP_NONE      = 3;
+    const RSVP_MAYBE = 2;
+    const RSVP_NONE = 3;
 
     /**
      * @var Event
@@ -52,7 +53,7 @@ class EventRsvp
     protected $attendance = 0;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $attended = null;

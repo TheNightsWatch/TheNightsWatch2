@@ -2,10 +2,8 @@
 
 namespace NightsWatch\Form;
 
-use Zend\Form\Element\Collection;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
 
 class RegisterForm extends Form
 {
@@ -19,11 +17,11 @@ class RegisterForm extends Form
 
         $this->add(
             [
-                'name' => 'email',
-                'type' => 'email',
+                'name'       => 'email',
+                'type'       => 'email',
                 'attributes' => [
-                    'type' => 'email',
-                    'id' => 'register-email',
+                    'type'     => 'email',
+                    'id'       => 'register-email',
                     'required' => true,
                 ],
                 'options' => [
@@ -32,68 +30,68 @@ class RegisterForm extends Form
                 'validators' => [
                     [
                         'name' => 'EmailAddress',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
         $this->add(
             [
-                'name' => 'username',
-                'type' => 'text',
+                'name'       => 'username',
+                'type'       => 'text',
                 'attributes' => [
-                    'id' => 'register-username',
+                    'id'       => 'register-username',
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Username',
+                    'label'     => 'Username',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'This must be exactly the same as your Minecraft character\'s username.',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'validators' => [
                     [
-                        'name' => 'StringLength',
+                        'name'    => 'StringLength',
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 16,
+                            'min'      => 1,
+                            'max'      => 16,
                         ],
                     ],
                     [
                         'name' => 'NightsWatch\Validator\MinecraftUsername',
                     ],
-                ]
+                ],
             ]
         );
 
         $this->add(
             [
-                'name' => 'password',
+                'name'       => 'password',
                 'attributes' => [
-                    'type' => 'password',
-                    'id' => 'register-password',
+                    'type'     => 'password',
+                    'id'       => 'register-password',
                     'required' => true,
                 ],
                 'options' => [
-                    'label' => 'Password',
+                    'label'     => 'Password',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'Please create a secure password for your new account.',
-                        ]
+                        ],
                     ],
                 ],
                 'validators' => [
                     [
-                        'name' => 'StringLength',
+                        'name'    => 'StringLength',
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min' => 5,
-                            'max' => 100,
+                            'min'      => 5,
+                            'max'      => 100,
                         ],
                     ],
                 ],
@@ -102,24 +100,24 @@ class RegisterForm extends Form
 
         $this->add(
             [
-                'name' => 'password2',
+                'name'       => 'password2',
                 'attributes' => [
-                    'type' => 'password',
-                    'id' => 'register-password2',
+                    'type'     => 'password',
+                    'id'       => 'register-password2',
                     'required' => true,
                 ],
                 'options' => [
                     'label',
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'Please verify your new password by typing it again.',
                         ],
                     ],
                 ],
                 'validators' => [
                     [
-                        'name' => 'Identical',
+                        'name'    => 'Identical',
                         'options' => [
                             'token' => 'password',
                         ],
@@ -130,17 +128,17 @@ class RegisterForm extends Form
 
         $this->add(
             [
-                'name' => 'submit',
+                'name'       => 'submit',
                 'attributes' => [
-                    'type' => 'submit',
+                    'type'  => 'submit',
                     'value' => 'Register',
-                    'id' => 'register-submit',
+                    'id'    => 'register-submit',
                     'class' => 'btn btn-primary',
                 ],
                 'options' => [
                     'bootstrap' => [
                         'help' => [
-                            'style' => 'block',
+                            'style'   => 'block',
                             'content' => 'On the next page, you will be asked to verify your Minecraft account to finish registration.',
                         ],
                     ],
@@ -156,47 +154,47 @@ class RegisterForm extends Form
 
             $inputFilter->add(
                 [
-                    'name' => 'email',
-                    'required' => true,
+                    'name'       => 'email',
+                    'required'   => true,
                     'validators' => [
                         [
                             'name' => 'EmailAddress',
-                        ]
-                    ]
+                        ],
+                    ],
                 ]
             );
 
             $inputFilter->add(
                 [
-                    'name' => 'username',
-                    'required' => true,
+                    'name'       => 'username',
+                    'required'   => true,
                     'validators' => [
                         [
-                            'name' => 'StringLength',
+                            'name'    => 'StringLength',
                             'options' => [
                                 'encoding' => 'UTF-8',
-                                'min' => 1,
-                                'max' => 16,
+                                'min'      => 1,
+                                'max'      => 16,
                             ],
                         ],
                         [
                             'name' => 'NightsWatch\Validator\MinecraftUsername',
                         ],
-                    ]
+                    ],
                 ]
             );
 
             $inputFilter->add(
                 [
-                    'name' => 'password',
-                    'required' => true,
+                    'name'       => 'password',
+                    'required'   => true,
                     'validators' => [
                         [
-                            'name' => 'StringLength',
+                            'name'    => 'StringLength',
                             'options' => [
                                 'encoding' => 'UTF-8',
-                                'min' => 5,
-                                'max' => 100,
+                                'min'      => 5,
+                                'max'      => 100,
                             ],
                         ],
                     ],
@@ -205,11 +203,11 @@ class RegisterForm extends Form
 
             $inputFilter->add(
                 [
-                    'name' => 'password2',
-                    'required' => true,
+                    'name'       => 'password2',
+                    'required'   => true,
                     'validators' => [
                         [
-                            'name' => 'Identical',
+                            'name'    => 'Identical',
                             'options' => [
                                 'token' => 'password',
                             ],
@@ -220,6 +218,7 @@ class RegisterForm extends Form
 
             $this->inputFilter = $inputFilter;
         }
+
         return $this->inputFilter;
     }
 }

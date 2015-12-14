@@ -4,11 +4,9 @@ namespace NightsWatch\Mvc\Controller;
 
 use NightsWatch\Entity\Ip;
 use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Storage\Session as SessionStorage;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Authentication\Storage\Session as SessionStorage;
-use Zend\Mvc\InjectApplicationEventInterface;
-use Zend\View\Model\ViewModel;
 
 class ActionController extends AbstractActionController
 {
@@ -74,6 +72,7 @@ class ActionController extends AbstractActionController
         if (is_null($this->entityManager)) {
             $this->entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         }
+
         return $this->entityManager;
     }
 
@@ -95,6 +94,7 @@ class ActionController extends AbstractActionController
                 $this->identityEntity = null;
             }
         }
+
         return $this->identityEntity;
     }
 
@@ -123,6 +123,7 @@ class ActionController extends AbstractActionController
             $this->auth = new AuthenticationService();
             $this->auth->setStorage(new SessionStorage('NightsWatch\Auth'));
         }
+
         return $this->auth;
     }
 
@@ -130,6 +131,7 @@ class ActionController extends AbstractActionController
     {
         if ($this->getAuthenticationService()->hasIdentity()) {
             $this->redirect()->toRoute('home', ['controller' => 'chat']);
+
             return true;
         } else {
             return false;
@@ -140,6 +142,7 @@ class ActionController extends AbstractActionController
     {
         if (!$this->getAuthenticationService()->hasIdentity()) {
             $this->redirect()->toRoute('login');
+
             return true;
         } else {
             return false;
@@ -150,12 +153,15 @@ class ActionController extends AbstractActionController
     {
         if ($this->disallowGuest()) {
             $this->redirect()->toRoute('login');
+
             return true;
         }
         if ($this->getIdentityEntity()->rank < $rank) {
             $this->redirect()->toRoute('home');
+
             return true;
         }
+
         return false;
     }
 
@@ -163,8 +169,10 @@ class ActionController extends AbstractActionController
     {
         if ($this->getIdentityEntity() && $this->getIdentityEntity()->rank > $rank) {
             $this->redirect()->toRoute('home');
+
             return true;
         }
+
         return false;
     }
 }

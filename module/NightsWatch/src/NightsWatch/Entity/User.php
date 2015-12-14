@@ -2,14 +2,15 @@
 
 namespace NightsWatch\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A User
+ * A User.
  *
  * @ORM\Entity
  * @ORM\Table(name="user")
+ *
  * @property int        $id
  * @property string     $username
  * @property string     $password
@@ -31,18 +32,18 @@ class User
 {
     // Rank Constants, with space to grow.
     // The bigger the number, the higher the rank.
-    const RANK_ADMIN      = 50000;
-    const RANK_COMMANDER  = 10000;
-    const RANK_GENERAL    = 5000;
+    const RANK_ADMIN = 50000;
+    const RANK_COMMANDER = 10000;
+    const RANK_GENERAL = 5000;
     const RANK_LIEUTENANT = 1000;
-    const RANK_CORPORAL   = 500;
-    const RANK_PRIVATE    = 2;
-    const RANK_RECRUIT    = 1;
-    const RANK_CIVILIAN   = 0;
+    const RANK_CORPORAL = 500;
+    const RANK_PRIVATE = 2;
+    const RANK_RECRUIT = 1;
+    const RANK_CIVILIAN = 0;
 
     // Order Constants
     const ORDER_STEWARD = 0;
-    const ORDER_RANGER  = 1;
+    const ORDER_RANGER = 1;
     const ORDER_BUILDER = 2;
 
     // Email Notification Constants, used as bitwise
@@ -141,7 +142,7 @@ class User
     protected $emailNotifications = self::EMAIL_ANNOUNCEMENT;
 
     /**
-     * An honorary title, %1$s is username, %2$s is order
+     * An honorary title, %1$s is username, %2$s is order.
      *
      * @var string|null
      * @ORM\Column(type="string", nullable=true)
@@ -207,6 +208,7 @@ class User
         if ($this->deserter) {
             return 'Deserter';
         }
+
         return static::getRankName($this->rank);
     }
 
@@ -216,21 +218,21 @@ class User
             return sprintf($this->title, $this->username, '');
         }
         if ($this->deserter) {
-            return $this->username . ', Deserter';
+            return $this->username.', Deserter';
         }
         switch ($this->rank) {
             case static::RANK_RECRUIT:
-                return $this->username . ', ' . static::getRankName($this->rank);
+                return $this->username.', '.static::getRankName($this->rank);
             case static::RANK_PRIVATE:
-                return 'Private ' . $this->username;
+                return 'Private '.$this->username;
             case static::RANK_CORPORAL:
-                return 'Corporal ' . $this->username;
+                return 'Corporal '.$this->username;
             case static::RANK_LIEUTENANT:
-                return 'Lieutenant ' . $this->username;
+                return 'Lieutenant '.$this->username;
             case static::RANK_GENERAL:
-                return 'General ' . $this->username;
+                return 'General '.$this->username;
             case static::RANK_COMMANDER:
-                return 'Lord Commander ' . $this->username;
+                return 'Lord Commander '.$this->username;
             default:
                 return $this->username;
         }
@@ -240,7 +242,7 @@ class User
     {
         $this->joined = new \DateTime();
         $this->honors = new ArrayCollection();
-        $this->ips    = new ArrayCollection();
+        $this->ips = new ArrayCollection();
     }
 
     public function __get($property)
@@ -254,7 +256,7 @@ class User
     }
 
     /**
-     * Convert the object into an array
+     * Convert the object into an array.
      *
      * @return array
      */

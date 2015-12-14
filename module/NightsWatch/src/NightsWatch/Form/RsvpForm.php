@@ -3,8 +3,8 @@
 namespace NightsWatch\Form;
 
 use NightsWatch\Entity\Event;
-use Zend\Form\Form;
 use NightsWatch\Entity\EventRsvp as RSVP;
+use Zend\Form\Form;
 
 class RsvpForm extends Form
 {
@@ -14,18 +14,18 @@ class RsvpForm extends Form
 
         $this->add(
             [
-                'name' => 'attendance',
-                'type' => 'select',
+                'name'       => 'attendance',
+                'type'       => 'select',
                 'attributes' => [
-                    'id' => 'attendance',
+                    'id'       => 'attendance',
                     'required' => true,
-                    'value' => RSVP::RSVP_ATTENDING,
+                    'value'    => RSVP::RSVP_ATTENDING,
                 ],
                 'options' => [
                     'value_options' => [
                         RSVP::RSVP_ATTENDING => RSVP::getRsvpNameFromType(RSVP::RSVP_ATTENDING),
-                        RSVP::RSVP_MAYBE => RSVP::getRsvpNameFromType(RSVP::RSVP_MAYBE),
-                        RSVP::RSVP_ABSENT => RSVP::getRsvpNameFromType(RSVP::RSVP_ABSENT),
+                        RSVP::RSVP_MAYBE     => RSVP::getRsvpNameFromType(RSVP::RSVP_MAYBE),
+                        RSVP::RSVP_ABSENT    => RSVP::getRsvpNameFromType(RSVP::RSVP_ABSENT),
                     ],
                 ],
             ]
@@ -33,18 +33,18 @@ class RsvpForm extends Form
 
         $this->add(
             [
-                'name' => 'event',
-                'type' => 'hidden',
+                'name'       => 'event',
+                'type'       => 'hidden',
                 'attributes' => [
-                    'value' => $event->id
+                    'value' => $event->id,
                 ],
             ]
         );
 
         $this->add(
             [
-                'name' => 'submit',
-                'type' => 'submit',
+                'name'       => 'submit',
+                'type'       => 'submit',
                 'attributes' => [
                     'value' => 'RSVP',
                     'class' => 'btn btn-primary',

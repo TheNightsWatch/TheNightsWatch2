@@ -5,10 +5,11 @@ namespace NightsWatch\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class ChatToken
- * @package NightsWatch\Entity
+ * Class ChatToken.
+ *
  * @ORM\Entity
  * @ORM\Table(name="chatToken")
+ *
  * @property int $id
  * @property User $user
  * @property string $token
@@ -44,15 +45,16 @@ class ChatToken
 
     public function __construct()
     {
-        $this->expires = new \DateTime("+2 minutes");
+        $this->expires = new \DateTime('+2 minutes');
     }
 
     public function generateToken()
     {
         $userId = $this->user->id;
         $now = time();
-        $token = sha1($userId . 'chatToken' . $now);
+        $token = sha1($userId.'chatToken'.$now);
         $this->token = $token;
+
         return $token;
     }
 
