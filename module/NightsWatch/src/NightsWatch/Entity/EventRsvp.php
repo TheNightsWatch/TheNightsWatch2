@@ -6,7 +6,6 @@
  * Date: 9/5/13
  * Time: 8:56 PM.
  */
-
 namespace NightsWatch\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
