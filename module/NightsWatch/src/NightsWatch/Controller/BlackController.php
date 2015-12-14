@@ -21,7 +21,7 @@ class BlackController extends ActionController
         if ($this->disallowGuest()) {
             return false;
         }
-        $keepHat = !!intval($this->params()->fromQuery('keepHat', 0));
+        $keepHat = (bool) intval($this->params()->fromQuery('keepHat', 0));
 
         $ident = $this->getIdentityEntity();
 

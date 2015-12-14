@@ -24,7 +24,7 @@ class TakeTheBlack
 
     public function keepHat($boolean)
     {
-        $this->keepHat = !!$boolean;
+        $this->keepHat = (bool) $boolean;
 
         return $this;
     }

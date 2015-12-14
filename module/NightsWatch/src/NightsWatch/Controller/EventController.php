@@ -7,7 +7,6 @@
  * Time: 1:23 AM
  * To change this template use File | Settings | File Templates.
  */
-
 namespace NightsWatch\Controller;
 
 use Doctrine\Common\Collections\Criteria;
@@ -333,7 +332,7 @@ class EventController extends ActionController
             $session->name = '';
 
             // Send out the Emails
-            $sendSpecified = (isset($session->sendemail) && !!$session->sendemail);
+            $sendSpecified = (isset($session->sendemail) && (bool) $session->sendemail);
             $sendEmails = $newEvent || $sendSpecified;
             if ($sendEmails) {
                 $criteria = Criteria::create()
