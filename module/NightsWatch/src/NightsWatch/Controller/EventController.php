@@ -92,6 +92,10 @@ class EventController extends ActionController
             ->getRepository('NightsWatch\Entity\Event')
             ->matching($criteria);
 
+        foreach ($events as $event) {
+            EventView::triggerView($this->getEntityManager(), $event, $this->getIdentityEntity());
+        }
+
         return new ViewModel(['events' => $events, 'user' => $this->getIdentityEntity()]);
     }
 
