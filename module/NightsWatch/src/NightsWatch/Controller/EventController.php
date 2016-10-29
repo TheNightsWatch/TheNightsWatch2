@@ -414,7 +414,7 @@ CALENDAR;
                 $bodyHtml->type = Mime::TYPE_HTML;
                 $bodyText = new MimePart($event->description);
                 $bodyText->type = Mime::TYPE_TEXT;
-                $bodyEvent = new MimePart($eventRaw);
+                $bodyEvent = new MimePart($eventRaw."\r\n");
                 $bodyEvent->type = 'text/calendar';
                 $bodyEvent->disposition = Mime::DISPOSITION_INLINE;
                 $bodyEvent->encoding = Mime::ENCODING_8BIT;
