@@ -412,14 +412,12 @@ CALENDAR;
                 $body = new MimeBody();
                 $bodyHtml = new MimePart($event->getParsedDescription());
                 $bodyHtml->type = Mime::TYPE_HTML;
-                $bodyText = new MimePart($event->description."\r\n");
-                $bodyText->type = Mime::TYPE_TEXT;
                 $bodyEvent = new MimePart($eventRaw);
                 $bodyEvent->type = 'text/calendar';
                 $bodyEvent->disposition = Mime::DISPOSITION_INLINE;
                 $bodyEvent->encoding = Mime::ENCODING_8BIT;
                 $bodyEvent->filename = 'calendar.ics';
-                $body->setParts([$bodyHtml, $bodyText, $bodyEvent]);
+                $body->setParts([$bodyHtml, $bodyEvent]);
                 $mail->setBody($body);
 
                 foreach ($users as $user) {
