@@ -174,7 +174,7 @@ class AnnouncementController extends ActionController
             $body = new MimeBody();
             $bodyHtml = new MimePart($announcement->getParsedContent());
             $bodyHtml->type = Mime::TYPE_HTML;
-            $bodyText = new MimePart($announcement->content);
+            $bodyText = new MimePart($announcement->content."\r\n");
             $bodyText->type = Mime::TYPE_TEXT;
             $body->setParts([$bodyHtml, $bodyText]);
             $mail->setBody($body);
