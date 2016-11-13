@@ -114,11 +114,16 @@ $(document).ready(function () {
         window.titlebar.flashMessage("New Chat Message!");
         getDesktopNotificationPermission();
         if (window.Notification && Notification.permission == 'granted') {
-            var notification = new Notification(message.user + ' #' + message.room, {
-                body: message.message,
-                icon: 'https://crafatar.com/avatars/' + message.user,
-                tag: message.room
-            });
+            try {
+                var notification = new Notification(message.user + ' #' + message.room, {
+                    body: message.message,
+                    icon: 'https://crafatar.com/avatars/' + message.user,
+                    tag: message.room
+                });
+            } catch (e) {
+                // Mobile browsers don't like this.
+                return;
+            }
             if (window.notificationTimeout) {
                 clearTimeout(window.notificationTimeout);
             }
