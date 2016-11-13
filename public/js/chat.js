@@ -99,9 +99,44 @@ $(document).ready(function () {
         window.showNotificationsFlag = true;
     });
 
-    window.showNotification = function() {
+    window.getDesktopNotificationPermission = function() {
+        if (!window.Notification) return;
+        var notifPermission = Notification.permission;
+        if (notifPermission !== "denied") {
+            Notification.requestPermission(function(status) {
+                Notification.permission = status;
+            });
+        }
+    };
+
+    window.showNotification = function(message) {
         if (!window.showNotificationsFlag) return;
         window.titlebar.flashMessage("New Chat Message!");
+        getDesktopNotificationPermission();
+        if (window.Notification && Notification.permission == 'granted') {
+            var notification = new Notification(message.user + ' [' + message.room + ']', {
+                body: message.message,
+                icon: 'https://crafatar.com/avatars/' + message.user,
+                tag: message.room
+            });
+            notification.onclick = function (e) {
+                var rightclick;
+                if (!e) {
+                    e = window.event;
+                    if (e.which) {
+                        rightclick = (e.which == 3);
+                    } else if (e.button) {
+                        rightclick = (e.button == 2);
+                    }
+                    if (!rightclick && window && window.focus) {
+                        window.focus();
+                        setTimeout(window.focus, 10);
+                        setTimeout($('#chat-message').find('.span10 input')[0].focus(), 15);
+                    }
+                    notification.close();
+                }
+            }
+        }
     };
 
     var $chatMessage = $('#chat-message');
@@ -274,7 +309,7 @@ $(document).ready(function () {
 
             $('.chat-messages' + tableClass).find('ol').append($li);
 
-            window.showNotification();
+            window.showNotification(data);
         }
         if (shouldScroll) {
             scrollToBottom('#chat-message-container');
@@ -334,6 +369,7 @@ $(document).ready(function () {
 
     // Handle Sending a Chat Message
     $chatMessage.on('submit', function (e) {
+        window.getDesktopNotificationPermission();
         e.preventDefault();
         var $this = $(this), $text = $this.find('input[type=text]');
         if ($text.val().trim() == '') {
