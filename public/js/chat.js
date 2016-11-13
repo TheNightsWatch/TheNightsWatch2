@@ -108,17 +108,20 @@ $(document).ready(function () {
             });
         }
     };
-
+    window.notificationTimeout = false;
     window.showNotification = function(message) {
         if (!window.showNotificationsFlag) return;
         window.titlebar.flashMessage("New Chat Message!");
         getDesktopNotificationPermission();
         if (window.Notification && Notification.permission == 'granted') {
-            var notification = new Notification(message.user + ' [' + message.room + ']', {
+            var notification = new Notification(message.user + ' #' + message.room, {
                 body: message.message,
                 icon: 'https://crafatar.com/avatars/' + message.user,
                 tag: message.room
             });
+            if (window.notificationTimeout) {
+                clearTimeout(window.notificationTimeout);
+            }
             notification.onclick = function (e) {
                 var rightclick;
                 if (!e) {
@@ -135,7 +138,10 @@ $(document).ready(function () {
                     }
                     notification.close();
                 }
-            }
+            };
+            window.notificationTimeout = setTimeout(function() {
+                notification.close();
+            }, 2000);
         }
     };
 

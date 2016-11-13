@@ -2,7 +2,7 @@
 use NightsWatch\Entity\User;
 
 $this->headScript()->appendFile('/socket.io/socket.io.js');
-$this->headScript()->appendFile('/js/chat.js?v=20161113');
+$this->headScript()->appendFile('/js/chat.js?v=20161113v2');
 /** @var \NightsWatch\Entity\User $identity */
 
 $recruitHidden = (is_null($identity) || $identity->rank < User::RANK_RECRUIT) ? ' hidden' : null;
