@@ -1,0 +1,72 @@
+server {
+    listen 80;
+
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/x-javascript tex                                                                                                                                                             t/xml application/xml application/xml+rss text/javascript;
+
+
+    set $host_path "/var/www/tnw.local";
+    access_log  /var/www/tnw.local/log/access.log;
+    error_log /var/www/tnw.local/log/error.log;
+
+    server_name  tnw.local;
+    root   $host_path/public;
+    set $yii_bootstrap "index.php";
+
+    charset utf-8;
+
+    index $yii_bootstrap;
+
+    location ~ /minotar/(.*) {
+        resolver 8.8.8.8;
+        proxy_pass http://mcsk.in/helm/$1;
+    }
+
+    location / {
+        index $yii_bootstrap index.html;
+        try_files $uri $uri/ /$yii_bootstrap$is_args$args;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php {
+        fastcgi_split_path_info  ^(.+\.php)(.*)$;
+
+        #let yii catch the calls to unexising PHP files
+        set $fsn /$yii_bootstrap;
+        if (-f $document_root$fastcgi_script_name){
+            set $fsn $fastcgi_script_name;
+        }
+
+        fastcgi_pass   unix:/var/run/php/php5.6-fpm.sock;
+        include fastcgi_params;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fsn;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+
+        #PATH_INFO and PATH_TRANSLATED can be omitted, but RFC 3875 specifies th                                                                                                                                                             em for CGI
+        fastcgi_param  PATH_INFO        $fastcgi_path_info;
+        fastcgi_param  PATH_TRANSLATED  $document_root$fsn;
+        fastcgi_param  APPLICATION_ENV production;
+    }
+
+    location ~ \.(png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
+        try_files $uri =404;
+    }
+
+    location ~ \.(js|css)$ {
+        try_files $uri =404;
+        expires 2d;
+        add_header Cache-Control public;
+    }
+
+    location ~ /\.ht {
+        deny  all;
+    }
+}
