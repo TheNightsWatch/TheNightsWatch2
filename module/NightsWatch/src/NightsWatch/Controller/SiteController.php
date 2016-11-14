@@ -101,11 +101,13 @@ class SiteController extends ActionController
 
         $shotbow = $this->getServiceLocator()->get('config')['NightsWatch']['shotbow'];
 
+        $domain = $this->getRequest()->getUri()->getHost();
+        $scheme = $this->getRequest()->getUri()->getScheme();
         $provider = new ShotbowProvider(
             [
                 'clientId'     => $shotbow['clientId'],
                 'clientSecret' => $shotbow['clientSecret'],
-                'redirectUri'  => 'https://minez-nightswatch.com/site/shotbowlogin',
+                'redirectUri'  => "{$scheme}://{$domain}/site/shotbowlogin",
                 'scopes'       => ['basic', 'email', 'ban', 'rank'],
             ]
         );
