@@ -25,4 +25,18 @@ return [
             ],
         ],
     ],
+    'NightsWatch' => [
+        'mumble' => [
+            'server' => 'SERVER',
+            'port' => 'PORT',
+            'recruitToken' => 'TOKEN',
+            'privateToken' => 'TOKEN',
+        ],
+        'shotbow' => [
+            'clientId' => 'CHANGEME',
+            'clientSecret' => 'CHANGEME',
+        ],
+        'secureChat' => true,
+        'mod' => 'LINKTOMOD',
+    ],
 ];
