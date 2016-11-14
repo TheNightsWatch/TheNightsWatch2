@@ -6,7 +6,7 @@
   "require": {
     "php": ">=5.4",
     "ext-intl": "*",
-    "zendframework/zendframework": "~2.1.0",
+    "zendframework/zendframework": "2.2.10",
     "doctrine/doctrine-orm-module": "~0.6",
     "navarr/minecraft-api": "~2.0",
     "zucchi/zucchi": "dev-last-working-commit as dev-master",

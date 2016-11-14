@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "125d9d267c52bd9cdd813934e77bbf02",
+    "hash": "37e337f70cb256a58b5aca0ab9932848",
+    "content-hash": "efd6dd53457a7175af7fe51989d351c7",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1223,12 +1224,12 @@
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
+                "url": "https://github.com/symfony/console.git",
                 "reference": "289113e60aad754d35b50347f66ecd3a4d96d03c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/289113e60aad754d35b50347f66ecd3a4d96d03c",
+                "url": "https://api.github.com/repos/symfony/console/zipball/289113e60aad754d35b50347f66ecd3a4d96d03c",
                 "reference": "289113e60aad754d35b50347f66ecd3a4d96d03c",
                 "shasum": ""
             },
@@ -1276,16 +1277,16 @@
         },
         {
             "name": "zendframework/zendframework",
-            "version": "2.2.9",
+            "version": "2.2.10",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/zf2.git",
-                "reference": "351279d669cf16eb5c640f86e944fe8f84c8b181"
+                "url": "https://github.com/zendframework/zendframework.git",
+                "reference": "a8d56b4b7ef3f027fc531c34064e2bf0132feab2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/351279d669cf16eb5c640f86e944fe8f84c8b181",
-                "reference": "351279d669cf16eb5c640f86e944fe8f84c8b181",
+                "url": "https://api.github.com/repos/zendframework/zendframework/zipball/a8d56b4b7ef3f027fc531c34064e2bf0132feab2",
+                "reference": "a8d56b4b7ef3f027fc531c34064e2bf0132feab2",
                 "shasum": ""
             },
             "require": {
@@ -1388,7 +1389,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2015-01-14 16:28:50"
+            "time": "2015-02-17 20:01:36"
         },
         {
             "name": "zendframework/zendxml",
@@ -1445,7 +1446,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zucchi/ZucchiBootstrap/zipball/42b24b380bed41c5ed1d7bb1bcd69e7d59672568",
+                "url": "https://api.github.com/repos/zucchi/ZucchiBootstrap/zipball/507fb3cd3ae1bdc8392488421b1365ca69bba48f",
                 "reference": "507fb3cd3ae1bdc8392488421b1365ca69bba48f",
                 "shasum": ""
             },
