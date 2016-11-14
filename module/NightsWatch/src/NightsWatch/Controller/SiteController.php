@@ -6,6 +6,7 @@ use Navarr\Minecraft\Profile;
 use NightsWatch\Authentication\Adapter as AuthAdapter;
 use NightsWatch\Authentication\ForceAdapter;
 use NightsWatch\Authentication\MinecraftIdAdapter;
+use NightsWatch\DiscordProvider;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\LoginForm;
 use NightsWatch\Mvc\Controller\ActionController;
@@ -47,6 +48,54 @@ class SiteController extends ActionController
         $mumble = $this->getServiceLocator()->get('config')['NightsWatch']['mumble'];
 
         return new ViewModel(['settings' => $mumble, 'user' => $this->getIdentityEntity()]);
+    }
+
+    public function connectdiscordAction()
+    {
+        if ($this->disallowGuest()) {
+            return false;
+        }
+
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+
+        $domain = $this->getRequest()->getUri()->getHost();
+        $scheme = $this->getRequest()->getUri()->getScheme();
+        $provider = new DiscordProvider(
+            [
+                'clientId'     => $discord['clientId'],
+                'clientSecret' => $discord['clientSecret'],
+                'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
+                'scopes'       => ['identify'],
+            ]
+        );
+
+        $session = new SessionContainer('NightsWatch\Connect\Discord');
+
+        if (!isset($_GET['code']) && empty($_GET['error'])) {
+            $authUrl = $provider->getAuthorizationUrl();
+            $session->state = $provider->state;
+
+            return $this->redirect()->toUrl($authUrl);
+        } elseif (!empty($_GET['error'])) {
+            throw new \Exception($_GET['message']);
+        } elseif (empty($_GET['state']) || $_GET['state'] !== $session->state) {
+            $session->state = null;
+            throw new \Exception('Invalid State - Possible MITM Attack');
+        } else {
+            $token = $provider->getAccessToken(
+                'authorization_code',
+                ['code' => $_GET['code'], 'grant_type' => 'authorization_code']
+            );
+            try {
+                $provider->headers['Authorization'] = 'Bearer '.$token;
+                $userDetails = $provider->getUserDetails($token);
+            } catch (\Exception $e) {
+                throw new \Exception('Failed to get User Details - '.$e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        var_dump($userDetails);
+        exit;
     }
 
     public function modAction()
