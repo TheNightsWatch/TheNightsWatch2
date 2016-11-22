@@ -7,9 +7,11 @@ use Navarr\MinecraftAPI\Exception\BasicException;
 use Navarr\MinecraftAPI\Exception\MigrationException;
 use Navarr\MinecraftAPI\MinecraftAPI;
 use NightsWatch\Authentication\ForceAdapter;
+use NightsWatch\DiscordProvider;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\ResetForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use NightsWatch\Routine\DiscordUpdateNameAndRoles;
 use Zend\Authentication\Storage\Session;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Session\Container as SessionContainer;
@@ -52,6 +54,9 @@ class JoinController extends ActionController
                 $user->rank = User::RANK_RECRUIT;
                 if ($user->recruitmentDate == null) {
                     $user->recruitmentDate = new \DateTime();
+                }
+                if ($user->discordId) {
+                    $this->updateDiscordRank($user);
                 }
                 $this->getEntityManager()->persist($user);
                 $this->getEntityManager()->flush();
@@ -115,5 +120,23 @@ class JoinController extends ActionController
                 'form'   => $form,
             ]
         );
+    }
+
+    private function updateDiscordRank(User $user)
+    {
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+        $domain = $this->getRequest()->getUri()->getHost();
+        $scheme = $this->getRequest()->getUri()->getScheme();
+        $provider = new DiscordProvider(
+            [
+                'clientId'     => $discord['clientId'],
+                'clientSecret' => $discord['clientSecret'],
+                'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
+                'scopes'       => ['identify', 'guilds.join'],
+            ]
+        );
+
+        $routine = new DiscordUpdateNameAndRoles($user, $user->discordId, $provider, $discord['accessToken']);
+        $routine->perform();
     }
 }
