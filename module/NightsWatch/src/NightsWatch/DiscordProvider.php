@@ -7,6 +7,8 @@ use League\OAuth2\Client\Token\AccessToken;
 
 class DiscordProvider extends AbstractProvider
 {
+    public $scopeSeparator = ' ';
+
     const URI_PREFIX = 'https://discordapp.com/api/';
 
     /**

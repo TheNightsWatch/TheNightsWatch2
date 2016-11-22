@@ -39,6 +39,7 @@ return [
         'discord' => [
             'clientId' => 'CHANGEME',
             'clientSecret' => 'CHANGEME',
+            'accessToken' => 'CHANGEME', // Bot Access Token
         ],
         'secureChat' => true,
         'mod' => 'LINKTOMOD',

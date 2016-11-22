@@ -1,99 +1,13 @@
 <?php
-use NightsWatch\Entity\User;
-
-$this->headScript()->appendFile('/socket.io/socket.io.js');
-$this->headScript()->appendFile('/js/chat.js?v=20161113v3');
 /** @var \NightsWatch\Entity\User $identity */
-
-$recruitHidden = (is_null($identity) || $identity->rank < User::RANK_RECRUIT) ? ' hidden' : null;
-$privateHidden = (is_null($identity) || $identity->rank < User::RANK_PRIVATE) ? ' hidden' : null;
-$councilHidden = (is_null($identity) || $identity->rank < User::RANK_LIEUTENANT) ? ' hidden' : null;
-$corporalHidden = (is_null($identity) || $identity->rank < User::RANK_CORPORAL) ? ' hidden' : null;
+$url = '/site/connectdiscord';
+if ($identity && $identity->discordId) {
+    $url = 'https://discord.gg/rdnVxHv';
+}
 ?>
-<ul class="nav nav-pills" id="chat-nav">
-    <li class="public" data-room="public"><a href="#public">#public</a></li>
-    <li class="recruit<?= $recruitHidden ?>" data-room="recruit"><a href="#recruit">#recruit</a></li>
-    <li class="private<?= $privateHidden ?>" data-room="private"><a href="#private">#private</a></li>
-    <li class="corporal<?= $corporalHidden ?>" data-room="corporal"><a href="#corporal">#corporal</a></li>
-    <li class="council<?= $councilHidden ?>" data-room="council"><a href="#council">#council</a></li>
-    <li style="padding-top:5px;">|</li>
-    <li class="announcements" data-room="announcements"><a href="#announcements">#announcements</a></li>
-    <li class="anime" data-room="anime"><a href="#anime">#anime</a></li>
-    <li class="games" data-room="games"><a href="#games">#games</a></li>
-    <li class="worldnews" data-room="worldnews"><a href="#worldnews">#worldnews</a></li>
-</ul>
-<div class="row-fluid">
-    <div class="span10">
-        <div class="well well-small better-scrollbar loading" id="chat-message-container">
-            <div id="templates" style="display:none;">
-                <ol>
-                    <li id="viewer-template">
-                        <a href="{link}" target="_blank"><img/> {user}</a>
-                    </li>
-                    <li id="chat-message-template">
-                        <span class="faux-invisible">[</span><span class="timestamp">{time}</span><span
-                            class="faux-invisible">] </span><span class="faux-invisible">&lt;</span><a
-                            href="{link}" target="_blank">{user}</a><span class="faux-invisible">&gt; </span>{message}
-                    </li>
-                </ol>
-            </div>
-            <div class="chat-messages public">
-                <ol></ol>
-            </div>
-            <div class="chat-messages recruit">
-                <ol></ol>
-            </div>
-            <div class="chat-messages private">
-                <ol></ol>
-            </div>
-            <div class="chat-messages corporal">
-                <ol></ol>
-            </div>
-            <div class="chat-messages council">
-                <ol></ol>
-            </div>
-            <div class="chat-messages announcements">
-                <ol></ol>
-            </div>
-            <div class="chat-messages anime">
-                <ol></ol>
-            </div>
-            <div class="chat-messages games">
-                <ol></ol>
-            </div>
-            <div class="chat-messages worldnews">
-                <ol></ol>
-            </div>
-        </div>
-        <form id="chat-message" class="row-fluid" <?= !is_null($identity) ? 'data-hasidentity="true"' : null ?>>
-            <div class="span10">
-                <input type="text" class="span12" disabled placeholder="Please login or register to chat"/>
-            </div>
-            <div class="span2">
-                <input type="submit" class="btn btn-inverse span12" disabled value="Post"/>
-            </div>
-        </form>
-    </div>
-    <div class="span2 hidden-phone hidden-print">
-        <div class="well well-small better-scrollbar" id="chat-viewers">
-            <ol class="chat-viewers public"></ol>
-            <ol class="chat-viewers recruit"></ol>
-            <ol class="chat-viewers private"></ol>
-            <ol class="chat-viewers corporal"></ol>
-            <ol class="chat-viewers council"></ol>
-            <ol class="chat-viewers announcements"></ol>
-            <ol class="chat-viewers anime"></ol>
-            <ol class="chat-viewers games"></ol>
-            <ol class="chat-viewers worldnews"></ol>
-        </div>
-        <?php if (!is_null($identity) && $identity->rank < User::RANK_RECRUIT): ?>
-            <a id="joinTheWatchButton" class="btn btn-primary span12" href="/join/recruit">Join the Watch!</a>
-            <div style="text-align:center;">
-                <small>(You haven't yet!)</small>
-            </div>
-        <?php elseif (!is_null($identity) && $identity->rank == User::RANK_RECRUIT): ?>
-            <a id="joinTheWatchButton" class="btn btn-inverse span12" href="/join/recruit">Get Promoted</a>
-        <?php endif; ?>
-    </div>
+<div style="text-align:center;">
+    <a href="<?= $url ?>">
+        <img src="/img/discord.png" alt="On Discord" title="On Discord" />
+    </a>
 </div>
 

@@ -3,6 +3,7 @@
 namespace NightsWatch\Authentication;
 
 use Doctrine\ORM\EntityManager;
+use NightsWatch\Routine\DiscordUpdateNameAndRoles;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
 

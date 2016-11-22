@@ -26,6 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property \DateTime  $joined
  * @property int        $emailNotifications
  * @property bool       $banned
+ * @property string     $discordId
  * @property \DateTime  $recruitmentDate
  */
 class User
@@ -160,6 +161,12 @@ class User
      * @ORM\Column(type="boolean")
      */
     protected $deserter = false;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $discordId = null;
 
     /**
      * @var Ip[]

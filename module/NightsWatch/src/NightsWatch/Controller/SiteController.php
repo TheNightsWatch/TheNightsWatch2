@@ -10,6 +10,8 @@ use NightsWatch\DiscordProvider;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\LoginForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use NightsWatch\Routine\DiscordUpdateNameAndRoles;
+use NightsWatch\Routine\DiscordWire;
 use NightsWatch\ShotbowProvider;
 use Zend\Authentication\Result as AuthResult;
 use Zend\Authentication\Storage\Session;
@@ -65,7 +67,7 @@ class SiteController extends ActionController
                 'clientId'     => $discord['clientId'],
                 'clientSecret' => $discord['clientSecret'],
                 'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
-                'scopes'       => ['identify'],
+                'scopes'       => ['identify', 'guilds.join'],
             ]
         );
 
@@ -94,8 +96,21 @@ class SiteController extends ActionController
             }
         }
 
-        var_dump($userDetails);
-        exit;
+        $routine = new DiscordWire(
+            $this->identityEntity,
+            $userDetails->id,
+            $provider,
+            $token,
+            $discord['accessToken']
+        );
+        $routine->after(function () {
+            $this->getEntityManager()->persist($this->identityEntity);
+            $this->getEntityManager()->flush($this->identityEntity);
+        });
+        $routine->perform();
+
+        $this->redirect()->toRoute('home', ['controller' => 'chat']);
+        return false;
     }
 
     public function modAction()
@@ -204,9 +219,23 @@ class SiteController extends ActionController
 
         $errors = [];
 
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+
+        $domain = $this->getRequest()->getUri()->getHost();
+        $scheme = $this->getRequest()->getUri()->getScheme();
+        $provider = new DiscordProvider(
+            [
+                'clientId'     => $discord['clientId'],
+                'clientSecret' => $discord['clientSecret'],
+                'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
+                'scopes'       => ['identify', 'guilds.join'],
+            ]
+        );
+
         switch ($result->getCode()) {
             case AuthResult::SUCCESS:
                 $this->redirect()->toRoute('home', ['controller' => 'chat']);
+                $this->updateDiscord($result->getIdentity());
 
                 return false;
             case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
@@ -230,53 +259,29 @@ class SiteController extends ActionController
         }
     }
 
-    public function loginAction()
+    private function updateDiscord($id)
     {
-        if ($this->disallowMember()) {
-            return false;
-        }
-        $this->updateLayoutWithIdentity();
-        $errors = [];
-        $form = new LoginForm();
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
-            if ($form->isValid()) {
-                if ($form->get('rememberme')->getValue()) {
-                    $authNamespace = new Container(Session::NAMESPACE_DEFAULT);
-                    $authNamespace->getManager()->rememberMe(60 * 60 * 24 * 30);
-                }
-                $authAdapter = new AuthAdapter(
-                    $form->get('username')->getValue(),
-                    $form->get('password')->getValue(),
-                    $this->getEntityManager()
-                );
-
-                $result = $this->getAuthenticationService()->authenticate($authAdapter);
-
-                switch ($result->getCode()) {
-                    case AuthResult::SUCCESS:
-                        $this->updateUsername();
-                        $this->redirect()->toRoute('home', ['controller' => 'chat']);
-
-                        return false;
-                    case AuthResult::FAILURE_IDENTITY_NOT_FOUND:
-                        $errors[] = 'Identity not Registered';
-                        break;
-                    case -5:
-                        $errors[] = 'Your account has been banned';
-                        break;
-                    default:
-                        $errors[] = 'Invalid Password';
-                        break;
-                }
-            }
-        }
-
-        return new ViewModel(
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+        $domain = $this->getRequest()->getUri()->getHost();
+        $scheme = $this->getRequest()->getUri()->getScheme();
+        $provider = new DiscordProvider(
             [
-                'form'   => $form,
-                'errors' => $errors,
+                'clientId'     => $discord['clientId'],
+                'clientSecret' => $discord['clientSecret'],
+                'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
+                'scopes'       => ['identify', 'guilds.join'],
             ]
         );
+        $user = $this->entityManager->getRepository('NightsWatch\Entity\User')->findOneBy(['id' => $id]);
+        if (!$user) return;
+
+        $routine = new DiscordUpdateNameAndRoles($user, $user->discordId, $provider, $discord['accessToken']);
+        $routine->perform();
+    }
+
+    public function loginAction()
+    {
+        $this->redirect()->toRoute('home', ['controller' => 'site', 'action' => 'shotbowlogin']);
+        return false;
     }
 }

@@ -141,7 +141,7 @@ class ActionController extends AbstractActionController
     protected function disallowGuest()
     {
         if (!$this->getAuthenticationService()->hasIdentity()) {
-            $this->redirect()->toRoute('login');
+            $this->redirect()->toRoute('shotbowlogin');
 
             return true;
         } else {
