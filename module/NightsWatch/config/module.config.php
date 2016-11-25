@@ -41,7 +41,7 @@ return [
             'shotbowlogin' => [
                 'type'    => 'literal',
                 'options' => [
-                    'route'    => '[/]shotbowlogin',
+                    'route'    => '/shotbowlogin',
                     'defaults' => [
                         'controller' => 'site',
                         'action'     => 'shotbowlogin',
