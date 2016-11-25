@@ -281,7 +281,7 @@ class SiteController extends ActionController
 
     public function loginAction()
     {
-        $this->redirect()->toRoute('home', ['controller' => 'site', 'action' => 'shotbowlogin']);
+        $this->redirect()->toRoute('shotbowlogin');
         return false;
     }
 }
