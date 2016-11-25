@@ -117,10 +117,9 @@ class EventController extends ActionController
             return;
         }
 
-        if ($rank < $event->lowestViewableRank) {
-            $this->getResponse()->setStatusCode(403);
-
-            return;
+        $redirect = $this->disallowRankLessThan($event->lowestViewableRank);
+        if ($redirect) {
+            return false;
         }
 
         $view = EventView::triggerView($this->getEntityManager(), $event, $this->getIdentityEntity());
