@@ -10,6 +10,7 @@ use NightsWatch\DiscordProvider;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\LoginForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use NightsWatch\Routine\DiscordRemove;
 use NightsWatch\Routine\DiscordUpdateNameAndRoles;
 use NightsWatch\Routine\DiscordWire;
 use NightsWatch\ShotbowProvider;
@@ -96,6 +97,7 @@ class SiteController extends ActionController
             }
         }
 
+        $originalId = $this->identityEntity->discordId;
         $routine = new DiscordWire(
             $this->identityEntity,
             $userDetails->id,
@@ -103,9 +105,12 @@ class SiteController extends ActionController
             $token,
             $discord['accessToken']
         );
-        $routine->after(function () {
+        $routine->after(function () use($originalId) {
             $this->getEntityManager()->persist($this->identityEntity);
             $this->getEntityManager()->flush($this->identityEntity);
+            if ($originalId && $this->identityEntity->discordId != $originalId) {
+                $this->removeFromDiscord($originalId);
+            }
         });
         $routine->perform();
 
@@ -223,14 +228,7 @@ class SiteController extends ActionController
 
         $domain = $this->getRequest()->getUri()->getHost();
         $scheme = $this->getRequest()->getUri()->getScheme();
-        $provider = new DiscordProvider(
-            [
-                'clientId'     => $discord['clientId'],
-                'clientSecret' => $discord['clientSecret'],
-                'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
-                'scopes'       => ['identify', 'guilds.join'],
-            ]
-        );
+        $provider = $this->createDiscordProvider();
 
         switch ($result->getCode()) {
             case AuthResult::SUCCESS:
@@ -259,12 +257,12 @@ class SiteController extends ActionController
         }
     }
 
-    private function updateDiscord($id)
+    private function createDiscordProvider()
     {
-        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
         $domain = $this->getRequest()->getUri()->getHost();
         $scheme = $this->getRequest()->getUri()->getScheme();
-        $provider = new DiscordProvider(
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+        return new DiscordProvider(
             [
                 'clientId'     => $discord['clientId'],
                 'clientSecret' => $discord['clientSecret'],
@@ -272,6 +270,21 @@ class SiteController extends ActionController
                 'scopes'       => ['identify', 'guilds.join'],
             ]
         );
+    }
+
+    private function removeFromDiscord($discordId)
+    {
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+        $provider = $this->createDiscordProvider();
+
+        $routine = new DiscordRemove(null, $discordId, $provider, $discord['accessToken']);
+        $routine->perform();
+    }
+
+    private function updateDiscord($id)
+    {
+        $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+        $provider = $this->createDiscordProvider();
         $user = $this->entityManager->getRepository('NightsWatch\Entity\User')->findOneBy(['id' => $id]);
         if (!$user) return;
 

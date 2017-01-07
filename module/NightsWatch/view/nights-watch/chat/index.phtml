@@ -1,13 +1,19 @@
 <?php
 /** @var \NightsWatch\Entity\User $identity */
 $url = '/site/connectdiscord';
-if ($identity && $identity->discordId) {
-    $url = 'https://discord.gg/rdnVxHv';
-}
 ?>
-<div style="text-align:center;">
-    <a href="<?= $url ?>">
-        <img src="/img/discord.png" alt="On Discord" title="On Discord" />
-    </a>
-</div>
-
+<?php if ($identity && $identity->discordId): ?>
+    <iframe src="https://discordapp.com/widget?id=222528908988383233&amp;theme=dark" width="350" height="500"
+            allowtransparency="true" frameborder="0"
+            style="width: 100%;max-height: calc(100vh - 105px);height: 5000px;">
+    </iframe>
+<?php else: ?>
+    <div style="text-align:center;">
+        <p><a href="<?= $url ?>">
+                <img src="/img/discord.png" alt="On Discord" title="On Discord"/>
+            </a>
+        </p>
+        <p>The link above will verify that your Discord and Minecraft accounts are the same person and automatically add
+            you to The Night's Watch server.</p>
+    </div>
+<?php endif; ?>
