@@ -15,7 +15,7 @@ $today = date("Y-m-d");
             <tr>
                 <th colspan="7">
                     <h2>
-                        <?= DateTime::createFromFormat('Y-n', "{$year}-{$month}")->format('F Y'); ?>
+                        <?= DateTime::createFromFormat('Y-n-d', "{$year}-{$month}-01")->format('F Y'); ?>
                     </h2>
                 </th>
             </tr>
@@ -52,7 +52,7 @@ $today = date("Y-m-d");
         </table>
         <br />
         <?php
-        $nextMonth = DateTime::createFromFormat('Y-n', "{$year}-{$month}")->add(new DateInterval('P1M'));
+        $nextMonth = DateTime::createFromFormat('Y-n-d', "{$year}-{$month}-01")->add(new DateInterval('P1M'));
         $nyear = $nextMonth->format('Y');
         $nmonth = $nextMonth->format('m');
         $url = $this->url('calendar', ['controller' => 'event', 'action' => 'index']) . "?year={$nyear}&month={$nmonth}";
