@@ -60,6 +60,9 @@ foreach ($user->reprimands as $reprimand) {
     </div>
     <div class="span9">
         <h1><?= $user->getTitleWithName(); ?></h1>
+        <?php if ($user->guild != User::GUILD_TNW): ?>
+        <p style="font-style:italic;">A member of <?= User::getGuildNames()[$user->guild] ?></p>
+        <?php endif; ?>
         <p>Registration Date: <?= $user->joined->format('F j, Y'); ?></p>
         <?php if ($user->rank >= User::RANK_RECRUIT && !is_null($user->recruitmentDate)): ?>
             <p>Recruitment Date: <?= $user->recruitmentDate->format('F j, Y'); ?></p>

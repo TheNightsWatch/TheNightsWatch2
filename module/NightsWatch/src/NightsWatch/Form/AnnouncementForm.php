@@ -55,7 +55,7 @@ class AnnouncementForm extends Form
                 ],
                 'options' => [
                     'label'         => 'Rank',
-                    'value_options' => \NightsWatch\Entity\User::getRankNames(),
+                    'value_options' => \NightsWatch\Entity\User::getTnwRankNames(),
                     'bootstrap'     => [
                         'help' => [
                             'style'   => 'block',

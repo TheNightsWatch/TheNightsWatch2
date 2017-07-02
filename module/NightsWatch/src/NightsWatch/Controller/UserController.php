@@ -2,6 +2,7 @@
 
 namespace NightsWatch\Controller;
 
+use NightsWatch\Entity\User;
 use NightsWatch\Mvc\Controller\ActionController;
 use Zend\View\Model\ViewModel;
 
@@ -14,7 +15,7 @@ class UserController extends ActionController
         /** @var \NightsWatch\Entity\User $users */
         $users = $this->getEntityManager()
             ->getRepository('NightsWatch\Entity\User')
-            ->findAll();
+            ->findBy(['guild' => User::GUILD_TNW]);
 
         $ranks = [];
 

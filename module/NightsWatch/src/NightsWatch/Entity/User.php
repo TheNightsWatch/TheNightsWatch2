@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property Accolade[] $accolades
  * @property int        $rank
  * @property int        $order
+ * @property int        $guild
  * @property bool       $admin
  * @property bool       $deniedJoin If true, the user is not allowed to become a recruit
  * @property bool       $deserter   If true, the user has deserted the Watch
@@ -42,10 +43,19 @@ class User
     const RANK_RECRUIT = 1;
     const RANK_CIVILIAN = 0;
 
+    const RANK_SEEKER = 2;
+    const RANK_ELDER = 10;
+    const RANK_SERAPH = 15;
+    const RANK_GUIDING_LIGHT = 20;
+
     // Order Constants
     const ORDER_STEWARD = 0;
     const ORDER_RANGER = 1;
     const ORDER_BUILDER = 2;
+
+    // Guild Constants
+    const GUILD_TNW = 0;
+    const GUILD_DB = 1;
 
     // Email Notification Constants, used as bitwise
     const EMAIL_ANNOUNCEMENT = 0b1;
@@ -138,6 +148,12 @@ class User
 
     /**
      * @var int
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    protected $guild = self::GUILD_TNW;
+
+    /**
+     * @var int
      * @ORM\Column(type="integer")
      */
     protected $emailNotifications = self::EMAIL_ANNOUNCEMENT;
@@ -177,6 +193,14 @@ class User
     public static function getRankNames()
     {
         return [
+            static::GUILD_TNW => static::getTnwRankNames(),
+            static::GUILD_DB => static::getDbRankNames(),
+        ];
+    }
+
+    public static function getTnwRankNames()
+    {
+        return [
             static::RANK_ADMIN      => 'Admin',
             static::RANK_COMMANDER  => 'Lord Commander',
             static::RANK_GENERAL    => 'General',
@@ -188,9 +212,19 @@ class User
         ];
     }
 
-    public static function getRankName($rank)
+    public static function getDbRankNames()
     {
-        return static::getRankNames()[$rank];
+        return [
+            static::RANK_GUIDING_LIGHT => 'Guiding Light',
+            static::RANK_SERAPH => 'Seraph',
+            static::RANK_ELDER => 'Elder',
+            static::RANK_SEEKER => 'Seeker',
+        ];
+    }
+
+    public static function getRankName($rank, $guild = self::GUILD_TNW)
+    {
+        return static::getRankNames()[$guild][$rank];
     }
 
     public static function getOrderNames()
@@ -207,16 +241,25 @@ class User
         return static::getOrderNames()[$order];
     }
 
+    public static function getGuildNames()
+    {
+        return [
+            static::GUILD_TNW => 'The Night\'s Watch',
+            static::GUILD_DB => 'Dawn Brigade',
+        ];
+    }
+
     public function getTitleOrRank()
     {
         if (!is_null($this->title)) {
             return sprintf($this->title, '', '');
         }
+
         if ($this->deserter) {
             return 'Deserter';
         }
 
-        return static::getRankName($this->rank);
+        return static::getRankName($this->rank, $this->guild);
     }
 
     public function getTitleWithName()
@@ -227,22 +270,38 @@ class User
         if ($this->deserter) {
             return $this->username.', Deserter';
         }
-        switch ($this->rank) {
-            case static::RANK_RECRUIT:
-                return $this->username.', '.static::getRankName($this->rank);
-            case static::RANK_PRIVATE:
-                return 'Private '.$this->username;
-            case static::RANK_CORPORAL:
-                return 'Corporal '.$this->username;
-            case static::RANK_LIEUTENANT:
-                return 'Lieutenant '.$this->username;
-            case static::RANK_GENERAL:
-                return 'General '.$this->username;
-            case static::RANK_COMMANDER:
-                return 'Lord Commander '.$this->username;
-            default:
-                return $this->username;
+        if ($this->guild == static::GUILD_TNW) {
+            switch ($this->rank) {
+                case static::RANK_RECRUIT:
+                    return $this->username . ', ' . static::getRankName($this->rank);
+                case static::RANK_PRIVATE:
+                    return 'Private ' . $this->username;
+                case static::RANK_CORPORAL:
+                    return 'Corporal ' . $this->username;
+                case static::RANK_LIEUTENANT:
+                    return 'Lieutenant ' . $this->username;
+                case static::RANK_GENERAL:
+                    return 'General ' . $this->username;
+                case static::RANK_COMMANDER:
+                    return 'Lord Commander ' . $this->username;
+                default:
+                    return $this->username;
+            }
+        } elseif ($this->guild == static::GUILD_DB) {
+            switch ($this->rank) {
+                case static::RANK_SEEKER:
+                    return $this->username . ' the Seeker';
+                case static::RANK_ELDER:
+                    return 'Elder ' . $this->username;
+                case static::RANK_SERAPH:
+                    return 'Seraph ' . $this->username;
+                case static::RANK_GUIDING_LIGHT:
+                    return 'The Guiding Light, ' . $this->username;
+                default:
+                    return $this->username;
+            }
         }
+        return $this->username;
     }
 
     public function __construct()
