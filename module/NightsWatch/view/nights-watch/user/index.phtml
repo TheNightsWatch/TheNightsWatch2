@@ -26,7 +26,7 @@ foreach ($councilRanks as $rank => $users) {
 }
 echo '</table></div>';
 
-$ranksToDisplay = [User::RANK_CAPTAIN, User::RANK_PRIVATE, User::RANK_RECRUIT];
+$ranksToDisplay = [User::RANK_CAPTAIN, User::RANK_CORPORAL, User::RANK_PRIVATE, User::RANK_RECRUIT];
 foreach ($ranksToDisplay as $rank) {
     if (!isset($usersByRank[$rank])) {
         continue;
