@@ -11,23 +11,23 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="user")
  *
- * @property int        $id
- * @property string     $username
- * @property string     $password
- * @property string     $email
- * @property string     $minecraftId
- * @property Honor[]    $honors
+ * @property int $id
+ * @property string $username
+ * @property string $password
+ * @property string $email
+ * @property string $minecraftId
+ * @property Honor[] $honors
  * @property Accolade[] $accolades
- * @property int        $rank
- * @property int        $order
- * @property bool       $admin
- * @property bool       $deniedJoin If true, the user is not allowed to become a recruit
- * @property bool       $deserter   If true, the user has deserted the Watch
- * @property \DateTime  $joined
- * @property int        $emailNotifications
- * @property bool       $banned
- * @property string     $discordId
- * @property \DateTime  $recruitmentDate
+ * @property int $rank
+ * @property int $order
+ * @property bool $admin
+ * @property bool $deniedJoin If true, the user is not allowed to become a recruit
+ * @property bool $deserter   If true, the user has deserted the Watch
+ * @property \DateTime $joined
+ * @property int $emailNotifications
+ * @property bool $banned
+ * @property string $discordId
+ * @property \DateTime $recruitmentDate
  */
 class User
 {
@@ -37,7 +37,8 @@ class User
     const RANK_COMMANDER = 10000;
     const RANK_GENERAL = 5000;
     const RANK_LIEUTENANT = 1000;
-    const RANK_CORPORAL = 500;
+    const RANK_CAPTAIN = 500;
+    const RANK_CORPORAL = 250;
     const RANK_PRIVATE = 2;
     const RANK_RECRUIT = 1;
     const RANK_CIVILIAN = 0;
@@ -177,14 +178,15 @@ class User
     public static function getRankNames()
     {
         return [
-            static::RANK_ADMIN      => 'Admin',
-            static::RANK_COMMANDER  => 'Lord Commander',
-            static::RANK_GENERAL    => 'General',
+            static::RANK_ADMIN => 'Admin',
+            static::RANK_COMMANDER => 'Lord Commander',
+            static::RANK_GENERAL => 'General',
             static::RANK_LIEUTENANT => 'Lieutenant',
-            static::RANK_CORPORAL   => 'Corporal',
-            static::RANK_PRIVATE    => 'Private',
-            static::RANK_RECRUIT    => 'Recruit',
-            static::RANK_CIVILIAN   => 'Civilian',
+            static::RANK_CAPTAIN => 'Captain',
+            static::RANK_CORPORAL => 'Corporal',
+            static::RANK_PRIVATE => 'Private',
+            static::RANK_RECRUIT => 'Recruit',
+            static::RANK_CIVILIAN => 'Civilian',
         ];
     }
 
@@ -197,7 +199,7 @@ class User
     {
         return [
             static::ORDER_STEWARD => 'Steward',
-            static::ORDER_RANGER  => 'Ranger',
+            static::ORDER_RANGER => 'Ranger',
             static::ORDER_BUILDER => 'Builder',
         ];
     }
@@ -225,21 +227,23 @@ class User
             return sprintf($this->title, $this->username, '');
         }
         if ($this->deserter) {
-            return $this->username.', Deserter';
+            return $this->username . ', Deserter';
         }
         switch ($this->rank) {
             case static::RANK_RECRUIT:
-                return $this->username.', '.static::getRankName($this->rank);
+                return $this->username . ', ' . static::getRankName($this->rank);
             case static::RANK_PRIVATE:
-                return 'Private '.$this->username;
+                return 'Private ' . $this->username;
             case static::RANK_CORPORAL:
-                return 'Corporal '.$this->username;
+                return 'Corporal ' . $this->username;
+            case static::RANK_CAPTAIN:
+                return 'Captain ' . $this->username;
             case static::RANK_LIEUTENANT:
-                return 'Lieutenant '.$this->username;
+                return 'Lieutenant ' . $this->username;
             case static::RANK_GENERAL:
-                return 'General '.$this->username;
+                return 'General ' . $this->username;
             case static::RANK_COMMANDER:
-                return 'Lord Commander '.$this->username;
+                return 'Lord Commander ' . $this->username;
             default:
                 return $this->username;
         }

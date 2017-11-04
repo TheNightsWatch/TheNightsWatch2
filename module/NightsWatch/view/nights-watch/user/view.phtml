@@ -25,8 +25,8 @@ foreach ($user->accolades as $accolade) {
     $string = 'Awarded for "<strong>' . htmlentities($accolade->reason) . '</strong>" on ' .
         $accolade->timestamp->format('F j, Y');
 
-    // Only show an accolade's issuer to Corporal or Above
-    if (!is_null($identity) && $identity->rank >= User::RANK_CORPORAL) {
+    // Only show an accolade's issuer to Captain or Above
+    if (!is_null($identity) && $identity->rank >= User::RANK_CAPTAIN) {
         $string .= ' by ' . $generateUserLink($accolade->givenBy);
     }
     $string .= '.';
@@ -64,7 +64,7 @@ foreach ($user->reprimands as $reprimand) {
         <?php if ($user->rank >= User::RANK_RECRUIT && !is_null($user->recruitmentDate)): ?>
             <p>Recruitment Date: <?= $user->recruitmentDate->format('F j, Y'); ?></p>
         <?php endif; ?>
-        <?php if (!is_null($identity) && $identity->rank >= User::RANK_CORPORAL): ?>
+        <?php if (!is_null($identity) && $identity->rank >= User::RANK_CAPTAIN): ?>
             <p class="alert alert-warning">Some of the information on this page may be classified. Do not disclose any
                 information on this page to others. Always link them.</p>
         <?php endif; ?>

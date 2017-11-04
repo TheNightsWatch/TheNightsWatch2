@@ -34,7 +34,7 @@ class ModController extends ActionController
         $response = new Response();
         $response->getHeaders()->addHeaders(['Content-Type' => 'image/png']);
 
-        $cacheName = sha1(strtolower($user->username)."-{$user->rank}-{$user->deserter}-{$user->order}");
+        $cacheName = sha1(strtolower($user->username) . "-{$user->rank}-{$user->deserter}-{$user->order}");
 
         $fileLoc = "data/cache/cape-{$cacheName}.png";
         if (file_exists($fileLoc)) {
@@ -56,19 +56,11 @@ class ModController extends ActionController
                 case User::RANK_LIEUTENANT:
                     $iconType = 'lieutenant';
                     break;
+                case User::RANK_CAPTAIN:
+                    $iconType = 'captain';
+                    break;
                 case User::RANK_CORPORAL:
                     $iconType = 'corporal';
-                    break;
-            }
-            switch ($user->order) {
-                case User::ORDER_RANGER:
-                    $backingType = 'ranger';
-                    break;
-                case User::ORDER_STEWARD:
-                    $backingType = 'steward';
-                    break;
-                case User::ORDER_BUILDER:
-                    $backingType = 'builder';
                     break;
             }
             if ($user->rank == User::RANK_RECRUIT) {
