@@ -39,7 +39,7 @@ foreach ($user->accolades as $accolade) {
 // Process Reprimands
 $reprimands = [];
 foreach ($user->reprimands as $reprimand) {
-    if ($user->id != $identity->id && $identity->rank < User::RANK_LIEUTENANT) {
+    if (!$identity || ($user->id != $identity->id && $identity->rank < User::RANK_LIEUTENANT)) {
         break;
     }
 
