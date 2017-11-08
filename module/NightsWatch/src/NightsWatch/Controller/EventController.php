@@ -303,7 +303,7 @@ class EventController extends ActionController
         if (isset($session->id) && $session->id != false) {
             $event = $eventRepo->find($session->id);
             if (is_null($event)) {
-                throw new Exception('No such event found');
+                throw new \Exception('No such event found');
             }
         } else {
             $newEvent = true;
@@ -331,7 +331,7 @@ class EventController extends ActionController
 
         if ($this->getRequest()->isPost()) {
             // Verify that Event type is allowed
-            if (!in_array($event->type, EventForm::getEventTypesForRank($leader->rank))) {
+            if (!in_array($event->type, array_keys(EventForm::getEventTypesForRank($event->user->rank)))) {
                 throw new HttpException('Disallowed', 403);
             }
             $this->getEntityManager()->persist($event);
