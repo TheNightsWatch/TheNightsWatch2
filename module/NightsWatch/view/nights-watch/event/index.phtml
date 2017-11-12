@@ -4,7 +4,7 @@ $today = date("Y-m-d");
 /** @var string $month */
 /** @var array $days */
 ?>
-<?php if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_CAPTAIN):
+<?php if ($identity && $identity->rank >= \NightsWatch\Entity\User::RANK_CORPORAL):
     $url = $this->url('home', ['controller' => 'event', 'action' => 'create']); ?>
     <a href="<?= $url ?>" class="btn btn-primary post-event-button pull-right">Post New Event</a>
 <?php endif; ?>
