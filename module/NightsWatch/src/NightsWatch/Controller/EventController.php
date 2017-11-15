@@ -311,7 +311,7 @@ class EventController extends ActionController
             $event = new Event();
         }
         $event->name = $session->name;
-        $event->description = $session->description;
+        $originalDescription = $event->description = $session->description;
         if ($newEvent) {
             $event->user = $this->getIdentityEntity();
         }
@@ -454,7 +454,7 @@ CALENDAR;
                             'embeds' => [
                                 [
                                     'title' => $event->name,
-                                    'description' => $event->description,
+                                    'description' => $originalDescription,
                                     'timestamp' => $event->start->format('c'),
                                     'url' => $url,
                                     'color' => intval($colorMap[$event->lowestViewableRank]),
@@ -472,6 +472,11 @@ CALENDAR;
                                             'inline' => true,
                                             'value' => "[Attending]({$url}) · [Maybe]({$url}) · [No]({$url})",
                                             'name' => 'RSVP',
+                                        ],
+                                        [
+                                            'inline' => true,
+                                            'name' => 'Event Type',
+                                            'value' => $event->getTypeName(),
                                         ]
                                     ]
                                 ]
