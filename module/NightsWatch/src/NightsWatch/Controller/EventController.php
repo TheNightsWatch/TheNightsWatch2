@@ -102,8 +102,9 @@ class EventController extends ActionController
         return new ViewModel(['events' => $events, 'user' => $this->getIdentityEntity()]);
     }
 
-    public function quickRsvpAction($rsvp)
+    public function quickRsvpAction()
     {
+        $rsvp = $this->params()->fromQuery('rsvp');
         $this->updateLayoutWithIdentity();
 
         $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
@@ -114,7 +115,7 @@ class EventController extends ActionController
             ->getRepository('NightsWatch\Entity\Event')
             ->find($id);
 
-        if (is_null($event) || $rank == 0 || $this->getIdentityEntity()->id == $event->leader->id) {
+        if (is_null($rsvp) || is_null($event) || $rank == 0 || $this->getIdentityEntity()->id == $event->leader->id) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
@@ -475,6 +476,36 @@ CALENDAR;
                         User::RANK_CAPTAIN => '28352',
                         User::RANK_LIEUTENANT => '30516',
                     ];
+                    $yes = $this->url()->fromRoute(
+                        'id',
+                        [
+                            'controller' => 'event',
+                            'action' => 'quickRsvp',
+                            'id' => $event->id,
+                            'rsvp' => EventRsvp::RSVP_ATTENDING
+                        ],
+                        ['force_canonical' => true]
+                    );
+                    $maybe = $this->url()->fromRoute(
+                        'id',
+                        [
+                            'controller' => 'event',
+                            'action' => 'quickRsvp',
+                            'id' => $event->id,
+                            'rsvp' => EventRsvp::RSVP_MAYBE
+                        ],
+                        ['force_canonical' => true]
+                    );
+                    $no = $this->url()->fromRoute(
+                        'id',
+                        [
+                            'controller' => 'event',
+                            'action' => 'quickRsvp',
+                            'id' => $event->id,
+                            'rsvp' => EventRsvp::RSVP_ABSENT
+                        ],
+                        ['force_canonical' => true]
+                    );
                     $discordMessenger = new DiscordMessage($webhook);
                     $discordMessenger->perform(
                         [
@@ -499,7 +530,7 @@ CALENDAR;
                                         ],
                                         [
                                             'inline' => true,
-                                            'value' => "[Attending]({$url}) · [Maybe]({$url}) · [No]({$url})",
+                                            'value' => "[Attending]({$yes}) · [Maybe]({$maybe}) · [No]({$no})",
                                             'name' => 'RSVP',
                                         ],
                                         [
