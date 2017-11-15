@@ -477,35 +477,35 @@ CALENDAR;
                         User::RANK_LIEUTENANT => '30516',
                     ];
                     $yes = $this->url()->fromRoute(
-                        'id',
-                        [
-                            'controller' => 'event',
-                            'action' => 'quickRsvp',
-                            'id' => $event->id,
-                            'rsvp' => EventRsvp::RSVP_ATTENDING
-                        ],
-                        ['force_canonical' => true]
-                    );
+                            'id',
+                            [
+                                'controller' => 'event',
+                                'action' => 'quickRsvp',
+                                'id' => $event->id,
+                                'rsvp' => EventRsvp::RSVP_ATTENDING
+                            ],
+                            ['force_canonical' => true]
+                        ) . '?rsvp=' . EventRsvp::RSVP_ATTENDING;
                     $maybe = $this->url()->fromRoute(
-                        'id',
-                        [
-                            'controller' => 'event',
-                            'action' => 'quickRsvp',
-                            'id' => $event->id,
-                            'rsvp' => EventRsvp::RSVP_MAYBE
-                        ],
-                        ['force_canonical' => true]
-                    );
+                            'id',
+                            [
+                                'controller' => 'event',
+                                'action' => 'quickRsvp',
+                                'id' => $event->id,
+                                'rsvp' => EventRsvp::RSVP_MAYBE
+                            ],
+                            ['force_canonical' => true]
+                        ) . '?rsvp=' . EventRsvp::RSVP_MAYBE;
                     $no = $this->url()->fromRoute(
-                        'id',
-                        [
-                            'controller' => 'event',
-                            'action' => 'quickRsvp',
-                            'id' => $event->id,
-                            'rsvp' => EventRsvp::RSVP_ABSENT
-                        ],
-                        ['force_canonical' => true]
-                    );
+                            'id',
+                            [
+                                'controller' => 'event',
+                                'action' => 'quickRsvp',
+                                'id' => $event->id,
+                                'rsvp' => EventRsvp::RSVP_ABSENT
+                            ],
+                            ['force_canonical' => true]
+                        ) . '?rsvp=' . EventRsvp::RSVP_ABSENT;
                     $discordMessenger = new DiscordMessage($webhook);
                     $discordMessenger->perform(
                         [
