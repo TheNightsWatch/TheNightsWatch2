@@ -40,6 +40,15 @@ return [
             'clientId' => 'CHANGEME',
             'clientSecret' => 'CHANGEME',
             'accessToken' => 'CHANGEME', // Bot Access Token
+            'webhooks' => [
+                \NightsWatch\Entity\User::RANK_CIVILIAN => '',
+                \NightsWatch\Entity\User::RANK_RECRUIT => '',
+                \NightsWatch\Entity\User::RANK_PRIVATE => '',
+                \NightsWatch\Entity\User::RANK_CORPORAL => '',
+                \NightsWatch\Entity\User::RANK_CAPTAIN => '',
+                \NightsWatch\Entity\User::RANK_LIEUTENANT => '',
+                \NightsWatch\Entity\User::RANK_GENERAL => '',
+            ],
         ],
         'secureChat' => true,
         'mod' => 'LINKTOMOD',

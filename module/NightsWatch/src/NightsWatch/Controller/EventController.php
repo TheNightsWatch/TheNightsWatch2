@@ -18,6 +18,7 @@ use NightsWatch\Entity\User;
 use NightsWatch\Form\EventForm;
 use NightsWatch\Form\RsvpForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use NightsWatch\Routine\DiscordMessage;
 use Zend\Json\Server\Exception\HttpException;
 use Zend\Mail\Address;
 use Zend\Mail\Transport\Sendmail;
@@ -432,6 +433,53 @@ CALENDAR;
                 }
                 $transport = new Sendmail();
                 $transport->send($mail);
+
+                // TODO Notify Discord
+                $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord']['webhooks'];
+                $webhookConfig = $discordConfig['webhooks'];
+                $webhook = isset($webhookConfig[$event->lowestViewableRank]) ? $webhookConfig[$event->lowestViewableRank] : false;
+                if ($webhook) {
+                    $colorMap = [
+                        User::RANK_CIVILIAN => '11382189',
+                        User::RANK_RECRUIT => '4620980',
+                        User::RANK_PRIVATE => '2068816',
+                        User::RANK_CORPORAL => '8089546',
+                        User::RANK_CAPTAIN => '28352',
+                        User::RANK_LIEUTENANT => '30516',
+                    ];
+                    $discordMessenger = new DiscordMessage($webhook);
+                    $discordMessenger->perform(
+                        [
+                            'username' => 'The Night\'s Watch',
+                            'content' => $lead,
+                            'embeds' => [
+                                [
+                                    'title' => $event->name,
+                                    'description' => $event->description,
+                                    'timestamp' => $event->start->format('c'),
+                                    'url' => $url,
+                                    'color' => intval($colorMap[$event->lowestViewableRank]),
+                                    'author' => [
+                                        'name' => $event->leader->getTitleWithName(),
+                                        'icon_url' => $event->leader->getAvatar(100),
+                                    ],
+                                    'fields' => [
+                                        [
+                                            'inline' => true,
+                                            'value' => User::getRankName($event->lowestViewableRank) . '+',
+                                            'name' => 'Classified',
+                                        ],
+                                        [
+                                            'inline' => true,
+                                            'value' => "[Attending]({$url}) · [Maybe]({$url}) · [No]({$url})",
+                                            'name' => 'RSVP',
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    );
+                }
             }
 
             $this->redirect()->toRoute('id', ['controller' => 'event', 'id' => $event->id]);
