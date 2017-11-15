@@ -434,8 +434,7 @@ CALENDAR;
                 $transport = new Sendmail();
                 $transport->send($mail);
 
-                // TODO Notify Discord
-                $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord']['webhooks'];
+                $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
                 $webhookConfig = $discordConfig['webhooks'];
                 $webhook = isset($webhookConfig[$event->lowestViewableRank]) ? $webhookConfig[$event->lowestViewableRank] : false;
                 if ($webhook) {
