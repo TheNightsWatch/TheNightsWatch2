@@ -102,6 +102,35 @@ class EventController extends ActionController
         return new ViewModel(['events' => $events, 'user' => $this->getIdentityEntity()]);
     }
 
+    public function quickRsvpAction($rsvp)
+    {
+        $this->updateLayoutWithIdentity();
+
+        $rank = is_null($this->getIdentityEntity()) ? 0 : $this->getIdentityEntity()->rank;
+        $id = $this->params()->fromRoute('id');
+
+        /** @var Event $event */
+        $event = $this->getEntityManager()
+            ->getRepository('NightsWatch\Entity\Event')
+            ->find($id);
+
+        if (is_null($event) || $rank == 0 || $this->getIdentityEntity()->id == $event->leader->id) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $redirect = $this->disallowRankLessThan($event->lowestViewableRank);
+        if ($redirect) {
+            return false;
+        }
+
+        $view = EventView::triggerView($this->getEntityManager(), $event, $this->getIdentityEntity());
+        $this->getEntityManager()->persist($view);
+        $this->getEntityManager()->flush();
+
+        return new ViewModel(['event' => $event, 'user' => $this->getIdentityEntity(), 'attendance' => $rsvp]);
+    }
+
     public function viewAction()
     {
         $this->updateLayoutWithIdentity();

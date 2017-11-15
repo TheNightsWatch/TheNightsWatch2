@@ -1,0 +1,40 @@
+<?php
+/**
+ * @var \NightsWatch\Entity\Event $event
+ * @var \NightsWatch\Entity\User $user
+ * @var int $attendance
+ */
+?>
+<article class="event span9 offset1">
+    <header>
+        <time class="time sidetime" datetime="<?= $iso8601; ?>" title="<?= $iso8601 ?>">
+            <span class="dateformat" data-format="H:i" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('H:i T'); ?>
+            </span>
+            <span class="date dateformat" data-format="M j" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('M j'); ?>
+            </span>
+        </time>
+        <h2><?= htmlspecialchars($event->name); ?></h2>
+        <time class="time visible-phone hidden-tablet" datetime="<?= $iso8601 ?>" title="<?= $iso8601 ?>">
+            <span class="dateformat" data-format="F j, Y" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('F j, Y'); ?>
+            </span>
+            at
+            <span class="date dateformat" data-format="H:i" data-unix="<?= $event->start->getTimestamp(); ?>">
+                <?= $event->start->format('H:i T'); ?>
+            </span>
+            <br/><br/>
+        </time>
+    </header>
+    <p class="alert alert-danger fade in">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        You must click <strong>RSVP</strong> in order to finish your RSVP to this event.
+    </p>
+    <?php
+    $form = new \NightsWatch\Form\RsvpForm($event);
+    $form->setAttribute('action', $this->url('home', ['controller' => 'event', 'action' => 'rsvp']));
+    $form->get('attendance')->setValue($attendance);
+    echo $this->bootstrapForm($form);
+    ?>
+</article>
