@@ -53,12 +53,14 @@ foreach ($user->reprimands as $reprimand) {
 }
 ?>
 <canvas id="canvas" width="64" height="64" style="display:none;"></canvas>
-
 <div class="row">
     <div class="span3 text-center">
         <div id="model"></div>
     </div>
     <div class="span9">
+        <?php if($identity->rank >= User::RANK_COMMANDER): ?>
+            <a class="btn btn-primary" style="float:right;" href="<?= $this->url('user', ['controller' => 'user', 'action' => 'assignRank', 'username' => $user->username]); ?>">Update Rank</a>
+        <?php endif; ?>
         <h1><?= $user->getTitleWithName(); ?></h1>
         <p>Registration Date: <?= $user->joined->format('F j, Y'); ?></p>
         <?php if ($user->rank >= User::RANK_RECRUIT && !is_null($user->recruitmentDate)): ?>
