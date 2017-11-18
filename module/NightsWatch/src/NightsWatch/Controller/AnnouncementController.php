@@ -210,7 +210,8 @@ class AnnouncementController extends ActionController
                                 'timestamp' => $announcement->timestamp->format('c'),
                                 'url' => $this->url()->fromRoute(
                                     'id',
-                                    ['controller' => 'announcement', 'id' => $announcement->id]
+                                    ['controller' => 'announcement', 'id' => $announcement->id],
+                                    ['force_canonical' => true]
                                 ),
                                 'color' => intval($colorMap[$announcement->lowestReadableRank]),
                                 'author' => [
