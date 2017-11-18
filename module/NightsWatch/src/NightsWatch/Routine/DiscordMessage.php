@@ -25,10 +25,11 @@ class DiscordMessage
     /**
      * @param array $json
      */
-    public function perform($json)
+    public function perform($json, $wait = false)
     {
+        $webhook = $wait ? $this->webhook . '?wait=true' : $this->webhook;
         $this->client->post(
-            $this->webhook,
+            $webhook,
             [
                 'json' => $json,
             ]
