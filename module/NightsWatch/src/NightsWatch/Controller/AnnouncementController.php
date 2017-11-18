@@ -7,6 +7,7 @@ use NightsWatch\Entity\Announcement;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\AnnouncementForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use NightsWatch\Routine\DiscordMessage;
 use Zend\Mail\Address;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Sendmail;
@@ -58,9 +59,9 @@ class AnnouncementController extends ActionController
         return new ViewModel(
             [
                 'announcements' => $announcements,
-                'pages'         => $pages,
-                'page'          => $page,
-                'identity'      => $this->getIdentityEntity(),
+                'pages' => $pages,
+                'page' => $page,
+                'identity' => $this->getIdentityEntity(),
             ]
         );
     }
@@ -103,7 +104,7 @@ class AnnouncementController extends ActionController
         if (!empty($session->title)) {
             $form->setData(
                 [
-                    'title'   => $session->title,
+                    'title' => $session->title,
                     'content' => $session->content,
                     'lowrank' => $session->rank,
                 ]
@@ -161,7 +162,7 @@ class AnnouncementController extends ActionController
             $users = $userRepo->matching($criteria);
 
             $mail = new Message();
-            $mail->setSubject('[NightsWatch] '.$announcement->title);
+            $mail->setSubject('[NightsWatch] ' . $announcement->title);
             $mail->setFrom(new Address('noreply@minez-nightswatch.com', $announcement->user->username));
             $mail->setTo(new Address('members@minez-nightswatch.com', 'Members'));
             $mail->setEncoding('UTF-8');
@@ -169,7 +170,7 @@ class AnnouncementController extends ActionController
             // Create a signature for email
             $title = trim($announcement->user->getTitleOrRank());
             $announcement->content = $announcement->content .= "\n\n"
-                .$announcement->user->username."  \n".'*'.$title.'*';
+                . $announcement->user->username . "  \n" . '*' . $title . '*';
 
             $body = new MimeBody();
             $bodyHtml = new MimePart($announcement->getParsedContent());
@@ -184,6 +185,43 @@ class AnnouncementController extends ActionController
             }
             $transport = new Sendmail();
             $transport->send($mail);
+
+            $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+            $webhookConfig = $discordConfig['webhooks'];
+            $webhook = isset($webhookConfig[$announcement->lowestReadableRank]) ? $webhookConfig[$announcement->lowestReadableRank] : false;
+            if ($webhook) {
+                $colorMap = [
+                    User::RANK_CIVILIAN => '11382189',
+                    User::RANK_RECRUIT => '4620980',
+                    User::RANK_PRIVATE => '2068816',
+                    User::RANK_CORPORAL => '8089546',
+                    User::RANK_CAPTAIN => '28352',
+                    User::RANK_LIEUTENANT => '30516',
+                ];
+
+                $discordMessenger = new DiscordMessage($webhook);
+                $discordMessenger->perform(
+                    [
+                        'username' => 'The Night\'s Watch',
+                        'embeds' => [
+                            [
+                                'title' => $announcement->title,
+                                'description' => $announcement->content,
+                                'timestamp' => $announcement->timestamp->format('c'),
+                                'url' => $this->url()->fromRoute(
+                                    'id',
+                                    ['controller' => 'announcement', 'id' => $announcement->id]
+                                ),
+                                'color' => intval($colorMap[$announcement->lowestReadableRank]),
+                                'author' => [
+                                    'name' => $announcement->user->getTitleWithName(),
+                                    'icon_url' => $announcement->user->getAvatar(100),
+                                ],
+                            ]
+                        ]
+                    ]
+                );
+            }
 
             $session->title = '';
             $this->redirect()->toRoute('id', ['controller' => 'announcement', 'id' => $announcement->id]);
