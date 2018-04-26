@@ -38,6 +38,8 @@ foreach ($event->rsvps as $rsvp) {
     }
 }
 
+$viewableRankName = $event->accord ? 'Accord' : User::getRankName($event->lowestViewableRank);
+
 ?>
 <article class="event span9 offset1">
     <header>
