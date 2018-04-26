@@ -65,6 +65,9 @@ class UserController extends ActionController
             ->findOneBy(['username' => $username]);
 
         $origRank = $user->rank;
+        $origDeserter = $user->deserter;
+        $origEmailNotifications = $user->emailNotifications;
+        $origAccord = $user->accordMember;
 
         if (!$user) {
             $this->getResponse()->setStatusCode(404);
@@ -77,16 +80,21 @@ class UserController extends ActionController
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $user->rank = $form->get('rank')->getValue();
+                $user->deserter = $form->get('deserter')->getValue();
+                $user->emailNotifications = $form->get('email')->getValue();
+                $user->accordMember = $form->get('accord')->getValue();
 
                 // do discord message first
                 $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
                 $webhookConfig = $discordConfig['webhooks'];
-                if ($user->rank != $origRank && isset($webhookConfig[User::RANK_LIEUTENANT])) {
-                    $webhook = $webhookConfig[User::RANK_LIEUTENANT];
-                    $discordMessenger = new DiscordMessage($webhook);
 
-                    $performerText = $performer->discordId ? "<@{$performer->discordId}>" : $performer->username;
-                    $userText = $user->discordId ? "<@{$user->discordId}>" : $user->username;
+                $webhook = $webhookConfig[User::RANK_LIEUTENANT];
+                $discordMessenger = new DiscordMessage($webhook);
+
+                $performerText = $performer->discordId ? "<@{$performer->discordId}>" : $performer->username;
+                $userText = $user->discordId ? "<@{$user->discordId}> ({$user->username})" : $user->username;
+
+                if ($user->rank != $origRank && isset($webhookConfig[User::RANK_LIEUTENANT])) {
                     $prevRank = User::getRankName($origRank);
                     $newRank = User::getRankName($user->rank);
 
@@ -96,6 +104,38 @@ class UserController extends ActionController
                             'content' => "{$performerText} has changed {$userText}'s rank from {$prevRank} to {$newRank}"
                         ],
                         true
+                    );
+                }
+                if ($user->deserter != $origDeserter && isset($webhookConfig[User::RANK_LIEUTENANT])) {
+                    $message = $user->deserter ? "{$performerText} has marked {$userText} as a deserter" : "{$performerText} has removed {$userText} from the list of deserters";
+
+                    $discordMessenger->perform(
+                        [
+                            'username' => 'The Night\'s Watch',
+                            'content' => $message,
+                        ],
+                        true
+                    );
+                }
+                if ($user->emailNotifications != $origEmailNotifications) {
+                    $message = "{$performerText} has set {$userText} email preferences to: {$user->emailNotifications}";
+
+                    $discordMessenger->perform(
+                        [
+                            'username' => 'The Night\'s Watch',
+                            'content' => $message,
+                        ],
+                        false
+                    );
+                }
+                if ($user->accordMember != $origAccord) {
+                    $message = $user->accordMember ? "{$performerText} has associated {$userText} with an accord clan." : "{$performerText} has disassociated {$userText} from accord clans.";
+
+                    $discordMessenger->perform(
+                        [
+                            'username' => 'The Night\'s Watch',
+                            'content' => $message,
+                        ]
                     );
                 }
 

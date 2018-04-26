@@ -24,6 +24,7 @@ abstract class Discord
     const ROLE_PRIVATE = '222800638155685888';
     const ROLE_RECRUITPLUS = '291741842817417228';
     const ROLE_RECRUIT = '222800668224651276';
+    const ROLE_ACCORD = '406447069902012416';
     const ROLE_VERIFIED = '237769649251549184'; // Typical Civilian
 
     protected $user;

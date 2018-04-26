@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property bool $banned
  * @property string $discordId
  * @property \DateTime $recruitmentDate
+ * @property bool $accordMember
  */
 class User
 {
@@ -174,6 +175,14 @@ class User
      * @ORM\OneToMany(targetEntity="Ip", mappedBy="user")
      */
     protected $ips;
+
+    /**
+     * Belongs to an Accord-affiliated clan/guild
+     *
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $accordMember = false;
 
     public static function getRankNames()
     {

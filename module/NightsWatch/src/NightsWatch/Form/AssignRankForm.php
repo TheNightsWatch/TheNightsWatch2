@@ -44,6 +44,48 @@ class AssignRankForm extends Form
 
         $this->add(
             [
+                'name' => 'accord',
+                'type' => 'checkbox',
+                'attributes' => [
+                    'checked_value' => 1,
+                    'unchecked_value' => 0,
+                ],
+                'options' => [
+                    'label' => 'Accord member',
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name' => 'deserter',
+                'type' => 'checkbox',
+                'attributes' => [
+                    'checked_value' => 1,
+                    'unchecked_value' => 0,
+                ],
+                'options' => [
+                    'label' => 'Deserter'
+                ]
+            ]
+        );
+
+        $this->add(
+            [
+                'name' => 'email',
+                'type' => 'checkbox',
+                'attributes' => [
+                    'checked_value' => User::EMAIL_ANNOUNCEMENT,
+                    'unchecked_value' => 0,
+                ],
+                'options' => [
+                    'label' => 'Receive Emails',
+                ]
+            ]
+        );
+
+        $this->add(
+            [
                 'name' => 'submit',
                 'type' => 'submit',
                 'attributes' => [

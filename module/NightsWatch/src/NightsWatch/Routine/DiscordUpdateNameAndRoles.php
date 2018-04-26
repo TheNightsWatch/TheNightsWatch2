@@ -11,6 +11,9 @@ class DiscordUpdateNameAndRoles extends Discord
 
         $url = DiscordProvider::URI_PREFIX.'guilds/'.self::GUILD_ID.'/members/'.$this->discordId;
         $roles = $this->getRolesForRank($this->user->rank);
+        if ($this->user->accordMember) {
+            $roles[] = static::ROLE_ACCORD;
+        }
         $client->patch(
             $url,
             [

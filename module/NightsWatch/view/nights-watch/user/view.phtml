@@ -70,6 +70,9 @@ foreach ($user->reprimands as $reprimand) {
             <p class="alert alert-warning">Some of the information on this page may be classified. Do not disclose any
                 information on this page to others. Always link them.</p>
         <?php endif; ?>
+        <?php if ($user->accordMember): ?>
+            <p class="alert alert-info">This player is associated with a member of The Camp Bell Accords</p>
+        <?php endif; ?>
         <?php if (count($accolades)): ?>
             <h2>Accolades</h2>
             <ul>
