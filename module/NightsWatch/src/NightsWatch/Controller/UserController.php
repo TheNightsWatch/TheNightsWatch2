@@ -143,7 +143,7 @@ class UserController extends ActionController
                     );
                 }
                 if ($user->deniedJoin != $origDenyJoin) {
-                    $message = "{$performerText} has set {$userText}'s ability to join as:" . ($user->deniedJoin ? 'No' : 'Yes');
+                    $message = "{$performerText} has set {$userText}'s ability to join as: " . ($user->deniedJoin ? 'No' : 'Yes');
 
                     $discordMessenger->perform(
                         [
