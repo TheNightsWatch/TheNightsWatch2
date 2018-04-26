@@ -19,6 +19,7 @@ use Michelf\MarkdownExtra;
  * @property int                            $region
  * @property int                            $type
  * @property string                         $report
+ * @property bool                           $accord
  * @property \NightsWatch\Entity\User       $leader
  * @property \NightsWatch\Entity\User       $user
  * @property \NightsWatch\Entity\EventRsvp  $rsvps
@@ -76,6 +77,12 @@ class Event
      * @ORM\ManyToOne(targetEntity="User")
      */
     protected $user;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $accord = 0;
 
     /**
      * @var \NightsWatch\Entity\User

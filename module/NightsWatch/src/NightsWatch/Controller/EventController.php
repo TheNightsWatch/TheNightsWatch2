@@ -236,6 +236,7 @@ class EventController extends ActionController
                 $session->region = $form->get('region')->getValue();
                 $session->leader = $form->get('leader')->getValue();
                 $session->type = $form->get('eventtype')->getValue();
+                $session->accord = $form->get('accord')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
 
                 return false;
@@ -295,6 +296,7 @@ class EventController extends ActionController
                 $session->leader = $form->get('leader')->getValue();
                 $session->type = $form->get('eventtype')->getValue();
                 $session->sendemail = $form->get('sendemail')->getValue();
+                $session->accord = $form->get('accord')->getValue();
                 $this->redirect()->toRoute('home', ['controller' => 'event', 'action' => 'preview']);
 
                 return false;
@@ -348,6 +350,7 @@ class EventController extends ActionController
         $event->start = new \DateTime($session->date . ' ' . $session->time);
         $event->region = $session->region;
         $event->leader = $leader;
+        $event->accord = $session->accord;
         $event->type = $session->type;
         $offset = $session->offset + date('Z');
         $add = $offset > 0 ? true : false;
@@ -467,14 +470,18 @@ CALENDAR;
                 $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
                 $webhookConfig = $discordConfig['webhooks'];
                 $webhook = isset($webhookConfig[$event->lowestViewableRank]) ? $webhookConfig[$event->lowestViewableRank] : false;
+                if ($event->accord) {
+                    $webhook = isset($webhookConfig['accord']) ? $webhookConfig['accord'] : false;
+                }
                 if ($webhook) {
                     $colorMap = [
-                        User::RANK_CIVILIAN => '11382189',
-                        User::RANK_RECRUIT => '4620980',
-                        User::RANK_PRIVATE => '2068816',
-                        User::RANK_CORPORAL => '8089546',
-                        User::RANK_CAPTAIN => '28352',
-                        User::RANK_LIEUTENANT => '30516',
+                        User::RANK_CIVILIAN => '9936031',
+                        User::RANK_RECRUIT => '1146986',
+                        User::RANK_PRIVATE => '2123412',
+                        User::RANK_CORPORAL => '10181046',
+                        User::RANK_CAPTAIN => '15844367',
+                        User::RANK_LIEUTENANT => '15105570',
+                        'accord' => '14408667',
                     ];
                     $yes = $this->url()->fromRoute(
                             'id',
@@ -507,6 +514,8 @@ CALENDAR;
                             ['force_canonical' => true]
                         ) . '?rsvp=' . EventRsvp::RSVP_ABSENT;
                     $discordMessenger = new DiscordMessage($webhook);
+                    $color = intval($event->accord ? $colorMap['accord'] : $colorMap[$event->lowestViewableRank]);
+                    $classified = $event->accord ? 'Accord' : User::getRankName($event->lowestViewableRank);
                     $discordMessenger->perform(
                         [
                             'username' => 'The Night\'s Watch',
@@ -517,7 +526,7 @@ CALENDAR;
                                     'description' => $originalDescription,
                                     'timestamp' => $event->start->format('c'),
                                     'url' => $url,
-                                    'color' => intval($colorMap[$event->lowestViewableRank]),
+                                    'color' => $color,
                                     'author' => [
                                         'name' => $event->leader->getTitleWithName(),
                                         'icon_url' => $event->leader->getAvatar(100),
@@ -525,7 +534,7 @@ CALENDAR;
                                     'fields' => [
                                         [
                                             'inline' => true,
-                                            'value' => User::getRankName($event->lowestViewableRank) . '+',
+                                            'value' => $classified . '+',
                                             'name' => 'Classified',
                                         ],
                                         [
@@ -607,6 +616,7 @@ CALENDAR;
             'region' => $session->region,
             'eventtype' => $session->type,
             'leader' => $session->leader,
+            'accord' => $session->accord,
         ];
         if (isset($session->id)) {
             $data['id'] = $session->id;
@@ -628,6 +638,7 @@ CALENDAR;
             'region' => $event->region,
             'eventtype' => $event->type,
             'leader' => !is_null($event->leader) ? $event->leader->username : $event->user->username,
+            'accord' => $event->accord,
         ];
         $form->setData($data);
     }

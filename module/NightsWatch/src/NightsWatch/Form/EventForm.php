@@ -231,6 +231,26 @@ class EventForm extends Form
 
         $this->add(
             [
+                'name' => 'accord',
+                'type' => 'checkbox',
+                'attributes' => [
+                    'checked_value' => 1,
+                    'unchecked_value' => 0,
+                ],
+                'options' => [
+                    'label' => 'Cross-post to the Accord chat room',
+                    'bootstrap' => [
+                        'help' => [
+                            'style' => 'block',
+                            'content' => 'Let those in accord clans know about the event.  Note, this room is visible to Recruit+',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
                 'name' => 'preview',
                 'type' => 'hidden',
                 'attributes' => [
