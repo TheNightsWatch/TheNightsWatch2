@@ -146,7 +146,7 @@ class UserController extends ActionController
                     $this->updateDiscordRank($user);
                 }
 
-                $this->redirect()->toRoute('user', ['controller' => 'user', 'action' => 'view', 'username' => $user->id]);
+                $this->redirect()->toRoute('user', ['controller' => 'user', 'action' => 'view', 'username' => $user->username]);
             }
         }
 
