@@ -71,7 +71,7 @@ $viewableRankName = $event->accord ? 'Accord' : User::getRankName($event->lowest
         <p class="alert alert-error fade in">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
             This event is classified. All information concerning it is classified and only available to members of
-            rank <?= User::getRankName($event->lowestViewableRank); ?> and up.
+            rank <?= $viewableRankName; ?> and up.
         </p>
     <?php endif; ?>
     <div class="well well-small">
