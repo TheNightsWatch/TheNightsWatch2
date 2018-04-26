@@ -91,8 +91,10 @@ class UserController extends ActionController
                 $webhook = $webhookConfig[User::RANK_LIEUTENANT];
                 $discordMessenger = new DiscordMessage($webhook);
 
-                $performerText = $performer->discordId ? "<@{$performer->discordId}>" : $performer->username;
-                $userText = $user->discordId ? "<@{$user->discordId}> ({$user->username})" : $user->username;
+                $escapedPerformer = str_replace('_', '\_', $performer->username);
+                $performerText = $performer->discordId ? "<@{$performer->discordId}> ({$escapedPerformer})" : $performer->username;
+                $escapedName = str_replace('_', '\_', $user->username);
+                $userText = $user->discordId ? "<@{$user->discordId}> ({$escapedName})" : $user->username;
 
                 if ($user->rank != $origRank && isset($webhookConfig[User::RANK_LIEUTENANT])) {
                     $prevRank = User::getRankName($origRank);
