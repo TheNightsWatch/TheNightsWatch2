@@ -49,6 +49,7 @@ class AssignRankForm extends Form
                 'attributes' => [
                     'checked_value' => 1,
                     'unchecked_value' => 0,
+                    'value' => $user->accordMember,
                 ],
                 'options' => [
                     'label' => 'Accord member',
@@ -63,6 +64,7 @@ class AssignRankForm extends Form
                 'attributes' => [
                     'checked_value' => 1,
                     'unchecked_value' => 0,
+                    'value' => $user->deserter,
                 ],
                 'options' => [
                     'label' => 'Deserter'
@@ -77,6 +79,7 @@ class AssignRankForm extends Form
                 'attributes' => [
                     'checked_value' => User::EMAIL_ANNOUNCEMENT,
                     'unchecked_value' => 0,
+                    'value' => $user->emailNotifications
                 ],
                 'options' => [
                     'label' => 'Receive Emails',
