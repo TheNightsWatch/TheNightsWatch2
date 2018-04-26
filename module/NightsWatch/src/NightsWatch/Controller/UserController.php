@@ -68,6 +68,7 @@ class UserController extends ActionController
         $origDeserter = $user->deserter;
         $origEmailNotifications = $user->emailNotifications;
         $origAccord = $user->accordMember;
+        $origDenyJoin = $user->deniedJoin;
 
         if (!$user) {
             $this->getResponse()->setStatusCode(404);
@@ -83,6 +84,7 @@ class UserController extends ActionController
                 $user->deserter = $form->get('deserter')->getValue();
                 $user->emailNotifications = $form->get('email')->getValue();
                 $user->accordMember = $form->get('accord')->getValue();
+                $user->deniedJoin = $form->get('denyjoin')->getValue();
 
                 // do discord message first
                 $discordConfig = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
@@ -132,6 +134,16 @@ class UserController extends ActionController
                 }
                 if ($user->accordMember != $origAccord) {
                     $message = $user->accordMember ? "{$performerText} has associated {$userText} with an accord clan." : "{$performerText} has disassociated {$userText} from accord clans.";
+
+                    $discordMessenger->perform(
+                        [
+                            'username' => 'The Night\'s Watch',
+                            'content' => $message,
+                        ]
+                    );
+                }
+                if ($user->deniedJoin != $origDenyJoin) {
+                    $message = "{$performerText} has set {$userText}'s ability to join as:" . ($user->deniedJoin ? 'No' : 'Yes');
 
                     $discordMessenger->perform(
                         [

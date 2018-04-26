@@ -74,6 +74,21 @@ class AssignRankForm extends Form
 
         $this->add(
             [
+                'name' => 'denyjoin',
+                'type' => 'checkbox',
+                'attributes' => [
+                    'checked_value' => 1,
+                    'unchecked_value' => 0,
+                    'value' => $user->deniedJoin,
+                ],
+                'options' => [
+                    'label' => 'Can\'t rejoin as Recruit',
+                ],
+            ]
+        );
+
+        $this->add(
+            [
                 'name' => 'email',
                 'type' => 'checkbox',
                 'attributes' => [
