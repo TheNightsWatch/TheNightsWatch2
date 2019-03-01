@@ -11,6 +11,7 @@ use NightsWatch\DiscordProvider;
 use NightsWatch\Entity\User;
 use NightsWatch\Form\ResetForm;
 use NightsWatch\Mvc\Controller\ActionController;
+use NightsWatch\Routine\DiscordMessage;
 use NightsWatch\Routine\DiscordUpdateNameAndRoles;
 use Zend\Authentication\Storage\Session;
 use Zend\Crypt\Password\Bcrypt;
@@ -21,6 +22,9 @@ class JoinController extends ActionController
 {
     /** @var Session */
     protected $session;
+
+    /** @var DiscordProvider */
+    private $discordProvider;
 
     public function __construct()
     {
@@ -60,6 +64,7 @@ class JoinController extends ActionController
                 }
                 $this->getEntityManager()->persist($user);
                 $this->getEntityManager()->flush();
+                $this->announceNewRecruit($user);
                 $hasJoined = true;
             } else {
                 $errors[] = 'You do not have the ability to become a recruit.';
@@ -106,7 +111,7 @@ class JoinController extends ActionController
                     $errors[] = 'Invalid username or Password';
                 } catch (MigrationException $e) {
                     $errors[] = 'Your Minecraft account has been migrated to a Mojang account.  '
-                        .'Please enter your Mojang email and try again';
+                        . 'Please enter your Mojang email and try again';
                 } catch (BasicException $e) {
                     $errors[] = 'This is not a premium Minecraft Account';
                 }
@@ -115,28 +120,49 @@ class JoinController extends ActionController
 
         return new ViewModel(
             [
-                'done'   => false,
+                'done' => false,
                 'errors' => $errors,
-                'form'   => $form,
+                'form' => $form,
             ]
         );
     }
 
     private function updateDiscordRank(User $user)
     {
+        $provider = $this->getDiscordProvider();
         $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
-        $domain = $this->getRequest()->getUri()->getHost();
-        $scheme = $this->getRequest()->getUri()->getScheme();
-        $provider = new DiscordProvider(
-            [
-                'clientId'     => $discord['clientId'],
-                'clientSecret' => $discord['clientSecret'],
-                'redirectUri'  => "{$scheme}://{$domain}/site/connectdiscord",
-                'scopes'       => ['identify', 'guilds.join'],
-            ]
-        );
 
         $routine = new DiscordUpdateNameAndRoles($user, $user->discordId, $provider, $discord['accessToken']);
         $routine->perform();
+    }
+
+    private function getDiscordProvider()
+    {
+        if (!$this->discordProvider) {
+            $discord = $this->getServiceLocator()->get('config')['NightsWatch']['discord'];
+            $domain = $this->getRequest()->getUri()->getHost();
+            $scheme = $this->getRequest()->getUri()->getScheme();
+            $this->discordProvider = new DiscordProvider(
+                [
+                    'clientId' => $discord['clientId'],
+                    'clientSecret' => $discord['clientSecret'],
+                    'redirectUri' => "{$scheme}://{$domain}/site/connectdiscord",
+                    'scopes' => ['identify', 'guilds.join'],
+                ]
+            );
+        }
+        return $this->discordProvider;
+    }
+
+    private function announceNewRecruit(User $user)
+    {
+        $webhook = $this->getServiceLocator()->get('config')['NightsWatch']['discord'][User::RANK_LIEUTENANT];
+        $messenger = new DiscordMessage($webhook);
+        $messenger->perform(
+            [
+                'username' => 'The Night\'s Watch',
+                'content' => 'We have a new recruit!  Meet <@'.$user->discordId.'> ('.$user->username.')',
+            ]
+        );
     }
 }
