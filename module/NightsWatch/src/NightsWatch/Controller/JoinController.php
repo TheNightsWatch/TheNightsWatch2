@@ -156,12 +156,13 @@ class JoinController extends ActionController
 
     private function announceNewRecruit(User $user)
     {
-        $webhook = $this->getServiceLocator()->get('config')['NightsWatch']['discord'][User::RANK_LIEUTENANT];
+        $webhook = $this->getServiceLocator()->get('config')['NightsWatch']['discord']['webhooks'][User::RANK_LIEUTENANT];
         $messenger = new DiscordMessage($webhook);
+        $escapedName = str_replace('_', '\_', $user->username);
         $messenger->perform(
             [
                 'username' => 'The Night\'s Watch',
-                'content' => 'We have a new recruit!  Meet <@'.$user->discordId.'> ('.$user->username.')',
+                'content' => 'We have a new recruit!  Meet <@' . $user->discordId . '> (' .$escapedName . ')',
             ]
         );
     }
