@@ -343,7 +343,7 @@ class EventController extends ActionController
             $event = new Event();
         }
         $event->name = $session->name;
-        $originalDescription = $event->description = $session->description;
+        $event->description = $session->description;
         if ($newEvent) {
             $event->user = $this->getIdentityEntity();
         }
@@ -405,7 +405,6 @@ class EventController extends ActionController
                 );
 
                 $niceDate = $event->start->format('M j, Y');
-                $niceTime = $event->start->format('H:i T');
                 $region = $event->getRegionName();
                 // Create a signature
                 $title = trim($event->user->getTitleOrRank());
@@ -421,42 +420,15 @@ class EventController extends ActionController
                     )
                     . " and up.\n\n"
                     . 'You can read the details of this event at https://minez-nightswatch.com/event/' . $event->id
-                    . "\n\nEvent Details:  \nDate: {$niceDate}  \nTime: {$niceTime}  \nRSVP: [{$url}]({$url})  "
+                    . "\n\nEvent Details:  \nDate: {$niceDate}  \nRSVP: [{$url}]({$url})  "
                     . ($event->region > 0 ? "\nRegion: {$region}" : '')
                     . "\n\n"
                     . "{$event->user->username}  \n*{$title}*";
 
-                // Event Stuff
-                // Not Yet Working.  Not sure why.
-
-                $start = clone $event->start;
-                $start->setTimezone(new \DateTimeZone('UTC'));
-                $dtstart = $start->format('Ymd\\THis\\Z');
-                $eventRaw
-                    = <<<CALENDAR
-BEGIN:VCALENDAR
-PRODID:-//NightsWatch//Nights Watch Event Creator//EN
-VERSION:2.0
-CALSCALE:GREGORIAN
-METHOD:REQUEST
-BEGIN:VEVENT
-UID:event-{$event->id}@minez-nightswatch.com
-DTSTART:{$dtstart}
-ORGANIZER;CN=Night's Watch:noreply@minez-nightswatch.com
-SUMMARY:{$event->name}
-END:VEVENT
-END:VCALENDAR
-CALENDAR;
-
                 $body = new MimeBody();
                 $bodyHtml = new MimePart($event->getParsedDescription());
                 $bodyHtml->type = Mime::TYPE_HTML;
-                $bodyEvent = new MimePart($eventRaw);
-                $bodyEvent->type = 'text/calendar';
-                $bodyEvent->disposition = Mime::DISPOSITION_INLINE;
-                $bodyEvent->encoding = Mime::ENCODING_8BIT;
-                $bodyEvent->filename = 'calendar.ics';
-                $body->setParts([$bodyHtml, $bodyEvent]);
+                $body->setParts([$bodyHtml]);
                 $mail->setBody($body);
 
                 foreach ($users as $user) {
@@ -523,8 +495,6 @@ CALENDAR;
                             'embeds' => [
                                 [
                                     'title' => $event->name,
-                                    'description' => $originalDescription,
-                                    'timestamp' => $event->start->format('c'),
                                     'url' => $url,
                                     'color' => $color,
                                     'author' => [
