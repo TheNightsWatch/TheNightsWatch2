@@ -163,6 +163,12 @@ function FixLeftLeg2(context) {
     context.clearRect(12, 52, 4, 12);
 }
 
+function IsSmallSkinFormat(context) {
+    var value = HasTransparency(context, 46, 52, 2, 12);
+    if (value) { console.log('Detected Alex Skin'); } else { console.log('Detected Steve Skin'); }
+    return value;
+}
+
 // Expects a canvas with a 64x32 Minecraft skin drawn in the very top left corner (0,0)
 // Your canvas should be 64x64 in size to show the skin parts that were converted
 function Convert6432To6464(context) {
@@ -184,7 +190,7 @@ function Convert6432To6464(context) {
 
 // Expects a canvas with a Minecraft skin drawn in the very top left corner (0,0)
 // Makes the non-visible parts of the Minecraft skin transparent
-function FixNonVisible(context) {
+function FixNonVisible(context, smallSkin) {
     // 64x32 and 64x64 skin parts
     context.clearRect(0, 0, 8, 8);
     context.clearRect(24, 0, 16, 8);
@@ -192,19 +198,35 @@ function FixNonVisible(context) {
     context.clearRect(0, 16, 4, 4);
     context.clearRect(12, 16, 8, 4);
     context.clearRect(36, 16, 8, 4);
-    context.clearRect(52, 16, 4, 4);
-    context.clearRect(56, 16, 8, 32);
+    if (smallSkin) {
+        context.clearRect(50, 16, 4, 4);
+        context.clearRect(54, 16, 10, 32);
+    } else {
+        context.clearRect(52, 16, 4, 4);
+        context.clearRect(56, 16, 8, 32);
+    }
 
     // 64x64 skin parts
     context.clearRect(0, 32, 4, 4);
     context.clearRect(12, 32, 8, 4);
     context.clearRect(36, 32, 8, 4);
-    context.clearRect(52, 32, 4, 4);
+    if (smallSkin) {
+        context.clearRect(50, 32, 4, 4);
+    } else {
+        context.clearRect(52, 32, 4, 4);
+    }
     context.clearRect(0, 48, 4, 4);
     context.clearRect(12, 48, 8, 4);
     context.clearRect(28, 48, 8, 4);
-    context.clearRect(44, 48, 8, 4);
-    context.clearRect(60, 48, 8, 4);
+    if (smallSkin) {
+        context.clearRect(42, 48, 10, 4);
+        context.clearRect(46, 52, 2, 12);
+        context.clearRect(58, 48, 6, 4);
+        context.clearRect(62, 52, 2, 12);
+    } else {
+        context.clearRect(44, 48, 8, 4);
+        context.clearRect(60, 48, 8, 4);
+    }
 }
 
 // Checks if the given part of the canvas contains a pixel with 0 alpha value (transparent)
