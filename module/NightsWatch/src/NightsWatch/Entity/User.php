@@ -29,6 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $discordId
  * @property \DateTime $recruitmentDate
  * @property bool $accordMember
+ * @property bool $lordCommanderClubMember
+ * @property bool $councilMember
  */
 class User
 {
@@ -51,6 +53,7 @@ class User
 
     // Email Notification Constants, used as bitwise
     const EMAIL_ANNOUNCEMENT = 0b1;
+    const EMAIL_ELECTION = 0b10;
 
     /**
      * @var int
@@ -142,7 +145,7 @@ class User
      * @var int
      * @ORM\Column(type="integer")
      */
-    protected $emailNotifications = self::EMAIL_ANNOUNCEMENT;
+    protected $emailNotifications = self::EMAIL_ANNOUNCEMENT | self::EMAIL_ELECTION;
 
     /**
      * An honorary title, %1$s is username, %2$s is order.
@@ -184,16 +187,29 @@ class User
      */
     protected $accordMember = false;
 
+    /**
+     * A current or previous Lord Commander in good standing
+     *
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $lordCommanderClubMember = false;
+
+    /**
+     * A member of the council
+     *
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $councilMember = false;
+
     public static function getRankNames()
     {
         return [
             static::RANK_ADMIN => 'Admin',
             static::RANK_COMMANDER => 'Lord Commander',
-            static::RANK_GENERAL => 'General',
-            static::RANK_LIEUTENANT => 'Lieutenant',
             static::RANK_CAPTAIN => 'Captain',
-            static::RANK_CORPORAL => 'Corporal',
-            static::RANK_PRIVATE => 'Private',
+            static::RANK_PRIVATE => 'Ranger',
             static::RANK_RECRUIT => 'Recruit',
             static::RANK_CIVILIAN => 'Civilian',
         ];
@@ -242,15 +258,12 @@ class User
             case static::RANK_RECRUIT:
                 return $this->username . ', ' . static::getRankName($this->rank);
             case static::RANK_PRIVATE:
-                return 'Private ' . $this->username;
             case static::RANK_CORPORAL:
-                return 'Corporal ' . $this->username;
+                return 'Ranger ' . $this->username;
             case static::RANK_CAPTAIN:
-                return 'Captain ' . $this->username;
             case static::RANK_LIEUTENANT:
-                return 'Lieutenant ' . $this->username;
             case static::RANK_GENERAL:
-                return 'General ' . $this->username;
+                return 'Captain ' . $this->username;
             case static::RANK_COMMANDER:
                 return 'Lord Commander ' . $this->username;
             default:

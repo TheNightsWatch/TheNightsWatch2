@@ -90,14 +90,16 @@ class AssignRankForm extends Form
         $this->add(
             [
                 'name' => 'email',
-                'type' => 'checkbox',
+                'type' => 'multi_checkbox',
                 'attributes' => [
-                    'checked_value' => User::EMAIL_ANNOUNCEMENT,
-                    'unchecked_value' => 0,
                     'value' => $user->emailNotifications
                 ],
                 'options' => [
-                    'label' => 'Receive Emails',
+                    'label' => 'Emails',
+                    'value_options' => [
+                        User::EMAIL_ANNOUNCEMENT => 'Announcements',
+                        User::EMAIL_ELECTION => 'Elections'
+                    ]
                 ]
             ]
         );
